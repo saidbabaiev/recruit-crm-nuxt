@@ -1,3 +1,4 @@
+// Auto generated file. Do not edit manually.
 export type Json =
   | string
   | number
