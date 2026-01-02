@@ -1,21 +1,22 @@
-export default defineNuxtRouteMiddleware((to, from) => {
+export default defineNuxtRouteMiddleware((to) => {
     const user = useSupabaseUser();
 
-    // Add all protected routes here
-    const protectedRoutes = ['/dashboard', '/profile', '/settings', '/test'];
-    const isProtected = protectedRoutes.some(route => to.path.startsWith(route)); 
+    const publicRoutes = ['/', '/auth'];
+    const isPublic = publicRoutes.some(route => {
+        // Exact match or starts with (for /blog/*)
+        return to.path === route || to.path.startsWith(route + '/');
+    });
 
-    // If the route is protected and user is not authenticated, redirect to auth
-    if (isProtected && !user.value) {
+    // If route is not public and user is not logged in → redirect to /auth
+    if (!isPublic && !user.value) {
         return navigateTo({
             path: '/auth',
-            query: { redirectTo: to.fullPath } // save the intended route for after login
+            query: { redirectTo: to.fullPath }
         });
     }
 
-    // If user is authenticated and trying to access auth page, redirect to dashboard
+    // If user is logged in and tries to access /auth → redirect to /dashboard
     if (to.path === '/auth' && user.value) {
-        return navigateTo('/dashboard')
+        return navigateTo('/dashboard');
     }
-
-})
+});

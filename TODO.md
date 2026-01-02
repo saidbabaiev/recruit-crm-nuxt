@@ -13,6 +13,9 @@
     - [x] Implement Auth page (`/auth`) with Supabase Auth.
     - [x] Create main landing page (`/`) with basic marketing content.
     - [x] Create `middleware/auth.global.ts` to protect routes and handle redirects.
+    - [x] Add `redirectTo` query parameter support to remember intended destination.
+    - [x] Implement inverted auth logic (publicRoutes whitelist instead of protectedRoutes).
+    - [ ] **[FUTURE]** Consider hybrid approach: combine global publicRoutes with page-level `definePageMeta({ requiresAuth: false })` for more flexibility when needed in Phase 2+.
 - [ ] **Base UI Components**
     - [x] Install/Configure UI Library (Nuxt UI / Tailwind).
     - [ ] Setup a dark/light mode toggle (optional but good for practice).
