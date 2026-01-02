@@ -7,11 +7,10 @@
     - [x] Import generated Supabase types into the project.
     - [x] Create a global type definition or utility to easily access `Database` types in components.
 - [~] **Layout System**
-    - [x] Create `layouts/auth.vue` (Blank canvas for Login/Register).
+    - [x] Create `layouts/auth.vue` (Blank canvas for Auth page).
     - [ ] Create `layouts/default.vue` (Sidebar + Topbar + Slot for content).
 - [~] **Authentication Flow**
-    - [x] Implement Login page (`/login`) with Supabase Auth.
-    - [ ] Implement Register page.
+    - [x] Implement Auth page (`/auth`) with Supabase Auth.
     - [x] Create main landing page (`/`) with basic marketing content.
     - [x] Create `middleware/auth.global.ts` to protect routes and handle redirects.
 - [ ] **Base UI Components**

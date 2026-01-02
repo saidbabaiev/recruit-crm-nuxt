@@ -24,10 +24,10 @@ definePageMeta({
         </div>
         <div v-else class="flex gap-3">
           <Button variant="outline" as-child>
-            <NuxtLink to="/login">Sign In</NuxtLink>
+            <NuxtLink to="/auth">Sign In</NuxtLink>
           </Button>
           <Button as-child>
-            <NuxtLink to="/login">Get Started</NuxtLink>
+            <NuxtLink to="/auth">Get Started</NuxtLink>
           </Button>
         </div>
       </nav>
@@ -50,10 +50,10 @@ definePageMeta({
         </div>
         <div v-else class="flex flex-col sm:flex-row gap-4 justify-center">
           <Button size="lg" as-child>
-            <NuxtLink to="/login">Start Free Trial</NuxtLink>
+            <NuxtLink to="/auth">Start Free Trial</NuxtLink>
           </Button>
           <Button size="lg" variant="outline" as-child>
-            <NuxtLink to="/login">Sign In</NuxtLink>
+            <NuxtLink to="/auth">Sign In</NuxtLink>
           </Button>
         </div>
       </div>
@@ -113,7 +113,7 @@ definePageMeta({
           Join hundreds of companies using HireCRM to find and hire the best tech talent.
         </p>
         <Button size="lg" variant="secondary" as-child>
-          <NuxtLink to="/login">Get Started for Free</NuxtLink>
+          <NuxtLink to="/auth">Get Started for Free</NuxtLink>
         </Button>
       </div>
     </section>
