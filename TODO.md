@@ -16,6 +16,11 @@
 - [ ] **Base UI Components**
     - [x] Install/Configure UI Library (Nuxt UI / Tailwind).
     - [ ] Setup a dark/light mode toggle (optional but good for practice).
+- [ ] **Global Error Handling & Notifications**
+    - [ ] Install and configure toast notification library (vue-sonner or Nuxt UI Toast).
+    - [ ] Replace all `alert()` calls with toast notifications.
+    - [ ] Add global error boundary for uncaught errors.
+    - [ ] Create composable for consistent error messaging (`useErrorHandler`).
 
 ## 🏢 Phase 2: Multi-Tenancy (Organizations)
 *Focus: Handling multiple workspaces for a single user.*
