@@ -1,4 +1,4 @@
-# 📝 TODO: HR CRM Rewrite (Nuxt 4 + Supabase)
+# 📝 TODO: Hirecrm Rewrite (Nuxt 4 + Supabase)
 
 ## 🏗 Phase 1: Foundation & Architecture
 *Focus: Setting up the "skeleton" and ensuring type safety.*
