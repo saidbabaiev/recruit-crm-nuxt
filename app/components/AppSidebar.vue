@@ -32,11 +32,16 @@ const props = withDefaults(defineProps<SidebarProps>(), {
   variant: "inset",
 })
 
+const user = useSupabaseUser()
+const userName = user.value?.user_metadata?.full_name || "User"
+const userEmail = user.value?.email || ""
+
+
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
+    name: userName,
+    email: userEmail,
+    avatar: null,
   },
   navMain: [
     {
@@ -168,7 +173,7 @@ const data = {
                 <Command class="size-4" />
               </div>
               <div class="grid flex-1 text-left text-sm leading-tight">
-                <span class="truncate font-medium">Acme Inc</span>
+                <span class="truncate font-medium">Hire CRM</span>
                 <span class="truncate text-xs">Enterprise</span>
               </div>
             </a>

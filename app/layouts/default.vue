@@ -14,6 +14,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar"
+import { Input } from "~/components/ui/input";
 
 </script>
 
@@ -26,7 +27,8 @@ import {
           <div class="flex items-center gap-2 px-4">
             <SidebarTrigger class="-ml-1" />
             <Separator orientation="vertical" class="mr-2 data-[orientation=vertical]:h-4" />
-            <Breadcrumb>
+            <Input type="search" placeholder="Search..."/>
+            <!-- <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem class="hidden md:block">
                   <BreadcrumbLink href="#">
@@ -38,10 +40,10 @@ import {
                   <BreadcrumbPage>Data Fetching</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
-            </Breadcrumb>
+            </Breadcrumb> -->
           </div>
         </header>
-        <main class="flex-1 p-8 overflow-auto">
+        <main class="flex-1 overflow-auto">
           <slot />
         </main>
       </SidebarInset>
