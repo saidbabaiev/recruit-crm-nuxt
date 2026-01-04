@@ -40,30 +40,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 
-const { getCandidates } = useCandidates()
+const { getCandidates, getFullName, getInitials, getExperienceLabel } = useCandidates()
 const { data: candidates, pending, error, refresh } = await getCandidates()
 
-// Helper functions
-const getInitials = (name: string) => {
-  return name
-    .split(' ')
-    .map(word => word[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2)
-}
-
-const formatDate = (date: string) => {
-  const now = new Date()
-  const candidateDate = new Date(date)
-  const diffTime = Math.abs(now.getTime() - candidateDate.getTime())
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-  
-  if (diffDays === 0) return 'Today'
-  if (diffDays === 1) return 'Yesterday'
-  if (diffDays < 7) return `${diffDays} days ago`
-  return candidateDate.toLocaleDateString()
-}
 </script>
 
 <template>
@@ -131,12 +110,12 @@ const formatDate = (date: string) => {
               <Avatar class="h-12 w-12 shrink-0">
                 <AvatarImage src="" alt="John Doe" />
                 <AvatarFallback class="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold">
-                  {{ getInitials(candidate.first_name + ' ' + candidate.last_name) }}
+                  {{ getInitials(candidate) }}
                 </AvatarFallback>
               </Avatar>
               <div class="min-w-0 flex-1">
                 <CardTitle class="text-base leading-none mb-1.5 truncate">
-                  {{ candidate.first_name }} {{ candidate.last_name }}
+                  {{ getFullName(candidate) }}
                 </CardTitle>
                 <CardDescription class="text-sm truncate">
                   {{ candidate.current_position }}
@@ -160,7 +139,7 @@ const formatDate = (date: string) => {
           </div>
           <div v-if="candidate.experience_years" class="flex items-center gap-2 text-sm">
             <Briefcase class="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-            <span class="text-muted-foreground text-xs">{{ candidate.experience_years }} years experience</span>
+            <span class="text-muted-foreground text-xs">{{ getExperienceLabel(candidate) }}</span>
           </div>
           <div v-if="candidate.notice_period" class="flex items-center gap-2 text-sm">
             <Calendar class="h-3.5 w-3.5 text-muted-foreground shrink-0" />

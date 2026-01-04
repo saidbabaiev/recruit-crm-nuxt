@@ -98,13 +98,24 @@ export const useCandidates = () => {
         })
     }
 
+    const helpers = {
+        getFullName: (c: Candidate) => `${c.first_name} ${c.last_name}`,
+        getInitials: (c: Candidate) => {
+            if (!c.first_name || !c.last_name) return ''
+            return `${c.first_name.charAt(0).toUpperCase()}${c.last_name.charAt(0).toUpperCase()}`
+        },
+        getExperienceLabel: (c: Candidate) => 
+            c.experience_years ? `${c.experience_years}+ years experience` : 'No experience',
+    }
+
     return {
         getCandidates,
         getCandidateById,
         createCandidate,
         updateCandidate,
         deleteCandidate,
-        searchCandidates
+        searchCandidates,
+        ...helpers,
     }
 
 }
