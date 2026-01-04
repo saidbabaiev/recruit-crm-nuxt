@@ -10,8 +10,7 @@ import {
   MoreVertical,
   UserCheck,
   FileText,
-  Trash,
-  Users
+  Trash
 } from 'lucide-vue-next'
 
 import { Button } from '@/components/ui/button'
@@ -40,6 +39,31 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+
+const { getCandidates } = useCandidates()
+const { data: candidates, pending, error, refresh } = await getCandidates()
+
+// Helper functions
+const getInitials = (name: string) => {
+  return name
+    .split(' ')
+    .map(word => word[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2)
+}
+
+const formatDate = (date: string) => {
+  const now = new Date()
+  const candidateDate = new Date(date)
+  const diffTime = Math.abs(now.getTime() - candidateDate.getTime())
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+  
+  if (diffDays === 0) return 'Today'
+  if (diffDays === 1) return 'Yesterday'
+  if (diffDays < 7) return `${diffDays} days ago`
+  return candidateDate.toLocaleDateString()
+}
 </script>
 
 <template>
@@ -94,11 +118,12 @@ import {
     </div>
 
     <!-- Candidates Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+    <div v-if="!pending && !error && candidates" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+      <pre class="mt-2 text-sm">{{ candidates[0] }}</pre>
       <Card 
-        v-for="n in 9" 
-        :key="n"
-        class="overflow-hidden hover:shadow-lg transition-shadow duration-200"
+      v-for="candidate in candidates" 
+      :key="candidate.id"
+      class="overflow-hidden hover:shadow-lg transition-shadow duration-200"
       >
         <CardHeader class="pb-3">
           <div class="flex items-start justify-between gap-3">
@@ -106,15 +131,15 @@ import {
               <Avatar class="h-12 w-12 shrink-0">
                 <AvatarImage src="" alt="John Doe" />
                 <AvatarFallback class="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold">
-                  JD
+                  {{ getInitials(candidate.first_name + ' ' + candidate.last_name) }}
                 </AvatarFallback>
               </Avatar>
               <div class="min-w-0 flex-1">
                 <CardTitle class="text-base leading-none mb-1.5 truncate">
-                  John Doe
+                  {{ candidate.first_name }} {{ candidate.last_name }}
                 </CardTitle>
                 <CardDescription class="text-sm truncate">
-                  Senior Frontend Developer
+                  {{ candidate.current_position }}
                 </CardDescription>
               </div>
             </div>
@@ -127,19 +152,19 @@ import {
         <CardContent class="space-y-2.5 pb-4">
           <div class="flex items-center gap-2 text-sm">
             <Mail class="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-            <span class="text-muted-foreground truncate text-xs">john.doe@example.com</span>
+            <span class="text-muted-foreground truncate text-xs">{{ candidate.email }}</span>
           </div>
-          <div class="flex items-center gap-2 text-sm">
+          <div v-if="candidate.phone" class="flex items-center gap-2 text-sm">
             <Phone class="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-            <span class="text-muted-foreground text-xs">+1 (555) 123-4567</span>
+            <span class="text-muted-foreground text-xs">{{ candidate.phone }}</span>
           </div>
-          <div class="flex items-center gap-2 text-sm">
+          <div v-if="candidate.experience_years" class="flex items-center gap-2 text-sm">
             <Briefcase class="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-            <span class="text-muted-foreground text-xs">5+ years experience</span>
+            <span class="text-muted-foreground text-xs">{{ candidate.experience_years }} years experience</span>
           </div>
-          <div class="flex items-center gap-2 text-sm">
+          <div v-if="candidate.notice_period" class="flex items-center gap-2 text-sm">
             <Calendar class="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-            <span class="text-muted-foreground text-xs">Applied 2 days ago</span>
+            <span class="text-muted-foreground text-xs">Notice period {{ candidate.notice_period }}</span>
           </div>
 
           <div class="flex flex-wrap gap-1.5 pt-2">
