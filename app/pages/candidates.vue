@@ -98,7 +98,6 @@ const { data: candidates, pending, error, refresh } = await getCandidates()
 
     <!-- Candidates Grid -->
     <div v-if="!pending && !error && candidates" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-      <pre class="mt-2 text-sm">{{ candidates[0] }}</pre>
       <Card 
       v-for="candidate in candidates" 
       :key="candidate.id"
