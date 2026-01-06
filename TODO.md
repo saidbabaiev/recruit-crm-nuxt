@@ -6,7 +6,7 @@
 - [x] **Type Integration**
     - [x] Import generated Supabase types into the project.
     - [x] Create a global type definition or utility to easily access `Database` types in components.
-- [~] **Layout System**
+- [x] **Layout System**
     - [x] Create `layouts/auth.vue` (Blank canvas for Auth page).
     - [x] Create `layouts/default.vue` (Sidebar + Topbar + Slot for content).
 - [x] **Authentication Flow**
@@ -17,9 +17,9 @@
     - [x] Implement inverted auth logic (publicRoutes whitelist instead of protectedRoutes).
 - [ ] **Base UI Components**
     - [x] Install/Configure UI Library (Nuxt UI / Tailwind).
-    - [ ] Setup a dark/light mode toggle (optional but good for practice).
+    - [ ] Setup a dark/light mode toggle (optional).
 - [ ] **Global Error Handling & Notifications**
-    - [ ] Install and configure toast notification library (vue-sonner or Nuxt UI Toast).
+    - [ ] Install and configure toast notification library (vue-sonner).
     - [ ] Replace all `alert()` calls with toast notifications.
     - [ ] Add global error boundary for uncaught errors.
     - [ ] Create composable for consistent error messaging (`useErrorHandler`).
