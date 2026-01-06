@@ -8,7 +8,7 @@
     - [x] Create a global type definition or utility to easily access `Database` types in components.
 - [~] **Layout System**
     - [x] Create `layouts/auth.vue` (Blank canvas for Auth page).
-    - [ ] Create `layouts/default.vue` (Sidebar + Topbar + Slot for content).
+    - [x] Create `layouts/default.vue` (Sidebar + Topbar + Slot for content).
 - [x] **Authentication Flow**
     - [x] Implement Auth page (`/auth`) with Supabase Auth.
     - [x] Create main landing page (`/`) with basic marketing content.

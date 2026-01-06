@@ -19,15 +19,15 @@ import { Input } from "~/components/ui/input";
 </script>
 
 <template>
-  <div class="flex h-screen bg-gray-100">
+  <div class="flex h-screen bg-green-100">
     <SidebarProvider>
       <AppSidebar collapsible="icon" />
       <SidebarInset>
         <header class="flex h-16 shrink-0 items-center gap-2">
-          <div class="flex items-center gap-2 px-4">
+          <div class="w-full flex items-center gap-2 px-4">
             <SidebarTrigger class="-ml-1" />
             <Separator orientation="vertical" class="mr-2 data-[orientation=vertical]:h-4" />
-            <Input type="search" placeholder="Search..."/>
+            <Input type="search" placeholder="Search..." class="w-50"/>
             <!-- <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem class="hidden md:block">
