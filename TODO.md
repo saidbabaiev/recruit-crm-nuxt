@@ -40,17 +40,54 @@
 ## 👥 Phase 3: Candidates Module (Core Feature)
 *Focus: CRUD, Server-side pagination, and Forms.*
 
-- [ ] **Candidates List**
-    - [ ] Create `pages/org/[id]/candidates/index.vue`.
-    - [ ] Implement **Server-Side Pagination** using `useAsyncData` and Supabase `range()`.
-    - [ ] Add Search and Filters (by status, role) keeping state in URL (query params).
+- [x] **Candidates Composable**
+    - [x] Create `composables/useCandidates.ts` with CRUD operations
+    - [x] Implement `getCandidates()` with caching via `useAsyncData`
+    - [x] Add helper functions (`getFullName`, `getInitials`, `getExperienceLabel`)
+    - [x] Implement `createCandidate()`, `updateCandidate()`, `deleteCandidate()`
+    - [x] Add `searchCandidates()` for text search
+    - [x] Add cache invalidation with `refreshNuxtData()`
+
+- [x] **Candidates List (Basic)**
+    - [x] Create `pages/candidates.vue`
+    - [x] Fetch and display candidates in grid layout (3 columns on desktop)
+    - [x] Show candidate cards with avatar, name, position, contact info
+    - [x] Add loading states and error handling
+    - [x] Implement responsive design (1/2/3 columns)
+
+- [ ] **Candidates List (Advanced)**
+    - [ ] Implement **Server-Side Pagination** using `useAsyncData` and Supabase `range()`
+    - [ ] Add functional Search (connect to `searchCandidates()` composable)
+    - [ ] Add functional Filters (by status, position) keeping state in URL (query params)
+    - [ ] Add empty state component when no candidates found
+    - [ ] Add skills display from database (currently hardcoded)
+    - [ ] Add "Applied date" formatting helper
+    - [ ] Add status badge colors (currently all "New")
+
 - [ ] **Candidate Details**
-    - [ ] Create dynamic route `pages/org/[id]/candidates/[candidateId].vue`.
-    - [ ] Fetch detailed candidate profile + related data (e.g., applications).
+    - [ ] Create dynamic route `pages/candidates/[id].vue`
+    - [ ] Fetch detailed candidate profile using `getCandidateById()`
+    - [ ] Display full candidate information (resume, notes, history)
+    - [ ] Show related data (applications, interviews)
+    - [ ] Add back button to candidates list
+
 - [ ] **Candidate Mutations**
-    - [ ] Create "Add Candidate" Modal/Drawer.
-    - [ ] Implement form validation (Zod + Nuxt Form).
-    - [ ] Implement "Delete Candidate" with confirmation.
+    - [ ] Create "Add Candidate" Modal/Drawer (connect to "Add Candidate" button)
+    - [ ] Build candidate form with all fields (first_name, last_name, email, phone, etc.)
+    - [ ] Implement form validation (Zod + VeeValidate or Nuxt Form)
+    - [ ] Connect form to `createCandidate()` composable
+    - [ ] Implement "Edit Candidate" (connect to Edit button in card)
+    - [ ] Implement "Delete Candidate" with confirmation dialog (connect to dropdown menu)
+    - [ ] Add toast notifications for success/error states
+
+- [ ] **Candidate Actions**
+    - [ ] Connect "View" button to candidate detail page
+    - [ ] Implement "Schedule Interview" action from dropdown
+    - [ ] Implement "View Resume" action (file upload/view)
+    - [ ] Add bulk actions (select multiple candidates)
+
+**Current State:** ✅ Basic list view working with real data from Supabase  
+**Next Step:** 🎯 Add pagination and functional search/filters
 
 ## 💼 Phase 4: Jobs & Pipeline
 *Focus: relational data and status management.*
