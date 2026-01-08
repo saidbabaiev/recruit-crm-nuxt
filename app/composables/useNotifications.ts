@@ -34,14 +34,16 @@ export const useNotifications = () => {
     }
 
     const promise = <T>(
-        promiseFunc: Promise<T>,
+        action: Promise<T> | (() => Promise<T>),
         messages: { 
             loading: string; 
             success: string | ((data: T) => string); 
             error: string | ((error: any) => string); 
+            finally?: () => void;
         }
     ) => {
-        return $toast.promise(promiseFunc, messages)
+        const promiseToUse = typeof action === 'function' ? action() : action;
+        return $toast.promise(promiseToUse, messages)
     }
 
     return {

@@ -39,8 +39,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { getFullName, getCandidateInitials, getCandidateExperienceLabel } from '~/utils/candidates'
 
-const { getCandidates, getFullName, getInitials, getExperienceLabel } = useCandidates()
+const { getCandidates } = useCandidates()
 const { data: candidates, pending, error, refresh } = await getCandidates()
 
 </script>
@@ -109,7 +110,7 @@ const { data: candidates, pending, error, refresh } = await getCandidates()
               <Avatar class="h-12 w-12 shrink-0">
                 <AvatarImage src="" alt="John Doe" />
                 <AvatarFallback class="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold">
-                  {{ getInitials(candidate) }}
+                  {{ getCandidateInitials(candidate) }}
                 </AvatarFallback>
               </Avatar>
               <div class="min-w-0 flex-1">
@@ -138,7 +139,7 @@ const { data: candidates, pending, error, refresh } = await getCandidates()
           </div>
           <div v-if="candidate.experience_years" class="flex items-center gap-2 text-sm">
             <Briefcase class="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-            <span class="text-muted-foreground text-xs">{{ getExperienceLabel(candidate) }}</span>
+            <span class="text-muted-foreground text-xs">{{ getCandidateExperienceLabel(candidate) }}</span>
           </div>
           <div v-if="candidate.notice_period" class="flex items-center gap-2 text-sm">
             <Calendar class="h-3.5 w-3.5 text-muted-foreground shrink-0" />
