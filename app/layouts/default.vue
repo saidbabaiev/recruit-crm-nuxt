@@ -48,5 +48,7 @@ import { Input } from "~/components/ui/input";
         </main>
       </SidebarInset>
     </SidebarProvider>
+
+    <Toaster position="top-right" richColors :close-button="true" />
   </div>
 </template>

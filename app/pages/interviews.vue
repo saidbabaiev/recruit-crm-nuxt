@@ -1,9 +1,20 @@
 <template>
     <h1 class="text-2xl font-bold">Interviews page</h1>
-    <Toaster position="top-right" />
-    <Button @click="$toast('Test toast')">test toast</Button>
+    
+    <Button @click="testToast">Show Success</Button>
+    <Button @click="testError">Show Error</Button>
 </template>
 
 <script setup lang="ts">
-    const { $toast } = useNuxtApp()
+    // const { $toast } = useNuxtApp()
+    // 🔥 Используем composable
+const { success, error } = useNotifications()
+
+const testToast = () => {
+  success('This is a success message!')
+}
+
+const testError = () => {
+  error('Something went wrong!', 'Please try again later')
+}
 </script>

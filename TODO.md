@@ -19,7 +19,7 @@
     - [x] Install/Configure UI Library (Nuxt UI / Tailwind).
     - [ ] Setup a dark/light mode toggle (optional).
 - [ ] **Global Error Handling & Notifications**
-    - [ ] Install and configure toast notification library (vue-sonner).
+    - [x] Install and configure toast notification library (vue-sonner).
     - [ ] Replace all `alert()` calls with toast notifications.
     - [ ] Add global error boundary for uncaught errors.
     - [ ] Create composable for consistent error messaging (`useErrorHandler`).

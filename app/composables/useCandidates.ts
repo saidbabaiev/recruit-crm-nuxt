@@ -3,8 +3,9 @@ import type { Candidate, CandidateInsert, CandidateUpdate } from "@/types/databa
 
 export const useCandidates = () => {
     const supabase = useSupabaseClient<Database>()
+    const { promise } = useNotifications()
 
-    // Fetch all candidates (with cache and SSR)
+    // Fetch all candidates (with cache and SSR)xxs
     const getCandidates = async () => {
         return useAsyncData<Candidate[]>('candidates', async () => {
             const { data, error } = await supabase
@@ -37,18 +38,24 @@ export const useCandidates = () => {
 
     // Create a new candidate
     const createCandidate = async (candidate: CandidateInsert) => {
-        const { data, error } = await supabase
-            .from('candidates')
-            .insert(candidate)
-            .select()
-            .single()
-        
-        if (error) throw error
-
-        // Invalidate candidates cache
-        await refreshNuxtData('candidates')
-
-        return data as Candidate
+        return promise(
+            (async () => {
+                const { data, error } = await supabase
+                    .from('candidates')
+                    .insert(candidate)
+                    .select()
+                    .single()
+                
+                if (error) throw error
+                refreshNuxtData('candidates')
+                return data as Candidate
+            })(),
+            {
+                loading: 'Creating candidate...',
+                success: 'Candidate created successfully!',
+                error: (err) => `Error creating candidate: ${err.message}`,
+            }       
+        )
     }
 
     // Update an existing candidate
