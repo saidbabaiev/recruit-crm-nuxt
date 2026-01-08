@@ -3,7 +3,12 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
-  modules: ['@nuxtjs/tailwindcss', 'shadcn-nuxt', '@nuxtjs/supabase'],
+  modules: [
+    '@nuxtjs/tailwindcss', 
+    'shadcn-nuxt', 
+    '@nuxtjs/supabase', 
+    'vue-sonner/nuxt'
+  ],
 
   supabase: {
     url: process.env.SUPABASE_URL || '',
