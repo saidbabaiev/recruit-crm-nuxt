@@ -17,7 +17,7 @@ const form = reactive({
 })
 
 watch(user, (currentUser) => {
-    if (currentUser) {
+    if (currentUser && mode.value === 'signin') {
         const destination = (route.query.redirectTo as string) || '/dashboard'
         router.push(destination)
     }
