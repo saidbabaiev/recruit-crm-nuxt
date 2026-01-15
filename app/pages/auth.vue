@@ -1,19 +1,9 @@
 <script setup lang="ts">
-const supabase = useSupabaseClient()
+const { signIn, signUp } = useAuth()
+const { promise, success, error: showError } = useNotifications()
 const user = useSupabaseUser()
 const router = useRouter()
 const route = useRoute()
-
-// Capture the intended redirect path after login
-const redirectTo = computed(() => route.query.redirectTo as string || undefined)
-
-watchEffect(() => {
-    if (user.value) {
-        // If user is logged in, redirect to intended page or dashboard
-        const destination = redirectTo.value || '/dashboard'
-        router.push(destination)
-    }
-})
 
 const mode = ref<'signin' | 'signup'>('signin')
 const loading = ref(false)
@@ -25,51 +15,55 @@ const form = reactive({
     companyName: '',
 })
 
+watch(user, (currentUser) => {
+    if (currentUser) {
+        const destination = (route.query.redirectTo as string) || '/dashboard'
+        router.push(destination)
+    }
+})
+
 const handleSignIn = async () => {
     loading.value = true
     try {
-        const { error } = await supabase.auth.signInWithPassword({
-            email: form.email,
-            password: form.password,
-        })
-
-        if (error) throw error
-
-    } catch (error: any) {
-        alert(error.message || 'Error signing in')
+      await promise(
+      signIn(form.email, form.password),
+      {
+        loading: 'Signing in...',
+        success: 'Successfully signed in!',
+        error: (err) => err.message || 'Failed to sign in. Please check your credentials.',
+      }
+    )
     } finally {
-        loading.value = false
+      loading.value = false
     }
 }
 
 const handleSignUp = async () => {
+    if (!form.companyName.trim()) {
+        showError('Company name is required')
+        return
+    }
+
     loading.value = true
     try {
-        if (!form.companyName.trim()) {
-            alert('Company name is required')
-            return
+      await promise(
+        signUp(form.email, form.password, {
+          full_name: form.fullName,
+          company_name: form.companyName,
+        }),
+        {
+          loading: 'Creating account...',
+          success: 'Account created! Please check your email to verify your account.',
+          error: (err) => err.message || 'Failed to sign up. Please try again.',
         }
+      )
 
-        const { error } = await supabase.auth.signUp({
-            email: form.email,
-            password: form.password,
-            options: {
-                data: {
-                    full_name: form.fullName,
-                    company_name: form.companyName,
-                }
-            }
-        })
-
-        if (error) throw error
-
-        alert('Account created! Please check your email to confirm your account.')
         mode.value = 'signin'
-    } catch (error: any) {
-        alert(error.message || 'Error signing up')
+        form.password = ''
     } finally {
-        loading.value = false
+      loading.value = false
     }
+
 }
 
 const handleSubmit = () => {

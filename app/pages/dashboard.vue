@@ -2,9 +2,10 @@
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 const router = useRouter()
+const { signOut } = useAuth()
 
 const handleLogout = async () => {
-    await supabase.auth.signOut()
+    await signOut()
     router.push('/auth')
 }
 
