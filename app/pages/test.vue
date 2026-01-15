@@ -1,3 +1,3 @@
 <template>
-    <div>Yes redirect is working!!!</div>
+  <div>Yes redirect is working!!!</div>
 </template>

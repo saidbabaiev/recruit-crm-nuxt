@@ -1,7 +1,11 @@
 <template>
   <div class="h-screen">
-    <slot /> 
+    <slot />
 
-    <Toaster position="top-right" richColors :close-button="true" />
+    <Toaster
+      position="top-right"
+      rich-colors
+      :close-button="true"
+    />
   </div>
 </template>

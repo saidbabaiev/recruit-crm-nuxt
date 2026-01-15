@@ -1,17 +1,17 @@
 // Auto generated file. Do not edit manually.
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
+export type Json
+  = | string
+    | number
+    | boolean
+    | null
+    | { [key: string]: Json | undefined }
+    | Json[]
 
 export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "13.0.4"
+    PostgrestVersion: '13.0.4'
   }
   public: {
     Tables: {
@@ -48,18 +48,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "application_status_history_application_id_fkey"
-            columns: ["application_id"]
+            foreignKeyName: 'application_status_history_application_id_fkey'
+            columns: ['application_id']
             isOneToOne: false
-            referencedRelation: "job_applications"
-            referencedColumns: ["id"]
+            referencedRelation: 'job_applications'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "application_status_history_changed_by_fkey"
-            columns: ["changed_by"]
+            foreignKeyName: 'application_status_history_changed_by_fkey'
+            columns: ['changed_by']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -90,18 +90,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "candidate_notes_author_id_fkey"
-            columns: ["author_id"]
+            foreignKeyName: 'candidate_notes_author_id_fkey'
+            columns: ['author_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "candidate_notes_candidate_id_fkey"
-            columns: ["candidate_id"]
+            foreignKeyName: 'candidate_notes_candidate_id_fkey'
+            columns: ['candidate_id']
             isOneToOne: false
-            referencedRelation: "candidates"
-            referencedColumns: ["id"]
+            referencedRelation: 'candidates'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -130,14 +130,14 @@ export type Database = {
           phone: string | null
           relocation_willingness: boolean | null
           remote_work_preference:
-            | Database["public"]["Enums"]["remote_work_preference"]
+            | Database['public']['Enums']['remote_work_preference']
             | null
           resume_url: string | null
           salary_currency: string | null
-          salary_period: Database["public"]["Enums"]["salary_period"] | null
+          salary_period: Database['public']['Enums']['salary_period'] | null
           skills: string[] | null
           updated_at: string | null
-          visa_status: Database["public"]["Enums"]["visa_status"] | null
+          visa_status: Database['public']['Enums']['visa_status'] | null
         }
         Insert: {
           availability_date?: string | null
@@ -163,14 +163,14 @@ export type Database = {
           phone?: string | null
           relocation_willingness?: boolean | null
           remote_work_preference?:
-            | Database["public"]["Enums"]["remote_work_preference"]
+            | Database['public']['Enums']['remote_work_preference']
             | null
           resume_url?: string | null
           salary_currency?: string | null
-          salary_period?: Database["public"]["Enums"]["salary_period"] | null
+          salary_period?: Database['public']['Enums']['salary_period'] | null
           skills?: string[] | null
           updated_at?: string | null
-          visa_status?: Database["public"]["Enums"]["visa_status"] | null
+          visa_status?: Database['public']['Enums']['visa_status'] | null
         }
         Update: {
           availability_date?: string | null
@@ -196,29 +196,29 @@ export type Database = {
           phone?: string | null
           relocation_willingness?: boolean | null
           remote_work_preference?:
-            | Database["public"]["Enums"]["remote_work_preference"]
+            | Database['public']['Enums']['remote_work_preference']
             | null
           resume_url?: string | null
           salary_currency?: string | null
-          salary_period?: Database["public"]["Enums"]["salary_period"] | null
+          salary_period?: Database['public']['Enums']['salary_period'] | null
           skills?: string[] | null
           updated_at?: string | null
-          visa_status?: Database["public"]["Enums"]["visa_status"] | null
+          visa_status?: Database['public']['Enums']['visa_status'] | null
         }
         Relationships: [
           {
-            foreignKeyName: "candidates_company_id_fkey"
-            columns: ["company_id"]
+            foreignKeyName: 'candidates_company_id_fkey'
+            columns: ['company_id']
             isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
+            referencedRelation: 'companies'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "candidates_created_by_fkey"
-            columns: ["created_by"]
+            foreignKeyName: 'candidates_created_by_fkey'
+            columns: ['created_by']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -264,18 +264,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "clients_company_id_fkey"
-            columns: ["company_id"]
+            foreignKeyName: 'clients_company_id_fkey'
+            columns: ['company_id']
             isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
+            referencedRelation: 'companies'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "clients_created_by_fkey"
-            columns: ["created_by"]
+            foreignKeyName: 'clients_created_by_fkey'
+            columns: ['created_by']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -353,14 +353,14 @@ export type Database = {
           created_by: string
           duration_minutes: number | null
           id: string
-          interview_type: Database["public"]["Enums"]["interview_type"] | null
+          interview_type: Database['public']['Enums']['interview_type'] | null
           interviewer_id: string | null
           job_id: string
           location: string | null
           meeting_link: string | null
           notes: string | null
           scheduled_at: string
-          status: Database["public"]["Enums"]["interview_status"] | null
+          status: Database['public']['Enums']['interview_status'] | null
           updated_at: string | null
         }
         Insert: {
@@ -370,14 +370,14 @@ export type Database = {
           created_by: string
           duration_minutes?: number | null
           id?: string
-          interview_type?: Database["public"]["Enums"]["interview_type"] | null
+          interview_type?: Database['public']['Enums']['interview_type'] | null
           interviewer_id?: string | null
           job_id: string
           location?: string | null
           meeting_link?: string | null
           notes?: string | null
           scheduled_at: string
-          status?: Database["public"]["Enums"]["interview_status"] | null
+          status?: Database['public']['Enums']['interview_status'] | null
           updated_at?: string | null
         }
         Update: {
@@ -387,51 +387,51 @@ export type Database = {
           created_by?: string
           duration_minutes?: number | null
           id?: string
-          interview_type?: Database["public"]["Enums"]["interview_type"] | null
+          interview_type?: Database['public']['Enums']['interview_type'] | null
           interviewer_id?: string | null
           job_id?: string
           location?: string | null
           meeting_link?: string | null
           notes?: string | null
           scheduled_at?: string
-          status?: Database["public"]["Enums"]["interview_status"] | null
+          status?: Database['public']['Enums']['interview_status'] | null
           updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "interviews_candidate_id_fkey"
-            columns: ["candidate_id"]
+            foreignKeyName: 'interviews_candidate_id_fkey'
+            columns: ['candidate_id']
             isOneToOne: false
-            referencedRelation: "candidates"
-            referencedColumns: ["id"]
+            referencedRelation: 'candidates'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "interviews_company_id_fkey"
-            columns: ["company_id"]
+            foreignKeyName: 'interviews_company_id_fkey'
+            columns: ['company_id']
             isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
+            referencedRelation: 'companies'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "interviews_created_by_fkey"
-            columns: ["created_by"]
+            foreignKeyName: 'interviews_created_by_fkey'
+            columns: ['created_by']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "interviews_interviewer_id_fkey"
-            columns: ["interviewer_id"]
+            foreignKeyName: 'interviews_interviewer_id_fkey'
+            columns: ['interviewer_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "interviews_job_id_fkey"
-            columns: ["job_id"]
+            foreignKeyName: 'interviews_job_id_fkey'
+            columns: ['job_id']
             isOneToOne: false
-            referencedRelation: "jobs"
-            referencedColumns: ["id"]
+            referencedRelation: 'jobs'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -445,7 +445,7 @@ export type Database = {
           id: string
           job_id: string
           notes: string | null
-          status: Database["public"]["Enums"]["application_status"]
+          status: Database['public']['Enums']['application_status']
           updated_at: string | null
         }
         Insert: {
@@ -457,7 +457,7 @@ export type Database = {
           id?: string
           job_id: string
           notes?: string | null
-          status?: Database["public"]["Enums"]["application_status"]
+          status?: Database['public']['Enums']['application_status']
           updated_at?: string | null
         }
         Update: {
@@ -469,37 +469,37 @@ export type Database = {
           id?: string
           job_id?: string
           notes?: string | null
-          status?: Database["public"]["Enums"]["application_status"]
+          status?: Database['public']['Enums']['application_status']
           updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "job_applications_candidate_id_fkey"
-            columns: ["candidate_id"]
+            foreignKeyName: 'job_applications_candidate_id_fkey'
+            columns: ['candidate_id']
             isOneToOne: false
-            referencedRelation: "candidates"
-            referencedColumns: ["id"]
+            referencedRelation: 'candidates'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "job_applications_company_id_fkey"
-            columns: ["company_id"]
+            foreignKeyName: 'job_applications_company_id_fkey'
+            columns: ['company_id']
             isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
+            referencedRelation: 'companies'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "job_applications_created_by_fkey"
-            columns: ["created_by"]
+            foreignKeyName: 'job_applications_created_by_fkey'
+            columns: ['created_by']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "job_applications_job_id_fkey"
-            columns: ["job_id"]
+            foreignKeyName: 'job_applications_job_id_fkey'
+            columns: ['job_id']
             isOneToOne: false
-            referencedRelation: "jobs"
-            referencedColumns: ["id"]
+            referencedRelation: 'jobs'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -511,7 +511,7 @@ export type Database = {
           created_by: string
           description: string | null
           id: string
-          job_type: Database["public"]["Enums"]["job_type"] | null
+          job_type: Database['public']['Enums']['job_type'] | null
           location: string | null
           min_experience_period: string | null
           min_experience_value: number | null
@@ -519,12 +519,12 @@ export type Database = {
           salary_currency: string | null
           salary_max: number | null
           salary_min: number | null
-          salary_period: Database["public"]["Enums"]["salary_period"] | null
+          salary_period: Database['public']['Enums']['salary_period'] | null
           skills: string[] | null
-          status: Database["public"]["Enums"]["job_status"] | null
+          status: Database['public']['Enums']['job_status'] | null
           title: string
           updated_at: string | null
-          work_format: Database["public"]["Enums"]["work_format"]
+          work_format: Database['public']['Enums']['work_format']
         }
         Insert: {
           client_id?: string | null
@@ -533,7 +533,7 @@ export type Database = {
           created_by: string
           description?: string | null
           id?: string
-          job_type?: Database["public"]["Enums"]["job_type"] | null
+          job_type?: Database['public']['Enums']['job_type'] | null
           location?: string | null
           min_experience_period?: string | null
           min_experience_value?: number | null
@@ -541,12 +541,12 @@ export type Database = {
           salary_currency?: string | null
           salary_max?: number | null
           salary_min?: number | null
-          salary_period?: Database["public"]["Enums"]["salary_period"] | null
+          salary_period?: Database['public']['Enums']['salary_period'] | null
           skills?: string[] | null
-          status?: Database["public"]["Enums"]["job_status"] | null
+          status?: Database['public']['Enums']['job_status'] | null
           title: string
           updated_at?: string | null
-          work_format?: Database["public"]["Enums"]["work_format"]
+          work_format?: Database['public']['Enums']['work_format']
         }
         Update: {
           client_id?: string | null
@@ -555,7 +555,7 @@ export type Database = {
           created_by?: string
           description?: string | null
           id?: string
-          job_type?: Database["public"]["Enums"]["job_type"] | null
+          job_type?: Database['public']['Enums']['job_type'] | null
           location?: string | null
           min_experience_period?: string | null
           min_experience_value?: number | null
@@ -563,34 +563,34 @@ export type Database = {
           salary_currency?: string | null
           salary_max?: number | null
           salary_min?: number | null
-          salary_period?: Database["public"]["Enums"]["salary_period"] | null
+          salary_period?: Database['public']['Enums']['salary_period'] | null
           skills?: string[] | null
-          status?: Database["public"]["Enums"]["job_status"] | null
+          status?: Database['public']['Enums']['job_status'] | null
           title?: string
           updated_at?: string | null
-          work_format?: Database["public"]["Enums"]["work_format"]
+          work_format?: Database['public']['Enums']['work_format']
         }
         Relationships: [
           {
-            foreignKeyName: "jobs_client_id_fkey"
-            columns: ["client_id"]
+            foreignKeyName: 'jobs_client_id_fkey'
+            columns: ['client_id']
             isOneToOne: false
-            referencedRelation: "clients"
-            referencedColumns: ["id"]
+            referencedRelation: 'clients'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "jobs_company_id_fkey"
-            columns: ["company_id"]
+            foreignKeyName: 'jobs_company_id_fkey'
+            columns: ['company_id']
             isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
+            referencedRelation: 'companies'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "jobs_created_by_fkey"
-            columns: ["created_by"]
+            foreignKeyName: 'jobs_created_by_fkey'
+            columns: ['created_by']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -605,10 +605,10 @@ export type Database = {
           last_name: string | null
           subscription_expires_at: string | null
           subscription_plan:
-            | Database["public"]["Enums"]["subscription_plan_enum"]
+            | Database['public']['Enums']['subscription_plan_enum']
             | null
           subscription_status:
-            | Database["public"]["Enums"]["subscription_status_enum"]
+            | Database['public']['Enums']['subscription_status_enum']
             | null
           trial_ends_at: string | null
           updated_at: string | null
@@ -623,10 +623,10 @@ export type Database = {
           last_name?: string | null
           subscription_expires_at?: string | null
           subscription_plan?:
-            | Database["public"]["Enums"]["subscription_plan_enum"]
+            | Database['public']['Enums']['subscription_plan_enum']
             | null
           subscription_status?:
-            | Database["public"]["Enums"]["subscription_status_enum"]
+            | Database['public']['Enums']['subscription_status_enum']
             | null
           trial_ends_at?: string | null
           updated_at?: string | null
@@ -641,28 +641,28 @@ export type Database = {
           last_name?: string | null
           subscription_expires_at?: string | null
           subscription_plan?:
-            | Database["public"]["Enums"]["subscription_plan_enum"]
+            | Database['public']['Enums']['subscription_plan_enum']
             | null
           subscription_status?:
-            | Database["public"]["Enums"]["subscription_status_enum"]
+            | Database['public']['Enums']['subscription_status_enum']
             | null
           trial_ends_at?: string | null
           updated_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "profiles_company_id_fkey"
-            columns: ["company_id"]
+            foreignKeyName: 'profiles_company_id_fkey'
+            columns: ['company_id']
             isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
+            referencedRelation: 'companies'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "profiles_current_company_id_fkey"
-            columns: ["current_company_id"]
+            foreignKeyName: 'profiles_current_company_id_fkey'
+            columns: ['current_company_id']
             isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
+            referencedRelation: 'companies'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -699,18 +699,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "saved_searches_company_id_fkey"
-            columns: ["company_id"]
+            foreignKeyName: 'saved_searches_company_id_fkey'
+            columns: ['company_id']
             isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
+            referencedRelation: 'companies'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "saved_searches_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'saved_searches_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -723,7 +723,7 @@ export type Database = {
           expires_at: string
           id: string
           invited_by: string
-          role: Database["public"]["Enums"]["app_role"]
+          role: Database['public']['Enums']['app_role']
           token: string
           used_at: string | null
         }
@@ -735,7 +735,7 @@ export type Database = {
           expires_at?: string
           id?: string
           invited_by: string
-          role: Database["public"]["Enums"]["app_role"]
+          role: Database['public']['Enums']['app_role']
           token?: string
           used_at?: string | null
         }
@@ -747,24 +747,24 @@ export type Database = {
           expires_at?: string
           id?: string
           invited_by?: string
-          role?: Database["public"]["Enums"]["app_role"]
+          role?: Database['public']['Enums']['app_role']
           token?: string
           used_at?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "team_invitations_company_id_fkey"
-            columns: ["company_id"]
+            foreignKeyName: 'team_invitations_company_id_fkey'
+            columns: ['company_id']
             isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
+            referencedRelation: 'companies'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "team_invitations_invited_by_fkey"
-            columns: ["invited_by"]
+            foreignKeyName: 'team_invitations_invited_by_fkey'
+            columns: ['invited_by']
             isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            referencedRelation: 'profiles'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -774,7 +774,7 @@ export type Database = {
           created_at: string
           id: string
           joined_at: string
-          role: Database["public"]["Enums"]["app_role"]
+          role: Database['public']['Enums']['app_role']
           updated_at: string
           user_id: string
         }
@@ -783,7 +783,7 @@ export type Database = {
           created_at?: string
           id?: string
           joined_at?: string
-          role?: Database["public"]["Enums"]["app_role"]
+          role?: Database['public']['Enums']['app_role']
           updated_at?: string
           user_id: string
         }
@@ -792,17 +792,17 @@ export type Database = {
           created_at?: string
           id?: string
           joined_at?: string
-          role?: Database["public"]["Enums"]["app_role"]
+          role?: Database['public']['Enums']['app_role']
           updated_at?: string
           user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "user_companies_company_id_fkey"
-            columns: ["company_id"]
+            foreignKeyName: 'user_companies_company_id_fkey'
+            columns: ['company_id']
             isOneToOne: false
-            referencedRelation: "companies"
-            referencedColumns: ["id"]
+            referencedRelation: 'companies'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -815,7 +815,7 @@ export type Database = {
         Args: { invitation_token: string }
         Returns: Json
       }
-      get_current_user_role: { Args: never; Returns: string }
+      get_current_user_role: { Args: never, Returns: string }
       get_user_companies: {
         Args: never
         Returns: {
@@ -823,50 +823,50 @@ export type Database = {
           company_name: string
           is_current: boolean
           joined_at: string
-          user_role: Database["public"]["Enums"]["app_role"]
+          user_role: Database['public']['Enums']['app_role']
         }[]
       }
-      get_user_company_id: { Args: never; Returns: string }
+      get_user_company_id: { Args: never, Returns: string }
       get_user_role_in_company: {
-        Args: { company_id_param: string; user_id_param: string }
+        Args: { company_id_param: string, user_id_param: string }
         Returns: string
       }
       has_role: {
-        Args: { required_role: Database["public"]["Enums"]["app_role"] }
+        Args: { required_role: Database['public']['Enums']['app_role'] }
         Returns: boolean
       }
-      switch_company: { Args: { target_company_id: string }; Returns: boolean }
+      switch_company: { Args: { target_company_id: string }, Returns: boolean }
     }
     Enums: {
-      app_role: "owner" | "admin" | "team_member" | "restricted_team_member"
+      app_role: 'owner' | 'admin' | 'team_member' | 'restricted_team_member'
       application_status:
-        | "new"
-        | "under_review"
-        | "interview"
-        | "offer"
-        | "hired"
-        | "rejected"
-        | "withdrawn"
-      interview_status: "scheduled" | "completed" | "cancelled" | "no_show"
-      interview_type: "phone" | "video" | "onsite" | "technical"
-      job_status: "open" | "closed" | "on_hold" | "filled"
+        | 'new'
+        | 'under_review'
+        | 'interview'
+        | 'offer'
+        | 'hired'
+        | 'rejected'
+        | 'withdrawn'
+      interview_status: 'scheduled' | 'completed' | 'cancelled' | 'no_show'
+      interview_type: 'phone' | 'video' | 'onsite' | 'technical'
+      job_status: 'open' | 'closed' | 'on_hold' | 'filled'
       job_type:
-        | "full-time"
-        | "part-time"
-        | "contract"
-        | "temporary"
-        | "internship"
-      remote_work_preference: "remote" | "hybrid" | "onsite"
-      salary_period: "yearly" | "monthly"
-      subscription_plan_enum: "individual" | "team" | "team_extended"
-      subscription_status_enum: "trial" | "active" | "expired" | "cancelled"
+        | 'full-time'
+        | 'part-time'
+        | 'contract'
+        | 'temporary'
+        | 'internship'
+      remote_work_preference: 'remote' | 'hybrid' | 'onsite'
+      salary_period: 'yearly' | 'monthly'
+      subscription_plan_enum: 'individual' | 'team' | 'team_extended'
+      subscription_status_enum: 'trial' | 'active' | 'expired' | 'cancelled'
       visa_status:
-        | "citizen"
-        | "permanent_resident"
-        | "work_visa"
-        | "student_visa"
-        | "requires_sponsorship"
-      work_format: "remote" | "hybrid" | "onsite"
+        | 'citizen'
+        | 'permanent_resident'
+        | 'work_visa'
+        | 'student_visa'
+        | 'requires_sponsorship'
+      work_format: 'remote' | 'hybrid' | 'onsite'
     }
     CompositeTypes: {
       [_ in never]: never
@@ -874,158 +874,158 @@ export type Database = {
   }
 }
 
-type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+type DatabaseWithoutInternals = Omit<Database, '__InternalSupabase'>
 
-type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, 'public'>]
 
 export type Tables<
   DefaultSchemaTableNameOrOptions extends
-    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof (DefaultSchema['Tables'] & DefaultSchema['Views'])
+  | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+      & DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
-      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
+    & DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Views'])[TableName] extends {
       Row: infer R
     }
-    ? R
-    : never
-  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])
-    ? (DefaultSchema["Tables"] &
-        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
-        Row: infer R
-      }
       ? R
       : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema['Tables']
+    & DefaultSchema['Views'])
+    ? (DefaultSchema['Tables']
+      & DefaultSchema['Views'])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+        ? R
+        : never
     : never
 
 export type TablesInsert<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof DefaultSchema['Tables']
+  | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Insert: infer I
-    }
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+    Insert: infer I
+  }
     ? I
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Insert: infer I
-      }
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
+    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+      Insert: infer I
+    }
       ? I
       : never
     : never
 
 export type TablesUpdate<
   DefaultSchemaTableNameOrOptions extends
-    | keyof DefaultSchema["Tables"]
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof DefaultSchema['Tables']
+  | { schema: keyof DatabaseWithoutInternals },
   TableName extends DefaultSchemaTableNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables']
     : never = never,
 > = DefaultSchemaTableNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
-      Update: infer U
-    }
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions['schema']]['Tables'][TableName] extends {
+    Update: infer U
+  }
     ? U
     : never
-  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
-    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
-        Update: infer U
-      }
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema['Tables']
+    ? DefaultSchema['Tables'][DefaultSchemaTableNameOrOptions] extends {
+      Update: infer U
+    }
       ? U
       : never
     : never
 
 export type Enums<
   DefaultSchemaEnumNameOrOptions extends
-    | keyof DefaultSchema["Enums"]
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof DefaultSchema['Enums']
+  | { schema: keyof DatabaseWithoutInternals },
   EnumName extends DefaultSchemaEnumNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums']
     : never = never,
 > = DefaultSchemaEnumNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
-    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions['schema']]['Enums'][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema['Enums']
+    ? DefaultSchema['Enums'][DefaultSchemaEnumNameOrOptions]
     : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof DatabaseWithoutInternals },
+  | keyof DefaultSchema['CompositeTypes']
+  | { schema: keyof DatabaseWithoutInternals },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof DatabaseWithoutInternals
   }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
     : never = never,
 > = PublicCompositeTypeNameOrOptions extends {
   schema: keyof DatabaseWithoutInternals
 }
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema['CompositeTypes']
+    ? DefaultSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
     : never
 
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["owner", "admin", "team_member", "restricted_team_member"],
+      app_role: ['owner', 'admin', 'team_member', 'restricted_team_member'],
       application_status: [
-        "new",
-        "under_review",
-        "interview",
-        "offer",
-        "hired",
-        "rejected",
-        "withdrawn",
+        'new',
+        'under_review',
+        'interview',
+        'offer',
+        'hired',
+        'rejected',
+        'withdrawn',
       ],
-      interview_status: ["scheduled", "completed", "cancelled", "no_show"],
-      interview_type: ["phone", "video", "onsite", "technical"],
-      job_status: ["open", "closed", "on_hold", "filled"],
+      interview_status: ['scheduled', 'completed', 'cancelled', 'no_show'],
+      interview_type: ['phone', 'video', 'onsite', 'technical'],
+      job_status: ['open', 'closed', 'on_hold', 'filled'],
       job_type: [
-        "full-time",
-        "part-time",
-        "contract",
-        "temporary",
-        "internship",
+        'full-time',
+        'part-time',
+        'contract',
+        'temporary',
+        'internship',
       ],
-      remote_work_preference: ["remote", "hybrid", "onsite"],
-      salary_period: ["yearly", "monthly"],
-      subscription_plan_enum: ["individual", "team", "team_extended"],
-      subscription_status_enum: ["trial", "active", "expired", "cancelled"],
+      remote_work_preference: ['remote', 'hybrid', 'onsite'],
+      salary_period: ['yearly', 'monthly'],
+      subscription_plan_enum: ['individual', 'team', 'team_extended'],
+      subscription_status_enum: ['trial', 'active', 'expired', 'cancelled'],
       visa_status: [
-        "citizen",
-        "permanent_resident",
-        "work_visa",
-        "student_visa",
-        "requires_sponsorship",
+        'citizen',
+        'permanent_resident',
+        'work_visa',
+        'student_visa',
+        'requires_sponsorship',
       ],
-      work_format: ["remote", "hybrid", "onsite"],
+      work_format: ['remote', 'hybrid', 'onsite'],
     },
   },
 } as const

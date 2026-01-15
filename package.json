@@ -9,14 +9,18 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "supabase:generate-types": "npx supabase gen types typescript --project-id yomealkaicuuqvejjvun > types/supabase.ts",
-    "supabase:generate-types-local": "npx supabase gen types typescript --local > types/supabase.ts"
+    "supabase:generate-types-local": "npx supabase gen types typescript --local > types/supabase.ts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@nuxt/eslint": "^1.12.1",
     "@nuxtjs/supabase": "^2.0.3",
     "@supabase/supabase-js": "^2.89.0",
     "@vueuse/core": "^14.1.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "eslint": "^9.39.2",
     "lucide-vue-next": "^0.562.0",
     "nuxt": "^4.2.2",
     "reka-ui": "^2.7.0",

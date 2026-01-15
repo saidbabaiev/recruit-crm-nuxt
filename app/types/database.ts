@@ -15,14 +15,12 @@ export type Client = Database['public']['Tables']['clients']['Row']
 export type Company = Database['public']['Tables']['companies']['Row']
 export type CandidateNote = Database['public']['Tables']['candidate_notes']['Row']
 
-
 export type JobInsert = Database['public']['Tables']['jobs']['Insert']
 export type InterviewInsert = Database['public']['Tables']['interviews']['Insert']
 export type ProfileInsert = Database['public']['Tables']['profiles']['Insert']
 export type ClientInsert = Database['public']['Tables']['clients']['Insert']
 export type CompanyInsert = Database['public']['Tables']['companies']['Insert']
 export type CandidateNoteInsert = Database['public']['Tables']['candidate_notes']['Insert']
-
 
 // Enum aliases
 export type AppRole = Database['public']['Enums']['app_role']

@@ -11,7 +11,7 @@ import {
   PieChart,
   Send,
   Users,
-} from "lucide-vue-next"
+} from 'lucide-vue-next'
 
 import NavMain from '@/components/NavMain.vue'
 // import NavProjects from '@/components/NavProjects.vue'
@@ -28,14 +28,13 @@ import {
 } from '@/components/ui/sidebar'
 
 const props = withDefaults(defineProps<SidebarProps>(), {
-  variant: "inset",
-  collapsible: "icon",
+  variant: 'inset',
+  collapsible: 'icon',
 })
 
 const user = useSupabaseUser()
-const userName = user.value?.user_metadata?.full_name || "User"
-const userEmail = user.value?.email || ""
-
+const userName = user.value?.user_metadata?.full_name || 'User'
+const userEmail = user.value?.email || ''
 
 const data = {
   user: {
@@ -45,50 +44,50 @@ const data = {
   },
   navMain: [
     {
-      title: "Dashboard",
-      url: "/dashboard",
+      title: 'Dashboard',
+      url: '/dashboard',
       icon: PieChart,
     },
     {
-      title: "Candidates",
-      url: "/candidates",
+      title: 'Candidates',
+      url: '/candidates',
       icon: Users,
-      // items: [ 
+      // items: [
       //   { title: "All Candidates", url: "/candidates" },
       //   { title: "Active", url: "/candidates?status=active" },
       //   { title: "Archived", url: "/candidates?status=archived" },
       // ],
     },
     {
-      title: "Jobs",
-      url: "/jobs",
-      icon: Briefcase
+      title: 'Jobs',
+      url: '/jobs',
+      icon: Briefcase,
     },
     {
-      title: "Clients",
-      url: "/clients",
+      title: 'Clients',
+      url: '/clients',
       icon: Building2,
     },
     {
-      title: "Applications",
-      url: "/applications",
+      title: 'Applications',
+      url: '/applications',
       icon: FileUser,
     },
     {
-      title: "Interviews",
-      url: "/interviews",
+      title: 'Interviews',
+      url: '/interviews',
       icon: Calendar,
     },
   ],
   navSecondary: [
     {
-      title: "Support",
-      url: "#",
+      title: 'Support',
+      url: '#',
       icon: LifeBuoy,
     },
     {
-      title: "Feedback",
-      url: "#",
+      title: 'Feedback',
+      url: '#',
       icon: Send,
     },
   ],
@@ -96,11 +95,17 @@ const data = {
 </script>
 
 <template>
-  <Sidebar v-bind="props" class="bg-card">
+  <Sidebar
+    v-bind="props"
+    class="bg-card"
+  >
     <SidebarHeader>
       <SidebarMenu>
         <SidebarMenuItem>
-          <SidebarMenuButton size="lg" as-child>
+          <SidebarMenuButton
+            size="lg"
+            as-child
+          >
             <a href="#">
               <div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                 <Command class="size-4" />
@@ -117,7 +122,10 @@ const data = {
     <SidebarContent>
       <NavMain :items="data.navMain" />
       <!-- <NavProjects :projects="data.projects" /> -->
-      <NavSecondary :items="data.navSecondary" class="mt-auto" />
+      <NavSecondary
+        :items="data.navSecondary"
+        class="mt-auto"
+      />
     </SidebarContent>
     <SidebarFooter>
       <NavUser :user="data.user" />

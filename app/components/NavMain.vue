@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import type { LucideIcon } from "lucide-vue-next"
-import { ChevronRight } from "lucide-vue-next"
 import {
   Collapsible,
   CollapsibleContent,
@@ -8,7 +6,6 @@ import {
 } from '@/components/ui/collapsible'
 import {
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuAction,
   SidebarMenuButton,
@@ -17,6 +14,8 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar'
+import type { LucideIcon } from 'lucide-vue-next'
+import { ChevronRight } from 'lucide-vue-next'
 
 defineProps<{
   items: {
@@ -40,12 +39,21 @@ const isActiveRoute = (url: string) => {
   <SidebarGroup>
     <!-- <SidebarGroupLabel>Navigation</SidebarGroupLabel> -->
     <SidebarMenu>
-      <Collapsible v-for="item in items" :key="item.title" as-child :default-open="item.isActive">
+      <Collapsible
+        v-for="item in items"
+        :key="item.title"
+        as-child
+        :default-open="item.isActive"
+      >
         <SidebarMenuItem>
-          <SidebarMenuButton as-child :tooltip="item.title" :is-active="isActiveRoute(item.url)">
-            <NuxtLink 
+          <SidebarMenuButton
+            as-child
+            :tooltip="item.title"
+            :is-active="isActiveRoute(item.url)"
+          >
+            <NuxtLink
               :to="item.url"
-              >
+            >
               <component :is="item.icon" />
               <span>{{ item.title }}</span>
             </NuxtLink>
@@ -59,7 +67,10 @@ const isActiveRoute = (url: string) => {
             </CollapsibleTrigger>
             <CollapsibleContent>
               <SidebarMenuSub>
-                <SidebarMenuSubItem v-for="subItem in item.items" :key="subItem.title">
+                <SidebarMenuSubItem
+                  v-for="subItem in item.items"
+                  :key="subItem.title"
+                >
                   <SidebarMenuSubButton as-child>
                     <a :href="subItem.url">
                       <span>{{ subItem.title }}</span>
