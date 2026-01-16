@@ -41,5 +41,11 @@
     "typescript",
     "typescriptreact",
     "vue"
+  ],
+  "cSpell.words": [
+    "lucide",
+    "Nuxt",
+    "Supabase",
+    "tanstack"
   ]
 }

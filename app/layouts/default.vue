@@ -54,11 +54,5 @@ import { Input } from '~/components/ui/input'
         </main>
       </SidebarInset>
     </SidebarProvider>
-
-    <Toaster
-      position="top-right"
-      rich-colors
-      :close-button="true"
-    />
   </div>
 </template>
