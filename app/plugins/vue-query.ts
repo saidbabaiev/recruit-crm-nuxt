@@ -27,6 +27,20 @@ export default defineNuxtPlugin((nuxtApp) => {
     const status = error.status || error.statusCode || error.code
     const message = error.message || 'Something went wrong'
 
+    // 1. Network / Offline Check
+    const isNetworkError
+      = message.includes('Failed to fetch')
+        || message.includes('Network request failed')
+        || (typeof navigator !== 'undefined' && !navigator.onLine)
+
+    if (isNetworkError) {
+      $toast.error('No internet connection', {
+        description: 'Please check your network settings and try again.',
+      })
+      return
+    }
+
+    // 2. Auth Errors (401/403)
     const isSessionExpired
       = status == 401
         || status == 403
@@ -40,13 +54,12 @@ export default defineNuxtPlugin((nuxtApp) => {
       return
     }
 
-    // Ignoring client errors (400-499) because they are handled locally
+    // 3. Ignoring client errors (400-499) because they are handled locally
     if (typeof status === 'number' && status >= 400 && status < 500) {
       return
     }
 
-    // Handling server errors (500 and others)
-    // We only show a toast if it's not a manual request cancellation.
+    // 4. Server Errors (500+) or Unknown Errors
     $toast.error(message, {
       description: 'Our team has been notified.',
     })
