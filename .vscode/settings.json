@@ -3,7 +3,6 @@
   "workbench.iconTheme": "material-icon-theme",
   "editor.wordWrap": "on",
   "editor.stickyScroll.enabled": true,
-  "files.autoSave": "onFocusChange",
   "editor.minimap.enabled": false,
   
   // If you have installed fonts (uncomment the one you want):
@@ -11,11 +10,11 @@
   // "editor.fontLigatures": "'calt', 'liga', 'dlig', 'ss01', 'ss02', 'ss03', 'ss04', 'ss05', 'ss06', 'ss07', 'ss08'",
 
   // --- ESLint & Formatting ---
+  // Auto save files on focus change
+  "files.autoSave": "onFocusChange",
+
   // Disable built-in formatter
   "editor.formatOnSave": false,
-
-  // Run ESLint on save
-  "eslint.run": "onSave",
 
   // Enable ESLint as formatter
   "eslint.format.enable": true, 
