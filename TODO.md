@@ -13,7 +13,7 @@
 ## 2. Architecture & Security (Current Focus)
 - [x] **Auth Middleware:** `auth.global.ts` implemented for route protection.
 - [x] **Type Generation:** Supabase types generated + shortcuts in `types/database.ts`.
-- [ ] **Global Error Handling:** Configure `QueryCache` and `MutationCache` in `plugins/vue-query.ts`.
+- [x] **Global Error Handling:** Configure `QueryCache` and `MutationCache` in `plugins/vue-query.ts`.
     - *Goal:* Centralized handling of 401 (redirect) and 500 (toast) errors.
 
 ## 3. Application Shell (Dashboard)
