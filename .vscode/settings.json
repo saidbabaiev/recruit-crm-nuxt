@@ -13,6 +13,9 @@
   // Auto save files on focus change
   "files.autoSave": "onFocusChange",
 
+  // Run ESLint on save
+  "eslint.run": "onSave",
+
   // Disable built-in formatter
   "editor.formatOnSave": false,
 
