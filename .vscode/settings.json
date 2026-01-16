@@ -43,8 +43,13 @@
     "vue"
   ],
   "cSpell.words": [
+    "formkit",
     "lucide",
     "Nuxt",
+    "Pinia",
+    "Shadcn",
+    "Signup",
+    "sonner",
     "Supabase",
     "tanstack"
   ]
