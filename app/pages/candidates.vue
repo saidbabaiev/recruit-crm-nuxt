@@ -41,8 +41,19 @@ import {
 } from '@/components/ui/select'
 import { getCandidateExperienceLabel, getCandidateInitials, getFullName } from '~/utils/candidates'
 
-const { getCandidates } = useCandidates()
-const { data: candidates, pending, error } = await getCandidates()
+const filters = ref({
+  search: '',
+  status: undefined,
+  position: undefined,
+  page: 1,
+  limit: 10,
+})
+
+const { useCandidatesList } = useCandidates()
+const { data: candidatesResponse, isPending, error } = useCandidatesList(filters)
+
+const candidates = computed(() => candidatesResponse.value?.data || [])
+// const totalCount = computed(() => candidatesResponse.value?.count || 0)
 </script>
 
 <template>
@@ -73,7 +84,7 @@ const { data: candidates, pending, error } = await getCandidates()
         />
       </div>
       <Select>
-        <SelectTrigger class="w-full sm:w-[180px]">
+        <SelectTrigger class="w-full sm:w-45">
           <SelectValue placeholder="Status" />
         </SelectTrigger>
         <SelectContent>
@@ -101,7 +112,7 @@ const { data: candidates, pending, error } = await getCandidates()
         </SelectContent>
       </Select>
       <Select>
-        <SelectTrigger class="w-full sm:w-[180px]">
+        <SelectTrigger class="w-full sm:w-45">
           <SelectValue placeholder="Position" />
         </SelectTrigger>
         <SelectContent>
@@ -126,7 +137,7 @@ const { data: candidates, pending, error } = await getCandidates()
 
     <!-- Candidates Grid -->
     <div
-      v-if="!pending && !error && candidates"
+      v-if="!isPending && !error && candidates?.length"
       class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6"
     >
       <Card
@@ -142,7 +153,7 @@ const { data: candidates, pending, error } = await getCandidates()
                   src=""
                   alt="John Doe"
                 />
-                <AvatarFallback class="bg-gradient-to-br from-blue-500 to-purple-600 text-white font-semibold">
+                <AvatarFallback class="bg-linear-to-br from-blue-500 to-purple-600 text-white font-semibold">
                   {{ getCandidateInitials(candidate) }}
                 </AvatarFallback>
               </Avatar>
@@ -258,6 +269,36 @@ const { data: candidates, pending, error } = await getCandidates()
           </DropdownMenu>
         </CardFooter>
       </Card>
+    </div>
+
+    <!-- Loading State -->
+    <div
+      v-if="isPending"
+      class="text-center py-12"
+    >
+      <p class="text-muted-foreground">
+        Loading candidates...
+      </p>
+    </div>
+
+    <!-- Error State -->
+    <div
+      v-if="error"
+      class="text-center py-12"
+    >
+      <p class="text-destructive">
+        {{ error.message }}
+      </p>
+    </div>
+
+    <!-- Empty State -->
+    <div
+      v-if="!isPending && !error && !candidates?.length"
+      class="text-center py-12"
+    >
+      <p class="text-muted-foreground">
+        No candidates found
+      </p>
     </div>
   </div>
 </template>
