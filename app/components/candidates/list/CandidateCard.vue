@@ -1,7 +1,7 @@
-
 <script lang="ts" setup>
 import type { Candidate } from '@/types/candidates'
-import { Briefcase, Calendar, Edit, Eye, FileText, Mail, MoreVertical, Phone, Trash, UserCheck } from 'lucide-vue-next';
+import { Briefcase, Calendar, Mail, Phone } from 'lucide-vue-next'
+import CandidateCardActions from '@/components/candidates/list/CandidateCardActions.vue'
 
 interface Props {
   candidate: Candidate
@@ -13,15 +13,31 @@ const router = useRouter()
 const handleView = () => {
   router.push(`/candidates/${props.candidate.id}`)
 }
+
+const handleEdit = () => {
+  // TODO: Implement edit
+  console.log('Edit candidate', props.candidate.id)
+}
+
+const handleScheduleInterview = () => {
+  // TODO: Implement schedule interview
+  console.log('Schedule interview for', props.candidate.id)
+}
+
+const handleDelete = () => {
+  // TODO: Implement delete
+  console.log('Delete candidate', props.candidate.id)
+}
 </script>
 
 <template>
   <Card
-    class="overflow-hidden hover:shadow-lg transition-shadow duration-200"
+    class="overflow-hidden hover:shadow-lg transition-shadow duration-200 cursor-pointer"
+    @click="handleView"
   >
     <CardHeader class="pb-3">
       <div class="flex items-start justify-between gap-3">
-        <div class="flex items-start gap-3 min-w-0 flex-1">
+        <div class="flex items-center gap-3 min-w-0 flex-1">
           <Avatar class="h-12 w-12 shrink-0">
             <AvatarImage
               src=""
@@ -40,12 +56,17 @@ const handleView = () => {
             </CardDescription>
           </div>
         </div>
-        <Badge
+        <CandidateCardActions
+          @edit="handleEdit"
+          @schedule-interview="handleScheduleInterview"
+          @delete="handleDelete"
+        />
+        <!-- <Badge
           variant="outline"
           class="shrink-0 text-xs"
         >
           New
-        </Badge>
+        </Badge> -->
       </div>
     </CardHeader>
 
@@ -97,51 +118,5 @@ const handleView = () => {
         </Badge>
       </div>
     </CardContent>
-
-    <CardFooter class="flex gap-2 pt-3 border-t">
-      <Button
-        variant="outline"
-        class="flex-1"
-        size="sm"
-      >
-        <Eye class="mr-1.5 h-3.5 w-3.5" />
-        <span class="text-xs">View</span>
-      </Button>
-      <Button
-        variant="outline"
-        class="flex-1"
-        size="sm"
-      >
-        <Edit class="mr-1.5 h-3.5 w-3.5" />
-        <span class="text-xs">Edit</span>
-      </Button>
-      <DropdownMenu>
-        <DropdownMenuTrigger as-child>
-          <Button
-            variant="ghost"
-            size="icon"
-            class="h-8 w-8 shrink-0"
-          >
-            <MoreVertical class="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem>
-            <UserCheck class="mr-2 h-4 w-4" />
-            <span>Schedule Interview</span>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <FileText class="mr-2 h-4 w-4" />
-            <span>View Resume</span>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem class="text-destructive">
-            <Trash class="mr-2 h-4 w-4" />
-            <span>Delete</span>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </CardFooter>
   </Card>
 </template>
-

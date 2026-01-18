@@ -7,13 +7,13 @@ export default withNuxt(
     rules: {
       'no-console': 'warn',
 
-      '@typescript-eslint/no-unused-vars': ['warn', {
-        argsIgnorePattern: '^_',
-        varsIgnorePattern: '^_',
-        ignoreRestSiblings: true,
-      }],
+      // '@typescript-eslint/no-unused-vars': ['warn', {
+      //   argsIgnorePattern: '^_',
+      //   varsIgnorePattern: '^_',
+      //   ignoreRestSiblings: true,
+      // }],
 
-      'vue/no-undef-components': 'off',
+      // 'vue/no-undef-components': 'off',
     },
   },
 )
