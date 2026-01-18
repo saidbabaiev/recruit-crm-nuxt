@@ -18,6 +18,7 @@
 
 ## 3. Application Shell (Dashboard)
 - [x] **Default Layout:** Create `layouts/default.vue`.
+- [x] **Auth Layout:** Create `layouts/auth.vue`.
 - [ ] **Logout Flow:** Implement `signOut` logic.
     - *Critical:* Must call `queryClient.clear()` to remove cached sensitive data upon logout.
 - [ ] **User Session Helper:** Create `useUserSession` composable.
