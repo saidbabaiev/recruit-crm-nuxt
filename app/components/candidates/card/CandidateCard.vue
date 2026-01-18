@@ -1,7 +1,6 @@
 <script lang="ts" setup>
 import type { Candidate } from '@/types/candidates'
 import { Briefcase, Calendar, Mail, Phone } from 'lucide-vue-next'
-import CandidateCardActions from '@/components/candidates/list/CandidateCardActions.vue'
 
 interface Props {
   candidate: Candidate
@@ -14,20 +13,20 @@ const handleView = () => {
   router.push(`/candidates/${props.candidate.id}`)
 }
 
-const handleEdit = () => {
-  // TODO: Implement edit
-  console.log('Edit candidate', props.candidate.id)
-}
+// const handleEdit = () => {
+//   // TODO: Implement edit
+//   console.log('Edit candidate', props.candidate.id)
+// }
 
-const handleScheduleInterview = () => {
-  // TODO: Implement schedule interview
-  console.log('Schedule interview for', props.candidate.id)
-}
+// const handleScheduleInterview = () => {
+//   // TODO: Implement schedule interview
+//   console.log('Schedule interview for', props.candidate.id)
+// }
 
-const handleDelete = () => {
-  // TODO: Implement delete
-  console.log('Delete candidate', props.candidate.id)
-}
+// const handleDelete = () => {
+//   // TODO: Implement delete
+//   console.log('Delete candidate', props.candidate.id)
+// }
 </script>
 
 <template>
@@ -56,11 +55,11 @@ const handleDelete = () => {
             </CardDescription>
           </div>
         </div>
-        <CandidateCardActions
+        <!-- <CandidateCardActions
           @edit="handleEdit"
           @schedule-interview="handleScheduleInterview"
           @delete="handleDelete"
-        />
+        /> -->
         <!-- <Badge
           variant="outline"
           class="shrink-0 text-xs"

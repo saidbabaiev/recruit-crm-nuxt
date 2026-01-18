@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Plus } from 'lucide-vue-next'
-import CandidateCard from '@/components/candidates/list/CandidateCard.vue'
 
 const filters = ref({
   search: '',
@@ -99,12 +98,15 @@ const candidates = computed(() => candidatesResponse.value?.data || [])
     <!-- Candidates Grid -->
     <div
       v-if="!isPending && !error && candidates?.length"
-      class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6"
     >
-      <CandidateCard
+      <!-- <CandidateCard
         v-for="candidate in candidates"
         :key="candidate.id"
         :candidate="candidate"
+      /> -->
+
+      <CandidatesTable
+        :data="candidates"
       />
     </div>
 
