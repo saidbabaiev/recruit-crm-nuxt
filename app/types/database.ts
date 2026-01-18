@@ -22,14 +22,6 @@ export type ClientInsert = Database['public']['Tables']['clients']['Insert']
 export type CompanyInsert = Database['public']['Tables']['companies']['Insert']
 export type CandidateNoteInsert = Database['public']['Tables']['candidate_notes']['Insert']
 
-// Enum aliases
-export type AppRole = Database['public']['Enums']['app_role']
-export type ApplicationStatus = Database['public']['Enums']['application_status']
-export type JobStatus = Database['public']['Enums']['job_status']
-export type InterviewStatus = Database['public']['Enums']['interview_status']
-export type InterviewType = Database['public']['Enums']['interview_type']
-export type WorkFormat = Database['public']['Enums']['work_format']
-
 // Types with relations (joined data)
 export type CandidateWithApplications = Candidate & {
   applications: JobApplication[]
