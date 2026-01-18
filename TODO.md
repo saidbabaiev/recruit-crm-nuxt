@@ -24,18 +24,26 @@
 - [ ] **User Session Helper:** Create `useUserSession` composable.
     - *Refactor:* Derive `company_name` and user roles directly from metadata without a complex Pinia store.
 
+
+
 ## 4. Feature: Candidates (CRM Core)
 - [x] **Domain Logic:** Service Layer (`services/candidates`) & `useCandidates` composable (TanStack Query) implemented.
-- [ ] **Data Table UI:** Implement smart list view using Shadcn components.
-    - [ ] **Filters:** Create `CandidateFilters.vue` (Search Input + Status Select) with `refDebounced` (VueUse) to prevent API spam.
+- [x] **Component Structure:** Organized components into `table/`, `card/`, and future `board/` folders.
+- [x] **Data Table UI:** Implemented TanStack Table with Shadcn components.
+    - [x] **Table Component:** `CandidatesTable.vue` with sorting support.
+    - [x] **Columns Config:** `columns.ts` with custom cell renderers (avatar, status, skills, contacts).
+    - [x] **Row Actions:** `CandidatesTableDropdown.vue` for edit/delete/schedule actions.
+    - [x] **Loading States:** Skeleton rows for smooth loading transitions.
+    - [x] **Empty States:** "No candidates found" placeholder.
+    - [x] **Clickable Rows:** Navigate to candidate details, prevent on action clicks.
+    - [ ] **Filters:** Create `CandidatesFilters.vue` (Search Input + Status Select) with `refDebounced` (VueUse) to prevent API spam.
     - [ ] **Pagination:** Implement Pagination controls connected to server-side `count` and `page` param.
-    - [ ] **Sorting:** Add UI controls for sorting (e.g., "Newest first", "Alphabetical") wired to the query key.
-    - [ ] **Loading States:** Replace full-page loader with Skeleton Cards (`isPending` state) for smooth transitions.
-    - [ ] **Empty States:** Design a "No candidates found" placeholder for zero results.
+    - [ ] **Sorting UI:** Add UI controls for column sorting (currently only programmatic).
 - [ ] **Candidate Details:** Create dynamic page `pages/candidates/[id].vue`.
     - [ ] **UI:** Display detailed info, Skeletons, and Error handling.
-    - [ ] **Navigation:** Connect list items to detail view.
+    - [ ] **Navigation:** Connect list items to detail view (✅ partially done - table rows clickable).
 - [ ] **Mutations:** Create "Add Candidate" modal using `useMutation` with cache invalidation (`invalidateQueries`).
+- [ ] **Card View (Future):** Preserve `CandidateCard` components in `card/` folder for alternative view or drag-n-drop.
 
 ## 5. Feature: Pipeline / Jobs
 - [ ] **Kanban Board:** Implement drag-and-drop interface for candidate stages.
