@@ -25,9 +25,7 @@ export const columns: ColumnDef<Candidate>[] = [
     header: 'Candidate',
     cell: ({ row }) => {
       const candidate = row.original
-      // Use resume_url if no avatar_url, or empty string
-      // Important: src should not receive null if component typing is strict
-      const avatarSrc = candidate.resume_url || ''
+      const avatarSrc = ''
 
       return h('div', { class: 'flex items-center gap-3 min-w-[200px]' }, [
         h(Avatar, { class: 'h-8 w-8 shrink-0' }, {
