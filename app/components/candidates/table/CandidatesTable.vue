@@ -24,12 +24,10 @@ interface Props {
 }
 
 const props = defineProps<Props>()
-const router = useRouter()
 
 const sorting = ref<SortingState>([])
 
 const table = useVueTable({
-  // Геттеры для реактивности - Отлично сделано!
   get data() {
     return props.data
   },
@@ -49,7 +47,7 @@ const table = useVueTable({
 })
 
 const handleRowClick = (candidate: Candidate) => {
-  router.push(`/candidates/${candidate.id}`)
+  navigateTo(`/candidates/${candidate.id}`)
 }
 </script>
 
