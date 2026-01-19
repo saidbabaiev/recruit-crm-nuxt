@@ -1,3 +1,129 @@
+<script setup lang="ts">
+import { useMutation } from '@tanstack/vue-query'
+import { AlertCircle, Eye, EyeOff } from 'lucide-vue-next'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+
+// Composables
+const { $toast } = useNuxtApp()
+const { signIn, signUp } = useAuth()
+const router = useRouter()
+const route = useRoute()
+
+// State
+const tabs = ['signin', 'signup'] as const
+const showPassword = ref(false)
+const mode = ref<'signin' | 'signup'>('signin')
+const error = ref<string | null>(null)
+
+// Reactive form data
+const form = reactive({
+  email: '',
+  password: '',
+  fullName: '',
+  companyName: '',
+})
+
+watch(mode, () => {
+  error.value = null
+})
+
+watch(() => form.email, () => {
+  if (error.value) error.value = null
+})
+
+watch(() => form.password, () => {
+  if (error.value) error.value = null
+})
+
+// --- Types ---
+type SignInVariables = {
+  email: string
+  password: string
+}
+
+type SignUpVariables = {
+  email: string
+  password: string
+  metadata: {
+    full_name: string
+    company_name: string
+  }
+}
+
+// --- Mutations ---
+// Sign In Mutation
+const { mutate: login, isPending: isLoginPending } = useMutation({
+  mutationFn: (variables: SignInVariables) => {
+    return signIn(variables.email, variables.password)
+  },
+  onMutate: () => {
+    error.value = null
+  },
+  onSuccess: () => {
+    $toast.success('Successfully signed in!')
+    const destination = (route.query.redirectTo as string) || '/dashboard'
+    router.push(destination)
+  },
+  onError: (err: Error) => {
+    error.value = err.message || 'Your login or password is incorrect.'
+  },
+})
+
+// Sign Up Mutation
+const { mutate: register, isPending: isRegisterPending } = useMutation({
+  mutationFn: (variables: SignUpVariables) => {
+    return signUp(variables.email, variables.password, variables.metadata)
+  },
+  onMutate: () => {
+    error.value = null
+  },
+  onSuccess: () => {
+    $toast.success('Account created! Please check your email to verify your account.')
+    mode.value = 'signin'
+    form.password = ''
+  },
+  onError: (err: Error) => {
+    error.value = err.message || 'Failed to create account. Please try again.'
+  },
+})
+
+// --- Handlers ---
+
+const handleSubmit = () => {
+  if (mode.value === 'signin') {
+    login({ email: form.email, password: form.password })
+  }
+  else {
+    if (!form.companyName.trim()) {
+      $toast.error('Company name is required')
+      return
+    }
+
+    register({
+      email: form.email,
+      password: form.password,
+      metadata: {
+        full_name: form.fullName,
+        company_name: form.companyName,
+      },
+    })
+  }
+}
+
+// Watcher for user authentication state
+const user = useSupabaseUser()
+watch(user, (currentUser) => {
+  if (currentUser && mode.value === 'signin') {
+    const destination = (route.query.redirectTo as string) || '/dashboard'
+    router.push(destination)
+  }
+}, { immediate: true })
+
+definePageMeta({
+  layout: 'auth',
+})
+</script>
+
 <template>
   <div class="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-50 to-indigo-100 p-4">
     <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
@@ -26,6 +152,15 @@
           {{ tab === 'signin' ? 'Sign In' : 'Sign Up' }}
         </button>
       </div>
+
+      <Alert
+        v-if="error"
+        variant="destructive"
+        class="mb-4"
+      >
+        <AlertCircle class="h-4 w-4" />
+        <AlertDescription>{{ error }}</AlertDescription>
+      </Alert>
 
       <form
         class="space-y-4"
@@ -101,132 +236,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { useMutation } from '@tanstack/vue-query'
-import { Eye, EyeOff } from 'lucide-vue-next'
-
-// Composables
-const { $toast } = useNuxtApp()
-const { signIn, signUp } = useAuth()
-const router = useRouter()
-const route = useRoute()
-
-// State
-const mode = ref<'signin' | 'signup'>('signin')
-const showPassword = ref(false)
-const tabs = ['signin', 'signup'] as const
-
-// Reactive form data
-const form = reactive({
-  email: '',
-  password: '',
-  fullName: '',
-  companyName: '',
-})
-
-// --- Types ---
-type SignInVariables = {
-  email: string
-  password: string
-}
-
-type SignUpVariables = {
-  email: string
-  password: string
-  metadata: {
-    full_name: string
-    company_name: string
-  }
-}
-
-// --- Mutations ---
-// Sign In Mutation
-const { mutate: login, isPending: isLoginPending } = useMutation({
-  mutationFn: (variables: SignInVariables) => {
-    return signIn(variables.email, variables.password)
-  },
-  onMutate: () => {
-    // Return toast ID to identify and update the toast later
-    const toastId = $toast.loading('Signing in...')
-    return { toastId }
-  },
-  onSuccess: (_data: unknown, _variables: SignInVariables, context) => {
-    // Update the toast to success
-    if (context?.toastId) {
-      $toast.success('Successfully signed in!', { id: context.toastId })
-    }
-
-    // Redirect after successful sign-in
-    const destination = (route.query.redirectTo as string) || '/dashboard'
-    router.push(destination)
-  },
-  onError: (error: Error, _variables: SignInVariables, context) => {
-    if (context?.toastId) {
-      $toast.error(error.message || 'Failed to sign in', {
-        id: context?.toastId,
-        description: 'Please check your credentials.',
-      })
-    }
-  },
-})
-
-// Sign Up Mutation
-const { mutate: register, isPending: isRegisterPending } = useMutation({
-  mutationFn: (variables: SignUpVariables) => {
-    return signUp(variables.email, variables.password, variables.metadata)
-  },
-  onMutate: () => {
-    const toastId = $toast.loading('Creating account...')
-    return { toastId }
-  },
-  onSuccess: (_data: unknown, _variables: SignUpVariables, context) => {
-    if (context?.toastId) {
-      $toast.success('Account created! Please check your email to verify your account.', { id: context.toastId })
-    }
-    mode.value = 'signin'
-    form.password = ''
-  },
-  onError: (error: Error, _variables: SignUpVariables, context) => {
-    $toast.error(error.message || 'Failed to create account', {
-      id: context?.toastId,
-    })
-  },
-})
-
-// --- Handlers ---
-
-const handleSubmit = () => {
-  if (mode.value === 'signin') {
-    login({ email: form.email, password: form.password })
-  }
-  else {
-    if (!form.companyName.trim()) {
-      $toast.error('Company name is required')
-      return
-    }
-
-    register({
-      email: form.email,
-      password: form.password,
-      metadata: {
-        full_name: form.fullName,
-        company_name: form.companyName,
-      },
-    })
-  }
-}
-
-// Watcher for user authentication state
-const user = useSupabaseUser()
-watch(user, (currentUser) => {
-  if (currentUser && mode.value === 'signin') {
-    const destination = (route.query.redirectTo as string) || '/dashboard'
-    router.push(destination)
-  }
-}, { immediate: true })
-
-definePageMeta({
-  layout: 'auth',
-})
-</script>
