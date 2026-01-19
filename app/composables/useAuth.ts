@@ -51,7 +51,8 @@ interface MutationOptions<TData> {
 export const useAuth = () => {
   const supabase = useSupabaseClient<Database>()
   const queryClient = useQueryClient()
-  const { $toast } = useNuxtApp()
+  // const { $toast } = useNuxtApp()
+  const toast = useNotifications()
   const user = useSupabaseUser()
 
   // --- Sign In Mutation ---
@@ -78,20 +79,12 @@ export const useAuth = () => {
         if (error) throw error
         return data
       },
-      onMutate: () => {
-        // Show loading toast and store its ID for later update
-        const toastId = $toast.loading('Signing in...')
-        return { toastId }
-      },
-      onSuccess: async (data, _vars, context) => {
+      onSuccess: async (data) => {
         if (options?.onSuccess) {
           // Component-specific logic (e.g., custom redirect, close modal)
           await options.onSuccess(data)
         }
         else {
-          // Default behavior: show success toast and navigate to dashboard
-          $toast.success('Successfully signed in!', { id: context?.toastId })
-
           // FIX: Race condition with Supabase auth state sync
           // Problem: Supabase client returns success, but useSupabaseUser()
           // might not have updated yet. If we redirect immediately,
@@ -107,16 +100,9 @@ export const useAuth = () => {
           }
         }
       },
-      onError: (err, _vars, context) => {
-        if (options?.onError) {
-          // Component handles error display (e.g., inline form error)
-          options.onError(err)
-        }
-        else {
-          // Default: show error toast
-          const message = err.message || 'Invalid credentials'
-          $toast.error(message, { id: context?.toastId })
-        }
+      onError: (err) => {
+        // Component MUST handle error display via onError callback
+        options?.onError?.(err)
       },
     })
   }
@@ -147,34 +133,19 @@ export const useAuth = () => {
         if (error) throw error
         return data
       },
-      onMutate: () => {
-        // Show loading toast and store its ID for later update
-        const toastId = $toast.loading('Creating account...')
-        return { toastId }
+      onSuccess: (data) => {
+        // Always show success toast (architectural requirement)
+        toast.success(
+          'Account created! Please check your email to verify your account.',
+          { duration: 8000 },
+        )
+
+        // Component-specific logic (e.g., switch tab, clear password)
+        options?.onSuccess?.(data)
       },
-      onSuccess: (data, _vars, context) => {
-        if (options?.onSuccess) {
-          // Component-specific logic (e.g., switch to sign-in tab, clear password)
-          options.onSuccess(data)
-        }
-        else {
-          // Default: show success message with email verification reminder
-          $toast.success(
-            'Account created! Please check your email to verify your account.',
-            { id: context?.toastId, duration: 8000 },
-          )
-        }
-      },
-      onError: (err, _vars, context) => {
-        if (options?.onError) {
-          // Component handles error display (e.g., inline form error)
-          options.onError(err)
-        }
-        else {
-          // Default: show error toast
-          const message = err.message || 'Failed to create account'
-          $toast.error(message, { id: context?.toastId })
-        }
+      onError: (err) => {
+        // Component MUST handle error display via onError callback
+        options?.onError?.(err)
       },
     })
   }
@@ -194,7 +165,8 @@ export const useAuth = () => {
   const signOut = async () => {
     const { error } = await supabase.auth.signOut()
     if (error) throw error
-    queryClient.clear() // Clear all cached data on sign-out
+    // Clear all cached data on sign-out
+    queryClient.clear()
   }
 
   return {
