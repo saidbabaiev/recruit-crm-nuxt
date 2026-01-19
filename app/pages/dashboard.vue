@@ -1,15 +1,5 @@
 <script setup lang="ts">
-import { useMutation } from '@tanstack/vue-query'
-
 const user = useSupabaseUser()
-const { signOut } = useAuth()
-
-const { mutate: handleLogout, isPending } = useMutation({
-  mutationFn: signOut,
-  onSuccess: async () => {
-    await navigateTo('/auth')
-  },
-})
 </script>
 
 <template>
@@ -20,12 +10,6 @@ const { mutate: handleLogout, isPending } = useMutation({
           <h1 class="text-2xl font-bold">
             Dashboard
           </h1>
-          <Button
-            :disabled="isPending"
-            @click="() => handleLogout()"
-          >
-            {{ isPending ? 'Logging out...' : 'Logout' }}
-          </Button>
         </div>
 
         <div class="space-y-4">

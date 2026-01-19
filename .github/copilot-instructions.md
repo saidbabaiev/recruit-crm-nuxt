@@ -96,34 +96,82 @@ Auth composable in [composables/useAuth.ts](app/composables/useAuth.ts) wraps Su
 
 ## Component & Mutation Patterns
 
-### TanStack Table with Column Definitions
-See [components/candidates/table/columns.ts](app/components/candidates/table/columns.ts):
-```typescript
-export const columns: ColumnDef<Candidate>[] = [
-  {
-    accessorKey: 'candidate',
-    header: 'Candidate',
-    cell: ({ row }) => h(CandidateInfoCell, { candidate: row.original }),
-  },
-]
-```
+### Smart Composables: Unified Approach (Architectural Standard)
 
-### Mutation Pattern with Optimistic UX
-From [composables/useCandidates.ts](app/composables/useCandidates.ts):
+**ALL composables (`useAuth`, `useCandidates`, etc.) MUST follow this unified pattern:**
+
+#### 1. Logic Inside Composables
+- All `useMutation` and `useQuery` hooks MUST be created inside composables
+- NEVER move `useMutation` to `.vue` components
+- Composables are the single source of truth for data operations
+
+#### 2. Side Effects Handling
+- Standard actions (toast notifications, cache invalidation) MUST be defined inside composables
+- Default UX behavior (loading/success/error toasts) is built into mutation hooks
+- Cache invalidation via `queryClient` is part of the composable, not the component
+
+#### 3. Flexibility via Options
+- Composable mutation hooks SHOULD accept optional `options` parameter with callbacks (`onSuccess`, `onError`)
+- This allows components to add specific logic (e.g., navigation, closing modals) without duplicating base functionality
+- Default behavior executes if no custom callback is provided
+
+#### 4. Clean Components
+- `.vue` files MUST NOT contain data fetching business logic
+- Components only call ready-made methods from composables
+- Component responsibility: UI state, user interactions, and custom UX flows
+
+**Example Pattern:**
 ```typescript
-const createCandidate = useMutation({
-  mutationFn: (data) => CandidatesService.create(client, data),
-  onMutate: () => {
-    const toastId = $toast.loading('Creating candidate...')
-    return { toastId }
-  },
-  onSuccess: (_data, _vars, context) => {
-    queryClient.invalidateQueries({ queryKey: candidateQueryKeys.lists() })
-    $toast.success('Candidate created', { id: context?.toastId })
-  },
-  onError: (err, _vars, context) => {
-    $toast.error(err.message, { id: context?.toastId })
-  },
+// composables/use[Feature].ts
+export const use[Feature] = () => {
+  const client = useSupabaseClient()
+  const queryClient = useQueryClient()
+  const { $toast } = useNuxtApp()
+
+  const useCreate[Feature] = (options?: {
+    onSuccess?: (data: [Feature]) => void
+    onError?: (error: Error) => void
+  }) => {
+    return useMutation({
+      mutationFn: (data) => [Feature]Service.create(client, data),
+      onMutate: () => {
+        const toastId = $toast.loading('Creating...')
+        return { toastId }
+      },
+      onSuccess: (data, vars, context) => {
+        queryClient.invalidateQueries({ queryKey: [feature]QueryKeys.lists() })
+        
+        if (options?.onSuccess) {
+          options.onSuccess(data) // Custom logic
+        } else {
+          $toast.success('Created successfully', { id: context?.toastId })
+        }
+      },
+      onError: (err, vars, context) => {
+        if (options?.onError) {
+          options.onError(err)
+        } else {
+          const { message } = handleError(err)
+          $toast.error(message, { id: context?.toastId })
+        }
+      },
+    })
+  }
+
+  return { useCreate[Feature] }
+}
+
+// pages/[feature].vue
+const { useCreate[Feature] } = use[Feature]()
+
+// Standard usage (default toasts)
+const { mutate: create } = useCreate[Feature]()
+
+// Custom usage (override behavior)
+const { mutate: createWithRedirect } = useCreate[Feature]({
+  onSuccess: (data) => {
+    navigateTo(`/[feature]/${data.id}`)
+  }
 })
 ```
 

@@ -13,7 +13,6 @@ export const candidateQueryKeys = {
 }
 
 export const useCandidates = () => {
-  // DI Container, Initialize Supabase client and Query Client
   const client = useSupabaseClient()
   const queryClient = useQueryClient()
   const { $toast } = useNuxtApp()

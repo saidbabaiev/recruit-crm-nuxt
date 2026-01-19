@@ -1,17 +1,14 @@
 <script setup lang="ts">
-import { useMutation } from '@tanstack/vue-query'
 import { AlertCircle, Eye, EyeOff } from 'lucide-vue-next'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
-// Composables
-const { $toast } = useNuxtApp()
-const { signIn, signUp } = useAuth()
-const user = useSupabaseUser()
+// --- Composables ---
+const { useSignIn, useSignUp } = useAuth()
 
-// State
+// --- State ---
 const tabs = ['signin', 'signup'] as const
 const showPassword = ref(false)
 const mode = ref<'signin' | 'signup'>('signin')
@@ -25,6 +22,7 @@ const form = reactive({
   companyName: '',
 })
 
+// --- Watchers ---
 watch(mode, () => {
   error.value = null
 })
@@ -37,69 +35,19 @@ watch(() => form.password, () => {
   if (error.value) error.value = null
 })
 
-// --- Types ---
-type SignInVariables = {
-  email: string
-  password: string
-}
-
-type SignUpVariables = {
-  email: string
-  password: string
-  metadata: {
-    full_name: string
-    company_name: string
-  }
-}
-
 // --- Mutations ---
-// Sign In Mutation
-const { mutate: login, isPending: isLoginPending } = useMutation({
-  mutationFn: (variables: SignInVariables) => {
-    return signIn(variables.email, variables.password)
-  },
-  onMutate: () => {
-    error.value = null
-  },
-  onSuccess: async () => {
-    $toast.success('Successfully signed in!')
-
-    // FIX RACE CONDITION:
-    // Problem: The Supabase client returns success, but the global `useUser()`
-    // reactive state in Nuxt might not have updated yet.
-    // Risk: If we redirect immediately, the auth middleware on `/dashboard`
-    // will see `user = null` and kick us back to the login page.
-    if (!user.value) {
-      // Scenario A: User state is not ready yet.
-      // Solution: Set a watcher to wait for the user state to sync,
-      // then navigate. { once: true } ensures it only runs once.
-      watch(user, () => navigateTo('/dashboard'), { once: true })
-    }
-    else {
-      // Scenario B: User state is ready.
-      // Solution: Navigate immediately. `await` ensures the transition completes.
-      await navigateTo('/dashboard')
-    }
-  },
-  onError: (err: Error) => {
+const { mutate: login, isPending: isLoginPending } = useSignIn({
+  onError: (err) => {
     error.value = err.message || 'Your login or password is incorrect.'
   },
 })
 
-// Sign Up Mutation
-const { mutate: register, isPending: isRegisterPending } = useMutation({
-  mutationFn: (variables: SignUpVariables) => {
-    return signUp(variables.email, variables.password, variables.metadata)
-  },
-  onMutate: () => {
-    error.value = null
-  },
+const { mutate: register, isPending: isRegisterPending } = useSignUp({
   onSuccess: () => {
-    $toast.success('Account created! Please check your email to verify your account.', { duration: 8000 })
     mode.value = 'signin'
     form.password = ''
   },
-  onError: (err: Error) => {
+  onError: (err) => {
     error.value = err.message || 'Failed to create account. Please try again.'
   },
 })

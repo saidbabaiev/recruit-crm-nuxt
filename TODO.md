@@ -8,7 +8,7 @@
 - [x] **Supabase Setup:** `useAuth` composable implemented (raw client).
 - [x] **Async State Management:** `@tanstack/vue-query` installed & configured with Devtools.
 - [x] **UI Feedback:** `vue-sonner` integrated for toast notifications.
-- [x] **Auth UI:** Login/Signup forms refactored to use `useMutation` (Optimistic UX).
+- [x] **Auth UI:** Login/Signup forms refactored to use `useMutation`
 
 ## 2. Architecture & Security (✅ Completed)
 - [x] **Auth Middleware:** `auth.global.ts` implemented for route protection.
@@ -26,12 +26,10 @@
 ## 3. Application Shell (Dashboard)
 - [x] **Default Layout:** Create `layouts/default.vue`.
 - [x] **Auth Layout:** Create `layouts/auth.vue`.
-- [ ] **Logout Flow:** Implement `signOut` logic.
+- [x] **Logout Flow:** Implement `signOut` logic.
     - *Critical:* Must call `queryClient.clear()` to remove cached sensitive data upon logout.
 - [ ] **User Session Helper:** Create `useUserSession` composable.
     - *Refactor:* Derive `company_name` and user roles directly from metadata without a complex Pinia store.
-
-
 
 ## 4. Feature: Candidates (CRM Core)
 - [x] **Domain Logic:** Service Layer (`services/candidates`) & `useCandidates` composable (TanStack Query) implemented.
