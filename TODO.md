@@ -10,11 +10,18 @@
 - [x] **UI Feedback:** `vue-sonner` integrated for toast notifications.
 - [x] **Auth UI:** Login/Signup forms refactored to use `useMutation` (Optimistic UX).
 
-## 2. Architecture & Security (Current Focus)
+## 2. Architecture & Security (✅ Completed)
 - [x] **Auth Middleware:** `auth.global.ts` implemented for route protection.
 - [x] **Type Generation:** Supabase types generated + shortcuts in `types/database.ts`.
-- [x] **Global Error Handling:** Configure `QueryCache` and `MutationCache` in `plugins/vue-query.ts`.
-- [ ] **Error Normalization:** Implement `AppError` type and `toError` utility to eliminate `any` in error handlers.
+- [x] **Global Error Handling:** Configured `QueryCache` and `MutationCache` in `plugins/vue-query.ts`.
+  - ✅ Network errors → "No internet" toast
+  - ✅ Auth errors (401/PGRST301) → Redirect to `/auth` + session expired toast
+  - ✅ Database/HTTP 5xx → Generic error toast
+  - ✅ HTTP 4xx → Silent (component handles inline)
+- [x] **Error Normalization:** Implemented `AppError` discriminated union in `types/errors.ts`.
+  - ✅ `normalizeError()` utility converts all errors to type-safe `AppError`
+  - ✅ HTTP status detection with `hasHttpStatus()` type guard
+  - ✅ Component-level pattern: inline errors for forms, toasts for success only
 
 ## 3. Application Shell (Dashboard)
 - [x] **Default Layout:** Create `layouts/default.vue`.
