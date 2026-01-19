@@ -3,7 +3,6 @@ import { Plus } from 'lucide-vue-next'
 
 const filters = ref({
   search: '',
-  status: undefined,
   page: 1,
   limit: 10,
 })
@@ -13,7 +12,7 @@ const { data: candidatesResponse, isPending, error } = useCandidatesList(filters
 
 const candidates = computed(() => candidatesResponse.value?.data || [])
 
-watch([() => filters.value.search, () => filters.value.status], () => {
+watch(() => filters.value.search, () => {
   filters.value.page = 1
 })
 </script>
@@ -46,34 +45,6 @@ watch([() => filters.value.search, () => filters.value.status], () => {
           class="w-full"
         />
       </div>
-      <Select v-model="filters.status">
-        <SelectTrigger class="w-full sm:w-45">
-          <SelectValue placeholder="Status" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">
-            All Statuses
-          </SelectItem>
-          <SelectItem value="new">
-            New
-          </SelectItem>
-          <SelectItem value="screening">
-            Screening
-          </SelectItem>
-          <SelectItem value="interview">
-            Interview
-          </SelectItem>
-          <SelectItem value="offer">
-            Offer
-          </SelectItem>
-          <SelectItem value="hired">
-            Hired
-          </SelectItem>
-          <SelectItem value="rejected">
-            Rejected
-          </SelectItem>
-        </SelectContent>
-      </Select>
       <Select>
         <SelectTrigger class="w-full sm:w-45">
           <SelectValue placeholder="Position" />
