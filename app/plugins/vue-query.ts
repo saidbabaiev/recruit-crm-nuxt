@@ -5,74 +5,108 @@ import {
   MutationCache,
   type VueQueryPluginOptions,
 } from '@tanstack/vue-query'
-
-interface ExtendedError extends Error {
-  statusCode?: number
-  status?: number | string
-  code?: string
-}
+import { normalizeError, isAuthRedirectError } from '@/utils/errors'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const router = useRouter()
   const { $toast } = useNuxtApp()
 
-  const handleGlobalError = (err: unknown) => {
-    const error = err as ExtendedError
-    // Log the error for debugging
+  const handleGlobalError = (error: unknown) => {
+    const normalized = normalizeError(error)
+
+    // Dev logging - only in dev mode
     if (import.meta.dev) {
-      console.error('[Global Query Error]:', error)
+      console.error('[Global Query Error]:', {
+        type: normalized.type,
+        normalized,
+        original: error,
+      })
     }
 
-    // Handling authentication errors (401/403)
-    const status = error.status || error.statusCode || error.code
-    const message = error.message || 'Something went wrong'
+    // 1. Auth Redirect → redirect + toast
+    if (isAuthRedirectError(normalized)) {
+      const currentPath = router.currentRoute.value.path
+      if (currentPath !== '/auth') {
+        $toast.error('Your session has expired', {
+          description: 'Please sign in to continue',
+        })
+        router.push({
+          path: '/auth',
+          query: { redirectTo: currentPath },
+        })
+      }
+      return
+    }
 
-    // 1. Network / Offline Check
-    const isNetworkError
-      = message.includes('Failed to fetch')
-        || message.includes('Network request failed')
-        || (typeof navigator !== 'undefined' && !navigator.onLine)
-
-    if (isNetworkError) {
+    // 2. Network (Offline, timeout) → toast
+    if (normalized.type === 'network') {
       $toast.error('No internet connection', {
         description: 'Please check your network settings and try again.',
       })
       return
     }
 
-    // 2. Auth Errors (401/403)
-    const isSessionExpired
-      = status == 401
-        || status == 403
-        || message.includes('JWT')
-
-    if (isSessionExpired) {
-      if (router.currentRoute.value.path !== '/auth') {
-        $toast.error('Session expired. Please login again.')
-        router.push('/auth')
-      }
+    // 3. Database 5xx (PostgreSQL down, connection issues) → toast
+    if (normalized.type === 'database') {
+      $toast.error('Database error occurred', {
+        description: normalized.hint || 'Please try again later',
+      })
       return
     }
 
-    // 3. Ignoring client errors (400-499) because they are handled locally
-    if (typeof status === 'number' && status >= 400 && status < 500) {
+    // 4. HTTP 5xx → toast (server errors)
+    if (normalized.type === 'http' && normalized.status >= 500) {
+      $toast.error('Server error', {
+        description: 'Please try again later',
+      })
       return
     }
 
-    // 4. Server Errors (500+) or Unknown Errors
-    $toast.error(message, {
-      description: 'Our team has been notified.',
-    })
+    // 5. HTTP 4xx → silent fail (handled locally)
+    if (normalized.type === 'http' && normalized.status >= 400) {
+      return
+    }
+
+    // Other errors (validation, not_found, auth) are handled locally
   }
 
   const queryClient = new QueryClient({
-    queryCache: new QueryCache({ onError: handleGlobalError }),
-    mutationCache: new MutationCache({ onError: handleGlobalError }),
+    queryCache: new QueryCache({
+      onError: handleGlobalError,
+    }),
+    mutationCache: new MutationCache({
+      onError: handleGlobalError,
+    }),
     defaultOptions: {
       queries: {
-        staleTime: 1000 * 60 * 5, // 5 минут
+        staleTime: 1000 * 60 * 5,
         refetchOnWindowFocus: false,
-        retry: 1,
+        retry: (failureCount, error) => {
+          const normalized = normalizeError(error)
+
+          // No retry auth redirect (expired session)
+          if (isAuthRedirectError(normalized)) return false
+
+          // No retry 400-level (validation, not_found, bad credentials)
+          if (normalized.type === 'validation' || normalized.type === 'not_found') {
+            return false
+          }
+
+          // No retry auth errors (bad credentials)
+          if (normalized.type === 'auth') return false
+
+          // Retry network up to 2 times
+          if (normalized.type === 'network' && failureCount < 2) {
+            return true
+          }
+
+          // Retry 5xx up to 1 time
+          return failureCount < 1
+        },
+        retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
+      },
+      mutations: {
+        retry: false,
       },
     },
   })
