@@ -32,14 +32,9 @@ watch(() => filters.value.search, () => {
   <div class="p-6 space-y-6">
     <!-- Page Header -->
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-      <div>
-        <h1 class="text-3xl font-bold tracking-tight">
-          Candidates
-        </h1>
-        <p class="text-muted-foreground mt-1">
-          Manage and track all your candidates
-        </p>
-      </div>
+      <h1 class="text-2xl font-bold tracking-tight">
+        Candidates List
+      </h1>
       <Button>
         <Plus class="mr-2 h-4 w-4" />
         Add Candidate
