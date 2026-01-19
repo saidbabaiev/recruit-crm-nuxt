@@ -9,8 +9,7 @@ import { Label } from '@/components/ui/label'
 // Composables
 const { $toast } = useNuxtApp()
 const { signIn, signUp } = useAuth()
-const router = useRouter()
-const route = useRoute()
+const user = useSupabaseUser()
 
 // State
 const tabs = ['signin', 'signup'] as const
@@ -62,10 +61,14 @@ const { mutate: login, isPending: isLoginPending } = useMutation({
   onMutate: () => {
     error.value = null
   },
-  onSuccess: () => {
+  onSuccess: async () => {
     $toast.success('Successfully signed in!')
-    const destination = (route.query.redirectTo as string) || '/dashboard'
-    router.push(destination)
+    if (!user.value) {
+      watch(user, () => navigateTo('/dashboard'), { once: true })
+    }
+    else {
+      await navigateTo('/dashboard')
+    }
   },
   onError: (err: Error) => {
     error.value = err.message || 'Your login or password is incorrect.'
@@ -91,7 +94,6 @@ const { mutate: register, isPending: isRegisterPending } = useMutation({
 })
 
 // --- Handlers ---
-
 const handleSubmit = () => {
   if (mode.value === 'signin') {
     login({ email: form.email, password: form.password })
@@ -108,15 +110,7 @@ const handleSubmit = () => {
   }
 }
 
-// Watcher for user authentication state
-const user = useSupabaseUser()
-watch(user, (currentUser) => {
-  if (currentUser && mode.value === 'signin') {
-    const destination = (route.query.redirectTo as string) || '/dashboard'
-    router.push(destination)
-  }
-}, { immediate: true })
-
+// --- Page Meta ---
 definePageMeta({
   layout: 'auth',
 })
