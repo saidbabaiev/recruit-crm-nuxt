@@ -104,6 +104,7 @@ Auth composable in [composables/useAuth.ts](app/composables/useAuth.ts) wraps Su
 - All `useMutation` and `useQuery` hooks MUST be created inside composables
 - NEVER move `useMutation` to `.vue` components
 - Composables are the single source of truth for data operations
+- **Components are maximally simple** - they only consume ready-made mutation hooks from composables
 
 #### 2. Side Effects Handling
 - Standard actions (toast notifications, cache invalidation) MUST be defined inside composables
@@ -120,31 +121,74 @@ Auth composable in [composables/useAuth.ts](app/composables/useAuth.ts) wraps Su
 - Components only call ready-made methods from composables
 - Component responsibility: UI state, user interactions, and custom UX flows
 
+#### 5. Navigation Standard
+- **ALWAYS use `navigateTo()`** for programmatic navigation (Nuxt built-in)
+- NEVER use `useRouter().push()` or `window.location.href`
+- Example: `await navigateTo('/dashboard')` or `navigateTo({ path: '/auth', query: { redirectTo } })`
+
+#### 6. Toast Notifications Standard
+- **ALWAYS use `useNotifications()` hook** for toast notifications
+- NEVER access `$toast` directly via `useNuxtApp()`
+- Example: `const toast = useNotifications()` → `toast.success('Done!')`
+
+#### 7. Documentation Standard
+- **ALL composables MUST have detailed JSDoc comments** that explicitly describe:
+  - Default UI behavior (toasts shown, redirects performed)
+  - Complex logic explanations (e.g., race conditions, auth state sync)
+  - Parameters and return types
+  - Usage examples for common scenarios
+- This provides critical context for developers working with smart composables
+
 **Example Pattern:**
 ```typescript
 // composables/use[Feature].ts
 export const use[Feature] = () => {
   const client = useSupabaseClient()
   const queryClient = useQueryClient()
-  const { $toast } = useNuxtApp()
+  const toast = useNotifications() // ✅ Use hook, not $toast
 
+  /**
+   * Creates a mutation hook for creating a new [Feature].
+   * 
+   * **Default UI Behavior:**
+   * - Shows loading toast: "Creating..."
+   * - On success: Updates toast to "Created successfully"
+   * - On error: Shows error toast with message
+   * - Invalidates [feature] list cache automatically
+   * 
+   * @param options - Optional callbacks to override default behavior
+   * @param options.onSuccess - Custom logic after successful creation (e.g., navigate to detail page)
+   * @param options.onError - Custom error handling (e.g., show inline form error instead of toast)
+   * 
+   * @example
+   * ```ts
+   * // Default usage (shows toasts)
+   * const { mutate: create } = useCreate[Feature]()
+   * create({ name: 'New Item' })
+   * 
+   * // Custom usage (navigate on success)
+   * const { mutate: createAndRedirect } = useCreate[Feature]({
+   *   onSuccess: (data) => navigateTo(`/[feature]/${data.id}`)
+   * })
+   * ```
+   */
   const useCreate[Feature] = (options?: {
-    onSuccess?: (data: [Feature]) => void
+    onSuccess?: (data: [Feature]) => void | Promise<void>
     onError?: (error: Error) => void
   }) => {
     return useMutation({
       mutationFn: (data) => [Feature]Service.create(client, data),
       onMutate: () => {
-        const toastId = $toast.loading('Creating...')
+        const toastId = toast.loading('Creating...') // ✅ Use toast hook
         return { toastId }
       },
-      onSuccess: (data, vars, context) => {
+      onSuccess: async (data, vars, context) => {
         queryClient.invalidateQueries({ queryKey: [feature]QueryKeys.lists() })
         
         if (options?.onSuccess) {
-          options.onSuccess(data) // Custom logic
+          await options.onSuccess(data) // Custom logic
         } else {
-          $toast.success('Created successfully', { id: context?.toastId })
+          toast.success('Created successfully', { id: context?.toastId })
         }
       },
       onError: (err, vars, context) => {
@@ -152,7 +196,7 @@ export const use[Feature] = () => {
           options.onError(err)
         } else {
           const { message } = handleError(err)
-          $toast.error(message, { id: context?.toastId })
+          toast.error(message, { id: context?.toastId })
         }
       },
     })
@@ -169,8 +213,8 @@ const { mutate: create } = useCreate[Feature]()
 
 // Custom usage (override behavior)
 const { mutate: createWithRedirect } = useCreate[Feature]({
-  onSuccess: (data) => {
-    navigateTo(`/[feature]/${data.id}`)
+  onSuccess: async (data) => {
+    await navigateTo(`/[feature]/${data.id}`) // ✅ Use navigateTo
   }
 })
 ```

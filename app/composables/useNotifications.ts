@@ -10,5 +10,8 @@ export const useNotifications = () => {
 
     info: (message: string, options?: { id?: string | number, duration?: number }) =>
       $toast.info(message, options),
+
+    loading: (message: string, options?: { id?: string | number }) =>
+      $toast.loading(message, options),
   }
 }

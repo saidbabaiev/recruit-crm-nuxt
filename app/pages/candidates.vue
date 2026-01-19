@@ -4,7 +4,6 @@ import { Plus } from 'lucide-vue-next'
 const filters = ref({
   search: '',
   status: undefined,
-  position: undefined,
   page: 1,
   limit: 10,
 })
@@ -13,7 +12,10 @@ const { useCandidatesList } = useCandidates()
 const { data: candidatesResponse, isPending, error } = useCandidatesList(filters)
 
 const candidates = computed(() => candidatesResponse.value?.data || [])
-// const totalCount = computed(() => candidatesResponse.value?.count || 0)
+
+watch([() => filters.value.search, () => filters.value.status], () => {
+  filters.value.page = 1
+})
 </script>
 
 <template>
@@ -38,12 +40,13 @@ const candidates = computed(() => candidatesResponse.value?.data || [])
     <div class="flex flex-col sm:flex-row gap-4">
       <div class="flex-1">
         <Input
+          v-model="filters.search"
           type="search"
           placeholder="Search candidates by name, email, or skills..."
           class="w-full"
         />
       </div>
-      <Select>
+      <Select v-model="filters.status">
         <SelectTrigger class="w-full sm:w-45">
           <SelectValue placeholder="Status" />
         </SelectTrigger>

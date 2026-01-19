@@ -1,9 +1,14 @@
 import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/vue-query'
-import type { CandidateInsert, CandidateFilters as CandidateParams } from '@/types/candidates'
+import type { Candidate, CandidateInsert, CandidateFilters as CandidateParams } from '@/types/candidates'
 import { CandidatesService } from '@/services/candidates'
 
-// --- 1. Query keys factory ---
-// Centralized query keys for candidates
+/**
+ * Query keys factory for centralized cache management.
+ * Hierarchical structure allows granular invalidation:
+ * - `all`: Invalidates everything
+ * - `lists()`: Invalidates all list queries (different filters)
+ * - `list(params)`: Invalidates specific filtered list
+ */
 export const candidateQueryKeys = {
   all: ['candidates'] as const,
   lists: () => [...candidateQueryKeys.all, 'list'] as const,
@@ -15,11 +20,18 @@ export const candidateQueryKeys = {
 export const useCandidates = () => {
   const client = useSupabaseClient()
   const queryClient = useQueryClient()
-  const { $toast } = useNuxtApp()
+  const toast = useNotifications()
 
-  // --- 2. Queries (READ) ---
+  // --- Queries (READ) ---
+
   /**
-   * Hook to fetch paginated and filtered list of candidates
+   * Fetches paginated and filtered candidates list.
+   *
+   * Query automatically refetch when params change (reactive).
+   * Uses `keepPreviousData` to prevent UI flash during pagination/filtering.
+   * Data stays fresh for 60s to reduce unnecessary requests.
+   *
+   * @param params - Reactive filters (search, status, page, limit)
    */
   const useCandidatesList = (params: MaybeRefOrGetter<CandidateParams>) => {
     return useQuery({
@@ -33,6 +45,14 @@ export const useCandidates = () => {
     })
   }
 
+  /**
+   * Fetches single candidate by ID.
+   *
+   * Query is disabled until ID is provided (prevents invalid requests).
+   * Useful for detail pages and modals.
+   *
+   * @param id - Reactive candidate ID
+   */
   const useCandidateDetails = (id: MaybeRef<string>) => {
     return useQuery({
       queryKey: computed(() => candidateQueryKeys.detail(unref(id))),
@@ -41,33 +61,72 @@ export const useCandidates = () => {
     })
   }
 
-  // --- 3. Mutations (WRITE) ---
-  const createCandidate = useMutation({
-    mutationFn: (newCandidate: CandidateInsert) => CandidatesService.create(client, newCandidate),
+  // --- Mutations (WRITE) ---
 
-    onMutate: () => {
-      const toastId = $toast.loading('Creating candidate...')
-      return { toastId }
-    },
+  /**
+   * Creates a new candidate with automatic cache invalidation and toast notifications.
+   *
+   * **Default behavior:**
+   * - Shows loading toast
+   * - Invalidates all list queries on success
+   * - Shows success/error toast
+   *
+   * **Custom behavior:**
+   * Pass `options.onSuccess` to override (e.g., navigate to detail page, close modal).
+   * Pass `options.onError` to handle errors in component (e.g., inline form validation).
+   *
+   * @param options - Optional callbacks to customize behavior
+   *
+   * @example
+   * ```ts
+   * // Default (shows toasts, invalidates cache)
+   * const { mutate: create } = useCreateCandidate()
+   * create({ first_name: 'John', last_name: 'Doe', ... })
+   *
+   * // Custom (navigate after creation)
+   * const { mutate: createAndNavigate } = useCreateCandidate({
+   *   onSuccess: (data) => navigateTo(`/candidates/${data.id}`)
+   * })
+   * ```
+   */
+  const useCreateCandidate = (options?: {
+    onSuccess?: (data: Candidate) => void | Promise<void>
+    onError?: (error: Error) => void
+  }) => {
+    return useMutation({
+      mutationFn: (newCandidate: CandidateInsert) => CandidatesService.create(client, newCandidate),
 
-    onSuccess: (_data, _vars, context) => {
-      // Initialize invalidation of related queries
-      queryClient.invalidateQueries({ queryKey: candidateQueryKeys.lists() })
+      onMutate: () => {
+        const toastId = toast.loading('Creating candidate...')
+        return { toastId }
+      },
 
-      $toast.success('Candidate created successfully', { id: context?.toastId })
-    },
-
-    onError: (err, _vars, context) => {
-      const { message } = handleError(err)
-      $toast.error(message || 'Failed to create', { id: context?.toastId })
-    },
-  })
+      onSuccess: async (data, vars, context) => {
+        queryClient.invalidateQueries({ queryKey: candidateQueryKeys.lists() })
+        if (options?.onSuccess) {
+          await options.onSuccess(data)
+        }
+        else {
+          toast.success('Candidate created successfully', { id: context?.toastId })
+        }
+      },
+      onError: (err, vars, context) => {
+        if (options?.onError) {
+          options.onError(err)
+        }
+        else {
+          const { message } = handleError(err)
+          toast.error(message || 'Failed to create', { id: context?.toastId })
+        }
+      },
+    })
+  }
 
   // TODO: Update and Delete mutations can be added here
 
   return {
     useCandidatesList,
     useCandidateDetails,
-    createCandidate,
+    useCreateCandidate,
   }
 }
