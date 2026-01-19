@@ -1,5 +1,14 @@
 <script setup lang="ts">
 import { Plus } from 'lucide-vue-next'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+} from '@/components/ui/pagination'
+import { Button } from '@/components/ui/button'
 
 const filters = ref({
   search: '',
@@ -11,6 +20,8 @@ const { useCandidatesList } = useCandidates()
 const { data: candidatesResponse, isPending, error } = useCandidatesList(filters)
 
 const candidates = computed(() => candidatesResponse.value?.data || [])
+const totalCount = computed(() => candidatesResponse.value?.count || 0)
+// const totalPages = computed(() => Math.ceil(totalCount.value / filters.value.limit))
 
 watch(() => filters.value.search, () => {
   filters.value.page = 1
@@ -76,6 +87,48 @@ watch(() => filters.value.search, () => {
       <CandidatesTable
         :data="candidates"
       />
+    </div>
+
+    <!-- Pagination -->
+    <div
+      v-if="!isPending && !error && totalCount > filters.limit"
+      class="flex items-center justify-between"
+    >
+      <p class="text-sm text-muted-foreground">
+        Showing {{ (filters.page - 1) * filters.limit + 1 }}-{{ Math.min(filters.page * filters.limit, totalCount) }} of {{ totalCount }} candidates
+      </p>
+
+      <Pagination
+        v-slot="{ page }"
+        v-model:page="filters.page"
+        :total="totalCount"
+        :items-per-page="filters.limit"
+        :sibling-count="1"
+        show-edges
+      >
+        <PaginationContent v-slot="{ items }">
+          <PaginationPrevious />
+
+          <template
+            v-for="(item, index) in items"
+            :key="index"
+          >
+            <PaginationItem
+              v-if="item.type === 'page'"
+              :value="item.value"
+              :is-active="item.value === page"
+            >
+              {{ item.value }}
+            </PaginationItem>
+            <PaginationEllipsis
+              v-else
+              :index="index"
+            />
+          </template>
+
+          <PaginationNext />
+        </PaginationContent>
+      </Pagination>
     </div>
 
     <!-- Loading State -->

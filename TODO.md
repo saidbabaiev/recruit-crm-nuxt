@@ -14,14 +14,14 @@
 - [x] **Auth Middleware:** `auth.global.ts` implemented for route protection.
 - [x] **Type Generation:** Supabase types generated + shortcuts in `types/database.ts`.
 - [x] **Global Error Handling:** Configured `QueryCache` and `MutationCache` in `plugins/vue-query.ts`.
-  - ✅ Network errors → "No internet" toast
-  - ✅ Auth errors (401/PGRST301) → Redirect to `/auth` + session expired toast
-  - ✅ Database/HTTP 5xx → Generic error toast
-  - ✅ HTTP 4xx → Silent (component handles inline)
+  - [x] Network errors → "No internet" toast
+  - [x] Auth errors (401/PGRST301) → Redirect to `/auth` + session expired toast
+  - [x] Database/HTTP 5xx → Generic error toast
+  - [x] HTTP 4xx → Silent (component handles inline)
 - [x] **Error Normalization:** Implemented `AppError` discriminated union in `types/errors.ts`.
-  - ✅ `normalizeError()` utility converts all errors to type-safe `AppError`
-  - ✅ HTTP status detection with `hasHttpStatus()` type guard
-  - ✅ Component-level pattern: inline errors for forms, toasts for success only
+  - [x] `normalizeError()` utility converts all errors to type-safe `AppError`
+  - [x] HTTP status detection with `hasHttpStatus()` type guard
+  - [x] Component-level pattern: inline errors for forms, toasts for success only
 
 ## 3. Application Shell (Dashboard)
 - [x] **Default Layout:** Create `layouts/default.vue`.
@@ -41,8 +41,15 @@
     - [x] **Loading States:** Skeleton rows for smooth loading transitions.
     - [x] **Empty States:** "No candidates found" placeholder.
     - [x] **Clickable Rows:** Navigate to candidate details, prevent on action clicks.
-    - [ ] **Filters:** Create `CandidatesFilters.vue` (Search Input + Status Select) with `refDebounced` (VueUse) to prevent API spam.
-    - [ ] **Pagination:** Implement Pagination controls connected to server-side `count` and `page` param.
+    - [x] **Search Filter:** Implemented with `v-model` reactive binding (searches across name, email).
+        - [x] Auto-resets to page 1 on search change
+        - [x] Debouncing handled by TanStack Query `staleTime` (60s) to prevent API spam
+        - [x] Uses `placeholderData: keepPreviousData` for smooth UX during filtering
+    - [x] **Pagination:** Implemented with Shadcn `Pagination` component.
+        - [x] Server-side pagination via `range(from, to)` in Supabase
+        - [x] Displays "Showing X-Y of Z candidates"
+        - [x] Connected to reactive `filters.page` with automatic query refetch
+        - [x] Only shows when `totalCount > limit`
     - [ ] **Sorting UI:** Add UI controls for column sorting (currently only programmatic).
 - [ ] **Candidate Details:** Create dynamic page `pages/candidates/[id].vue`.
     - [ ] **UI:** Display detailed info, Skeletons, and Error handling.
