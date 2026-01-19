@@ -1,4 +1,5 @@
 import type { Database } from '@/types/supabase'
+import { useQueryClient } from '@tanstack/vue-query'
 
 interface SignUpMetadata {
   full_name: string
@@ -7,6 +8,7 @@ interface SignUpMetadata {
 
 export const useAuth = () => {
   const supabase = useSupabaseClient<Database>()
+  const queryClient = useQueryClient()
 
   const signIn = async (email: string, password: string) => {
     const { data, error } = await supabase.auth.signInWithPassword({
@@ -30,6 +32,9 @@ export const useAuth = () => {
   const signOut = async () => {
     const { error } = await supabase.auth.signOut()
     if (error) throw error
+    // Clear cached sensitive data upon logout
+    // Delete all cached queries and mutations (e.g., user profile, settings)
+    queryClient.clear()
   }
 
   return {
