@@ -63,10 +63,21 @@ const { mutate: login, isPending: isLoginPending } = useMutation({
   },
   onSuccess: async () => {
     $toast.success('Successfully signed in!')
+
+    // FIX RACE CONDITION:
+    // Problem: The Supabase client returns success, but the global `useUser()`
+    // reactive state in Nuxt might not have updated yet.
+    // Risk: If we redirect immediately, the auth middleware on `/dashboard`
+    // will see `user = null` and kick us back to the login page.
     if (!user.value) {
+      // Scenario A: User state is not ready yet.
+      // Solution: Set a watcher to wait for the user state to sync,
+      // then navigate. { once: true } ensures it only runs once.
       watch(user, () => navigateTo('/dashboard'), { once: true })
     }
     else {
+      // Scenario B: User state is ready.
+      // Solution: Navigate immediately. `await` ensures the transition completes.
       await navigateTo('/dashboard')
     }
   },
@@ -84,7 +95,7 @@ const { mutate: register, isPending: isRegisterPending } = useMutation({
     error.value = null
   },
   onSuccess: () => {
-    $toast.success('Account created! Please check your email to verify your account.')
+    $toast.success('Account created! Please check your email to verify your account.', { duration: 8000 })
     mode.value = 'signin'
     form.password = ''
   },
