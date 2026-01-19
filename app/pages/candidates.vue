@@ -73,12 +73,6 @@ watch(() => filters.value.search, () => {
     <div
       v-if="!isPending && !error && candidates?.length"
     >
-      <!-- <CandidateCard
-        v-for="candidate in candidates"
-        :key="candidate.id"
-        :candidate="candidate"
-      /> -->
-
       <CandidatesTable
         :data="candidates"
       />
