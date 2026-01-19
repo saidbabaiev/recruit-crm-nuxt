@@ -58,8 +58,9 @@ export const useCandidates = () => {
       $toast.success('Candidate created successfully', { id: context?.toastId })
     },
 
-    onError: (err: any, _vars, context) => {
-      $toast.error(err.message || 'Failed to create', { id: context?.toastId })
+    onError: (err, _vars, context) => {
+      const { message } = handleError(err)
+      $toast.error(message || 'Failed to create', { id: context?.toastId })
     },
   })
 

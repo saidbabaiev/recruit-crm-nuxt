@@ -2,8 +2,6 @@ import type { Candidate } from '~/types/database'
 
 /**
  * Get full name of the candidate
- * @param c Candidate object with first_name and last_name
- * @returns Full name of the candidate or 'Unknown Candidate' if not available
  */
 export const getFullName = (c: Pick<Candidate, 'first_name' | 'last_name'> | null) => {
   if (!c) return 'Unknown Candidate'
@@ -11,8 +9,6 @@ export const getFullName = (c: Pick<Candidate, 'first_name' | 'last_name'> | nul
 }
 /**
  * Get candidate initials
- * @param c Candidate object with first_name and last_name
- * @returns Initials of the candidate in uppercase
  */
 export const getCandidateInitials = (c: Pick<Candidate, 'first_name' | 'last_name'> | null) => {
   if (!c?.first_name && !c?.last_name) return ''
@@ -23,8 +19,6 @@ export const getCandidateInitials = (c: Pick<Candidate, 'first_name' | 'last_nam
 
 /**
  * Get candidate experience label
- * @param years Number of years of experience
- * @returns Experience label string
  */
 export const getCandidateExperienceLabel = (c: Pick<Candidate, 'experience_years'> | null) => {
   const years = c?.experience_years || 0
