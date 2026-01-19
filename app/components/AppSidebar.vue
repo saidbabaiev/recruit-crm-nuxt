@@ -14,7 +14,6 @@ import {
 } from 'lucide-vue-next'
 
 import NavMain from '@/components/NavMain.vue'
-// import NavProjects from '@/components/NavProjects.vue'
 import NavSecondary from '@/components/NavSecondary.vue'
 import NavUser from '@/components/NavUser.vue'
 import {
@@ -32,16 +31,7 @@ const props = withDefaults(defineProps<SidebarProps>(), {
   collapsible: 'icon',
 })
 
-const user = useSupabaseUser()
-const userName = user.value?.user_metadata?.full_name || 'User'
-const userEmail = user.value?.email || ''
-
 const data = {
-  user: {
-    name: userName,
-    email: userEmail,
-    avatar: null,
-  },
   navMain: [
     {
       title: 'Dashboard',
@@ -128,7 +118,7 @@ const data = {
       />
     </SidebarContent>
     <SidebarFooter>
-      <NavUser :user="data.user" />
+      <NavUser />
     </SidebarFooter>
   </Sidebar>
 </template>

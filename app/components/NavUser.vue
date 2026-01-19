@@ -11,7 +11,6 @@ import {
 import {
   Avatar,
   AvatarFallback,
-  AvatarImage,
 } from '@/components/ui/avatar'
 import {
   DropdownMenu,
@@ -28,22 +27,31 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
+import { useMutation } from '@tanstack/vue-query'
 
-const props = defineProps<{
-  user: {
-    name: string
-    email: string
-    avatar: string | null
-  }
-}>()
-
+const user = useSupabaseUser()
+const { signOut } = useAuth()
 const { isMobile } = useSidebar()
 
-const userAvatarFallback = props.user.name
-  .split(' ')
-  .map(n => n[0])
-  .join('')
-  .toUpperCase()
+// Compute user display info
+const userName = computed(() => {
+  return user.value?.user_metadata?.full_name || 'User'
+})
+const userEmail = computed(() => user.value?.email || '')
+const userAvatarFallback = computed(() =>
+  userName.value
+    .split(' ')
+    .map((n: string) => n[0])
+    .join('')
+    .toUpperCase(),
+)
+
+const { mutate: handleLogout, isPending } = useMutation({
+  mutationFn: signOut,
+  onSuccess: async () => {
+    await navigateTo('/auth')
+  },
+})
 </script>
 
 <template>
@@ -56,21 +64,15 @@ const userAvatarFallback = props.user.name
             class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
           >
             <Avatar class="h-8 w-8 rounded-lg">
-              <AvatarImage
-                v-if="user.avatar"
-                :src="user.avatar"
-                :alt="user.name"
-              />
               <AvatarFallback
-                v-else
                 class="rounded-lg"
               >
                 {{ userAvatarFallback }}
               </AvatarFallback>
             </Avatar>
             <div class="grid flex-1 text-left text-sm leading-tight">
-              <span class="truncate font-medium">{{ user.name }}</span>
-              <span class="truncate text-xs">{{ user.email }}</span>
+              <span class="truncate font-medium">{{ userName }}</span>
+              <span class="truncate text-xs">{{ userEmail }}</span>
             </div>
             <ChevronsUpDown class="ml-auto size-4" />
           </SidebarMenuButton>
@@ -84,21 +86,20 @@ const userAvatarFallback = props.user.name
           <DropdownMenuLabel class="p-0 font-normal">
             <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
               <Avatar class="h-8 w-8 rounded-lg">
-                <AvatarImage
-                  v-if="user.avatar"
-                  :src="user.avatar"
-                  :alt="user.name"
-                />
+                <!-- <AvatarImage
+                  v-if="user.value?.avatar"
+                  :src="user.value?.avatar"
+                  :alt="userName.value"
+                /> -->
                 <AvatarFallback
-                  v-else
                   class="rounded-lg"
                 >
                   {{ userAvatarFallback }}
                 </AvatarFallback>
               </Avatar>
               <div class="grid flex-1 text-left text-sm leading-tight">
-                <span class="truncate font-semibold">{{ user.name }}</span>
-                <span class="truncate text-xs">{{ user.email }}</span>
+                <span class="truncate font-semibold">{{ userName }}</span>
+                <span class="truncate text-xs">{{ userEmail }}</span>
               </div>
             </div>
           </DropdownMenuLabel>
@@ -125,9 +126,12 @@ const userAvatarFallback = props.user.name
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem
+            :disabled="isPending"
+            @click="handleLogout"
+          >
             <LogOut />
-            Log out
+            {{ isPending ? 'Logging out...' : 'Log out' }}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
