@@ -2,6 +2,9 @@
 import { useMutation } from '@tanstack/vue-query'
 import { AlertCircle, Eye, EyeOff } from 'lucide-vue-next'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 
 // Composables
 const { $toast } = useNuxtApp()
@@ -94,11 +97,6 @@ const handleSubmit = () => {
     login({ email: form.email, password: form.password })
   }
   else {
-    if (!form.companyName.trim()) {
-      $toast.error('Company name is required')
-      return
-    }
-
     register({
       email: form.email,
       password: form.password,
@@ -125,34 +123,32 @@ definePageMeta({
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-linear-to-br from-blue-50 to-indigo-100 p-4">
-    <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+  <div class="min-h-screen flex items-center justify-center bg-linear-to-br from-muted/30 to-accent/20 p-4">
+    <div class="w-full max-w-md bg-card rounded-lg shadow-lg p-8 border">
       <div class="text-center mb-8">
-        <h1 class="text-3xl font-bold text-blue-600">
+        <h1 class="text-3xl font-bold text-primary">
           Hire CRM
         </h1>
-        <p class="text-gray-600 mt-2">
+        <p class="text-muted-foreground mt-2">
           Your IT Recruiting Solution
         </p>
       </div>
 
+      <!-- Tabs -->
       <div class="flex gap-2 mb-6">
-        <button
+        <Button
           v-for="tab in tabs"
           :key="tab"
           type="button"
-          :class="[
-            'flex-1 py-2 px-4 rounded-lg font-medium transition',
-            mode === tab
-              ? 'bg-blue-600 text-white'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200',
-          ]"
+          :variant="mode === tab ? 'default' : 'secondary'"
+          class="flex-1"
           @click="mode = tab"
         >
           {{ tab === 'signin' ? 'Sign In' : 'Sign Up' }}
-        </button>
+        </Button>
       </div>
 
+      <!-- Error Alert -->
       <Alert
         v-if="error"
         variant="destructive"
@@ -162,76 +158,86 @@ definePageMeta({
         <AlertDescription>{{ error }}</AlertDescription>
       </Alert>
 
+      <!-- Form -->
       <form
         class="space-y-4"
         @submit.prevent="handleSubmit"
       >
+        <!-- Sign Up Fields -->
         <template v-if="mode === 'signup'">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-            <input
+          <div class="space-y-2">
+            <Label for="fullName">Full Name</Label>
+            <Input
+              id="fullName"
               v-model="form.fullName"
               type="text"
               required
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
+            />
           </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
-            <input
+          <div class="space-y-2">
+            <Label for="companyName">Company Name</Label>
+            <Input
+              id="companyName"
               v-model="form.companyName"
               type="text"
               required
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
+            />
           </div>
         </template>
 
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-          <input
+        <!-- Email -->
+        <div class="space-y-2">
+          <Label for="email">Email</Label>
+          <Input
+            id="email"
             v-model="form.email"
             type="email"
             required
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
+          />
         </div>
 
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+        <!-- Password -->
+        <div class="space-y-2">
+          <Label for="password">Password</Label>
           <div class="relative">
-            <input
+            <Input
+              id="password"
               v-model="form.password"
               :type="showPassword ? 'text' : 'password'"
               required
               minlength="6"
-              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition pr-10"
-            >
+              class="pr-10"
+            />
             <button
               v-if="form.password.length > 0"
               type="button"
-              class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 hover:text-blue-600 cursor-pointer transition"
+              class="absolute inset-y-0 right-0 px-3 flex items-center text-muted-foreground hover:text-foreground"
               @click="showPassword = !showPassword"
             >
-              <span v-show="!showPassword"><Eye /></span>
-              <span v-show="showPassword"><EyeOff /></span>
+              <Eye
+                v-if="!showPassword"
+                class="h-4 w-4"
+              />
+              <EyeOff
+                v-else
+                class="h-4 w-4"
+              />
             </button>
           </div>
         </div>
 
-        <button
+        <!-- Submit Button -->
+        <Button
           type="submit"
+          class="w-full"
           :disabled="isLoginPending || isRegisterPending"
-          class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition flex justify-center items-center gap-2"
         >
           <span
             v-if="isLoginPending || isRegisterPending"
-            class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"
+            class="animate-spin h-4 w-4 border-2 border-primary-foreground border-t-transparent rounded-full mr-2"
           />
-          <span>
-            {{ mode === 'signin' ? 'Sign In' : 'Create Account' }}
-          </span>
-        </button>
+          {{ mode === 'signin' ? 'Sign In' : 'Create Account' }}
+        </Button>
       </form>
     </div>
   </div>
