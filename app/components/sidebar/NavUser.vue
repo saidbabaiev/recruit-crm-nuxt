@@ -5,6 +5,7 @@ import {
   ChevronsUpDown,
   CreditCard,
   LogOut,
+  Settings,
   Sparkles,
 } from 'lucide-vue-next'
 
@@ -106,6 +107,10 @@ const { mutate: handleLogout, isPending } = useMutation({
             <DropdownMenuItem>
               <Bell :size="16" />
               Notifications
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <Settings :size="16" />
+              Settings
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />

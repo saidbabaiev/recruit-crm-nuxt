@@ -77,6 +77,7 @@ watch(() => filters.value.search, () => {
     <!-- Candidates Grid -->
     <div
       v-if="!isPending && !error && candidates?.length"
+      class="mb-3"
     >
       <CandidatesTable
         :data="candidates"
@@ -88,10 +89,6 @@ watch(() => filters.value.search, () => {
       v-if="!isPending && !error && totalCount > filters.limit"
       class="flex items-center justify-between"
     >
-      <p class="text-sm text-muted-foreground">
-        Showing {{ (filters.page - 1) * filters.limit + 1 }}-{{ Math.min(filters.page * filters.limit, totalCount) }} of {{ totalCount }} candidates
-      </p>
-
       <Pagination
         v-slot="{ page }"
         v-model:page="filters.page"
@@ -111,6 +108,7 @@ watch(() => filters.value.search, () => {
               v-if="item.type === 'page'"
               :value="item.value"
               :is-active="item.value === page"
+              size="sm"
             >
               {{ item.value }}
             </PaginationItem>
@@ -123,6 +121,10 @@ watch(() => filters.value.search, () => {
           <PaginationNext />
         </PaginationContent>
       </Pagination>
+
+      <p class="text-xs text-muted-foreground min-w-50">
+        Showing {{ (filters.page - 1) * filters.limit + 1 }}-{{ Math.min(filters.page * filters.limit, totalCount) }} of {{ totalCount }} candidates
+      </p>
     </div>
 
     <!-- Loading State -->
