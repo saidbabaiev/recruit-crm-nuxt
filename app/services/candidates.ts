@@ -17,12 +17,7 @@ export const CandidatesService = {
     if (params?.search) {
       const q = params.search.trim()
       // Use ilike for case-insensitive partial matching
-      query = query.or(`first_name.ilike.%${q}%,last_name.ilike.%${q}%,email.ilike.%${q}%`)
-    }
-
-    // status filter
-    if (params?.status && params?.status !== 'all') {
-      query = query.eq('status', params.status)
+      query = query.or(`first_name.ilike.%${q}%,last_name.ilike.%${q}%,email.ilike.%${q}%,phone.ilike.%${q}%,city.ilike.%${q}%, country.ilike.%${q}%`)
     }
 
     // 3. Sort by default by created_at descending

@@ -10,7 +10,6 @@ export interface CandidateFilters {
   page?: number
   limit?: number
   search?: string
-  status?: string | null
 }
 
 // Interface for candidate list response with data and count

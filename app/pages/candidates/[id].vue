@@ -1,10 +1,12 @@
 <script setup lang="ts">
-import { ArrowLeft, Mail, Phone, MapPin, FileText, Clock, Calendar, Edit, Github, Linkedin } from 'lucide-vue-next'
+import { ArrowLeft, MapPin, Clock, Calendar, Edit } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import CandidateSkillsCell from '@/components/candidates/table/cells/CandidateSkillsCell.vue'
+import CandidateContacts from '~/components/candidates/detail/CandidateContacts.vue'
 
 const route = useRoute()
 const candidateId = computed(() => route.params.id as string)
@@ -108,156 +110,75 @@ const formatVisaStatus = (status: string | null) => {
       class="max-w-6xl mx-auto"
     >
       <!-- Header Card -->
-      <Card>
-        <CardContent class="pt-6">
-          <div class="flex items-start gap-6">
+      <Card class="pb-4">
+        <CardContent class="p-0">
+          <div class="flex items-start gap-6 px-6">
             <!-- Avatar -->
-            <Avatar class="h-24 w-24">
-              <AvatarFallback class="text-2xl">
+            <Avatar class="h-16 w-16">
+              <AvatarFallback class="text-2xl bg-linear-to-br from-blue-300 to-violet-300 text-white font-semibold">
                 {{ initials }}
               </AvatarFallback>
             </Avatar>
 
             <!-- Main Info -->
             <div class="flex-1 space-y-4">
-              <!-- Name & Position -->
-              <div>
-                <div class="flex items-start justify-between">
-                  <div>
-                    <h1 class="text-3xl font-bold tracking-tight">
-                      {{ candidate.first_name }} {{ candidate.last_name }}
-                    </h1>
-                    <p class="text-lg text-muted-foreground mt-1">
-                      {{ candidate.current_position || 'Not specified' }}
-                    </p>
-                  </div>
-                  <div class="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                    >
-                      <Edit class="mr-2 h-4 w-4" />
-                      Edit
-                    </Button>
-                    <Button size="sm">
-                      Schedule Interview
-                    </Button>
-                  </div>
+              <div class="flex items-center justify-between mb-0">
+                <!-- Left: Name + Social Icons -->
+                <div class="flex items-center gap-3">
+                  <h1 class="text-3xl font-bold tracking-tight">
+                    {{ candidate.first_name }} {{ candidate.last_name }}
+                  </h1>
                 </div>
 
-                <!-- Location & Relocation -->
-                <div class="flex items-center gap-6 mt-3 text-sm">
-                  <span
-                    v-if="candidate.city || candidate.country"
-                    class="flex items-center gap-1.5 text-muted-foreground"
+                <!-- Right: Action Buttons -->
+                <div class="flex gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
                   >
-                    <MapPin class="h-4 w-4" />
-                    {{ candidate.city ? `${candidate.city}, ` : '' }}{{ candidate.country }}
-                  </span>
-
-                  <span class="flex items-center gap-1.5">
-                    <span class="text-muted-foreground">Willing To Relocate:</span>
-                    <Badge
-                      :variant="candidate.relocation_willingness ? 'default' : 'secondary'"
-                      class="text-xs"
-                    >
-                      {{ candidate.relocation_willingness ? 'Yes' : 'No' }}
-                    </Badge>
-                  </span>
+                    <Edit class="mr-2 h-4 w-4" />
+                    Edit
+                  </Button>
+                  <Button size="sm">
+                    Schedule Interview
+                  </Button>
                 </div>
               </div>
 
-              <Separator />
+              <!-- Position & Location & Relocation (new line below) -->
+              <div class="flex items-center gap-6 text-sm">
+                <p class="text-lg text-muted-foreground">
+                  {{ candidate.current_position || 'Not specified' }}
+                </p>
+                <span
+                  v-if="candidate.city || candidate.country"
+                  class="flex items-center gap-1.5 text-muted-foreground"
+                >
+                  <MapPin class="h-4 w-4" />
+                  {{ candidate.city ? `${candidate.city}, ` : '' }}{{ candidate.country }}
+                </span>
 
-              <!-- Contact Info Grid -->
-              <div class="grid grid-cols-2 gap-x-8 gap-y-3 text-sm">
-                <!-- Email -->
-                <div class="flex items-center gap-2">
-                  <Mail class="h-4 w-4 text-muted-foreground shrink-0" />
-                  <a
-                    v-if="candidate.email"
-                    :href="`mailto:${candidate.email}`"
-                    class="text-primary hover:underline truncate"
+                <span class="flex items-center gap-1.5">
+                  <span class="text-muted-foreground">Willing To Relocate:</span>
+                  <Badge
+                    :variant="candidate.relocation_willingness ? 'default' : 'secondary'"
+                    class="text-xs"
                   >
-                    {{ candidate.email }}
-                  </a>
-                  <span
-                    v-else
-                    class="text-muted-foreground"
-                  >Not specified</span>
-                </div>
-
-                <!-- Phone -->
-                <div class="flex items-center gap-2">
-                  <Phone class="h-4 w-4 text-muted-foreground shrink-0" />
-                  <a
-                    v-if="candidate.phone"
-                    :href="`tel:${candidate.phone}`"
-                    class="text-primary hover:underline"
-                  >
-                    {{ candidate.phone }}
-                  </a>
-                  <span
-                    v-else
-                    class="text-muted-foreground"
-                  >Not specified</span>
-                </div>
-
-                <!-- LinkedIn -->
-                <div class="flex items-center gap-2">
-                  <Linkedin class="h-4 w-4 text-muted-foreground shrink-0" />
-                  <a
-                    v-if="candidate.linkedin_url"
-                    :href="candidate.linkedin_url"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-primary hover:underline truncate"
-                  >
-                    LinkedIn Profile
-                  </a>
-                  <span
-                    v-else
-                    class="text-muted-foreground"
-                  >Not specified</span>
-                </div>
-
-                <!-- GitHub -->
-                <div class="flex items-center gap-2">
-                  <Github class="h-4 w-4 text-muted-foreground shrink-0" />
-                  <a
-                    v-if="candidate.github_url"
-                    :href="candidate.github_url"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-primary hover:underline truncate"
-                  >
-                    GitHub Profile
-                  </a>
-                  <span
-                    v-else
-                    class="text-muted-foreground"
-                  >Not specified</span>
-                </div>
-
-                <!-- Resume -->
-                <div class="flex items-center gap-2 col-span-2">
-                  <FileText class="h-4 w-4 text-muted-foreground shrink-0" />
-                  <a
-                    v-if="candidate.resume_url"
-                    :href="candidate.resume_url"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="text-primary hover:underline truncate"
-                  >
-                    Download Resume
-                  </a>
-                  <span
-                    v-else
-                    class="text-muted-foreground"
-                  >Not specified</span>
-                </div>
+                    {{ candidate.relocation_willingness ? 'Yes' : 'No' }}
+                  </Badge>
+                </span>
               </div>
+
+              <!-- <Separator />
+
+              <CandidateContacts :candidate="candidate" /> -->
             </div>
+          </div>
+
+          <Separator class="my-4" />
+
+          <div class="px-6">
+            <CandidateContacts :candidate="candidate" />
           </div>
         </CardContent>
       </Card>
@@ -268,40 +189,34 @@ const formatVisaStatus = (status: string | null) => {
           <div class="grid grid-cols-2 gap-x-16 gap-y-4 text-sm">
             <!-- Current Organization -->
             <div class="flex justify-between items-start">
-              <span class="text-muted-foreground">Current Organization</span>
-              <span class="font-medium text-right">{{ candidate.current_company || 'Not specified' }}</span>
+              <span class="font-medium">Current Organization</span>
+              <span class="text-right font-light">{{ candidate.current_company || 'Not specified' }}</span>
             </div>
 
             <!-- Education -->
             <div class="flex justify-between items-start">
-              <span class="text-muted-foreground">Education</span>
-              <span class="font-medium text-right">{{ candidate.education || 'Not specified' }}</span>
+              <span class="font-medium">Education</span>
+              <span class="text-right font-light">{{ candidate.education || 'Not specified' }}</span>
             </div>
 
             <!-- Skills -->
             <div class="flex justify-between items-start">
-              <span class="text-muted-foreground">Skills</span>
-              <div class="text-right">
-                <span
-                  v-if="candidate.skills && candidate.skills.length"
-                  class="font-medium"
-                >
-                  {{ candidate.skills.join(', ') }}
-                </span>
-                <span
-                  v-else
-                  class="text-muted-foreground"
-                >Not specified</span>
+              <span class="font-medium">Skills</span>
+              <div class="text-right font-light">
+                <CandidateSkillsCell
+                  :candidate="candidate"
+                  text-size="sm"
+                />
               </div>
             </div>
 
             <!-- Languages -->
             <div class="flex justify-between items-start">
-              <span class="text-muted-foreground">Languages</span>
-              <div class="text-right">
+              <span class="font-medium">Languages</span>
+              <div class="text-right font-light">
                 <span
                   v-if="candidate.languages && candidate.languages.length"
-                  class="font-medium"
+                  class="font-light"
                 >
                   {{ candidate.languages.join(', ') }}
                 </span>
@@ -314,48 +229,48 @@ const formatVisaStatus = (status: string | null) => {
 
             <!-- Salary Expectation -->
             <div class="flex justify-between items-start">
-              <span class="text-muted-foreground">Salary Expectation</span>
-              <div class="font-medium text-right">
+              <span class="font-medium">Salary Expectation</span>
+              <div class="text-right font-light">
                 <div v-if="candidate.expected_salary_min || candidate.expected_salary_max">
                   {{ formatSalary(candidate.expected_salary_min || candidate.expected_salary_max, candidate.salary_currency, candidate.salary_period) }}
                 </div>
                 <span
                   v-else
-                  class="text-muted-foreground font-normal"
+                  class="text-muted-foreground font-light"
                 >Not specified</span>
               </div>
             </div>
 
             <!-- Total Experience -->
             <div class="flex justify-between items-start">
-              <span class="text-muted-foreground">Total Experience</span>
-              <span class="font-medium text-right">
-                {{ candidate.experience_years ? `${candidate.experience_years} Year${candidate.experience_years > 1 ? 's' : ''}` : 'Not specified' }}
+              <span class="font-medium">Experience</span>
+              <span class="text-right font-light">
+                {{ getCandidateExperienceLabel(candidate) }}
               </span>
             </div>
 
             <!-- Notice Period -->
             <div class="flex justify-between items-start">
-              <span class="text-muted-foreground">Notice Period (Days)</span>
-              <span class="font-medium text-right">{{ candidate.notice_period ?? 'Not specified' }}</span>
+              <span class="font-medium">Notice Period (Days)</span>
+              <span class="text-right font-light">{{ candidate.notice_period ?? 'Not specified' }}</span>
             </div>
 
             <!-- Availability Date -->
             <div class="flex justify-between items-start">
-              <span class="text-muted-foreground">Availability Date</span>
-              <span class="font-medium text-right">{{ formatDate(candidate.availability_date) }}</span>
+              <span class="font-medium">Availability Date</span>
+              <span class="text-right font-light">{{ formatDate(candidate.availability_date) }}</span>
             </div>
 
             <!-- Remote Work Preference -->
             <div class="flex justify-between items-start">
-              <span class="text-muted-foreground">Remote Work Preference</span>
-              <span class="font-medium text-right">{{ formatRemotePreference(candidate.remote_work_preference) }}</span>
+              <span class="font-medium">Remote Work Preference</span>
+              <span class="text-right font-light">{{ formatRemotePreference(candidate.remote_work_preference) }}</span>
             </div>
 
             <!-- Visa Status -->
             <div class="flex justify-between items-start">
-              <span class="text-muted-foreground">Visa Status</span>
-              <span class="font-medium text-right">{{ formatVisaStatus(candidate.visa_status) }}</span>
+              <span class="font-medium">Visa Status</span>
+              <span class="text-right font-light">{{ formatVisaStatus(candidate.visa_status) }}</span>
             </div>
           </div>
         </CardContent>

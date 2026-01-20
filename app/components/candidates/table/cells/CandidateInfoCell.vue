@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Candidate } from '@/types/candidates'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 
 interface Props {
   candidate: Candidate

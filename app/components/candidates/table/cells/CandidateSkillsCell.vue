@@ -6,6 +6,7 @@ import { computed } from 'vue'
 interface Props {
   candidate: Candidate
   maxVisible?: number
+  textSize?: 'xs' | 'sm'
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -31,7 +32,7 @@ const remainingCount = computed(() =>
         <HoverCardTrigger as-child>
           <button
             type="button"
-            class="max-w-50 truncate text-left text-xs"
+            :class="`max-w-50 truncate text-left text-${props.textSize || 'xs'}`"
           >
             <span
               v-for="(skill, index) in visibleSkills"
@@ -41,7 +42,7 @@ const remainingCount = computed(() =>
             </span>
             <span
               v-if="remainingCount > 0"
-              class="font-medium"
+              :class="`font-medium text-${props.textSize || 'xs'}`"
             >
               +{{ remainingCount }} more
             </span>
@@ -52,7 +53,7 @@ const remainingCount = computed(() =>
             <span
               v-for="skill in candidate.skills"
               :key="skill"
-              class="inline-flex items-center rounded-md bg-secondary px-2 py-1 text-xs font-medium text-secondary-foreground"
+              :class="`inline-flex items-center rounded-md bg-secondary px-2 py-1 text-${props.textSize || 'xs'} font-medium text-secondary-foreground`"
             >
               {{ skill }}
             </span>
