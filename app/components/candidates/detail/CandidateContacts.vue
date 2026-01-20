@@ -13,7 +13,7 @@ defineProps<Props>()
 
 <template>
   <!-- Contact Info Grid -->
-  <div class="grid grid-cols-4 text-sm">
+  <div class="grid grid-cols-4 px-6 text-sm">
     <!-- Email -->
     <div class="flex items-center gap-2">
       <Mail class="h-4 w-4 text-muted-foreground shrink-0" />
