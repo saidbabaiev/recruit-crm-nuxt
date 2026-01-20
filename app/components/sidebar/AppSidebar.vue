@@ -4,7 +4,6 @@ import type { SidebarProps } from '@/components/ui/sidebar'
 import {
   Briefcase,
   Building2,
-  Calendar,
   Command,
   FileUser,
   LifeBuoy,
@@ -13,9 +12,9 @@ import {
   Users,
 } from 'lucide-vue-next'
 
-import NavMain from '@/components/NavMain.vue'
-import NavSecondary from '@/components/NavSecondary.vue'
-import NavUser from '@/components/NavUser.vue'
+import NavMain from '@/components/sidebar/NavMain.vue'
+import NavSecondary from '@/components/sidebar/NavSecondary.vue'
+import NavUser from '@/components/sidebar/NavUser.vue'
 import {
   Sidebar,
   SidebarContent,
@@ -42,11 +41,6 @@ const data = {
       title: 'Candidates',
       url: '/candidates',
       icon: Users,
-      // items: [
-      //   { title: "All Candidates", url: "/candidates" },
-      //   { title: "Active", url: "/candidates?status=active" },
-      //   { title: "Archived", url: "/candidates?status=archived" },
-      // ],
     },
     {
       title: 'Jobs',
@@ -62,11 +56,6 @@ const data = {
       title: 'Applications',
       url: '/applications',
       icon: FileUser,
-    },
-    {
-      title: 'Interviews',
-      url: '/interviews',
-      icon: Calendar,
     },
   ],
   navSecondary: [
@@ -87,7 +76,6 @@ const data = {
 <template>
   <Sidebar
     v-bind="props"
-    class="bg-card"
   >
     <SidebarHeader>
       <SidebarMenu>
@@ -111,7 +99,6 @@ const data = {
     </SidebarHeader>
     <SidebarContent>
       <NavMain :items="data.navMain" />
-      <!-- <NavProjects :projects="data.projects" /> -->
       <NavSecondary
         :items="data.navSecondary"
         class="mt-auto"
