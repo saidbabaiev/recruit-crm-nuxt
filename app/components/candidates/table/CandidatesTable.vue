@@ -52,7 +52,7 @@ const handleRowClick = (candidate: Candidate) => {
 </script>
 
 <template>
-  <div class="rounded-md border bg-card">
+  <div class="rounded-md border">
     <Table>
       <TableHeader>
         <TableRow
