@@ -14,11 +14,10 @@ import {
 
 import NavMain from '@/components/sidebar/NavMain.vue'
 import NavSecondary from '@/components/sidebar/NavSecondary.vue'
-import NavUser from '@/components/sidebar/NavUser.vue'
+// import NavUser from '@/components/sidebar/NavUser.vue'
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -104,8 +103,8 @@ const data = {
         class="mt-auto"
       />
     </SidebarContent>
-    <SidebarFooter>
+    <!-- <SidebarFooter>
       <NavUser />
-    </SidebarFooter>
+    </SidebarFooter> -->
   </Sidebar>
 </template>

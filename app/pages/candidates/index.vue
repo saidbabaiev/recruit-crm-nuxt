@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Plus } from 'lucide-vue-next'
 import {
   Pagination,
   PaginationContent,
@@ -8,7 +7,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination'
-import { Button } from '@/components/ui/button'
+import { Plus } from 'lucide-vue-next'
 
 const filters = ref({
   search: '',
@@ -31,8 +30,8 @@ watch(() => filters.value.search, () => {
 <template>
   <div class="p-6 space-y-6">
     <!-- Page Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-      <h1 class="text-2xl font-bold tracking-tight">
+    <div class="flex items-center justify-between ">
+      <h1 class="text-lg font-bold">
         Candidates List
       </h1>
       <Button>
