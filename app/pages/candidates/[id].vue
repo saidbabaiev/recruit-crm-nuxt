@@ -25,14 +25,14 @@ const initials = computed(() => {
 
 // Format salary with period
 const formatSalary = (amount: number | null, currency?: string | null, period?: string | null) => {
-  if (!amount) return 'Not available'
+  if (!amount) return 'Not specified'
   const periodText = period ? `/${period}` : ''
   return `${currency || 'EUR'} ${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}${periodText}`
 }
 
 // Format date
 const formatDate = (date: string | null) => {
-  if (!date) return 'Not available'
+  if (!date) return 'Not specified'
   return new Date(date).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
@@ -184,7 +184,7 @@ const formatVisaStatus = (status: string | null) => {
                   <span
                     v-else
                     class="text-muted-foreground"
-                  >Not available</span>
+                  >Not specified</span>
                 </div>
 
                 <!-- Phone -->
@@ -200,7 +200,7 @@ const formatVisaStatus = (status: string | null) => {
                   <span
                     v-else
                     class="text-muted-foreground"
-                  >Not available</span>
+                  >Not specified</span>
                 </div>
 
                 <!-- LinkedIn -->
@@ -218,7 +218,7 @@ const formatVisaStatus = (status: string | null) => {
                   <span
                     v-else
                     class="text-muted-foreground"
-                  >Not available</span>
+                  >Not specified</span>
                 </div>
 
                 <!-- GitHub -->
@@ -236,7 +236,7 @@ const formatVisaStatus = (status: string | null) => {
                   <span
                     v-else
                     class="text-muted-foreground"
-                  >Not available</span>
+                  >Not specified</span>
                 </div>
 
                 <!-- Resume -->
@@ -254,7 +254,7 @@ const formatVisaStatus = (status: string | null) => {
                   <span
                     v-else
                     class="text-muted-foreground"
-                  >Not available</span>
+                  >Not specified</span>
                 </div>
               </div>
             </div>
@@ -269,13 +269,13 @@ const formatVisaStatus = (status: string | null) => {
             <!-- Current Organization -->
             <div class="flex justify-between items-start">
               <span class="text-muted-foreground">Current Organization</span>
-              <span class="font-medium text-right">{{ candidate.current_company || 'Not available' }}</span>
+              <span class="font-medium text-right">{{ candidate.current_company || 'Not specified' }}</span>
             </div>
 
             <!-- Education -->
             <div class="flex justify-between items-start">
               <span class="text-muted-foreground">Education</span>
-              <span class="font-medium text-right">{{ candidate.education || 'Not available' }}</span>
+              <span class="font-medium text-right">{{ candidate.education || 'Not specified' }}</span>
             </div>
 
             <!-- Skills -->
@@ -291,7 +291,7 @@ const formatVisaStatus = (status: string | null) => {
                 <span
                   v-else
                   class="text-muted-foreground"
-                >Not available</span>
+                >Not specified</span>
               </div>
             </div>
 
@@ -308,7 +308,7 @@ const formatVisaStatus = (status: string | null) => {
                 <span
                   v-else
                   class="text-muted-foreground"
-                >Not available</span>
+                >Not specified</span>
               </div>
             </div>
 
@@ -322,7 +322,7 @@ const formatVisaStatus = (status: string | null) => {
                 <span
                   v-else
                   class="text-muted-foreground font-normal"
-                >Not available</span>
+                >Not specified</span>
               </div>
             </div>
 
@@ -330,14 +330,14 @@ const formatVisaStatus = (status: string | null) => {
             <div class="flex justify-between items-start">
               <span class="text-muted-foreground">Total Experience</span>
               <span class="font-medium text-right">
-                {{ candidate.experience_years ? `${candidate.experience_years} Year${candidate.experience_years > 1 ? 's' : ''}` : 'Not available' }}
+                {{ candidate.experience_years ? `${candidate.experience_years} Year${candidate.experience_years > 1 ? 's' : ''}` : 'Not specified' }}
               </span>
             </div>
 
             <!-- Notice Period -->
             <div class="flex justify-between items-start">
               <span class="text-muted-foreground">Notice Period (Days)</span>
-              <span class="font-medium text-right">{{ candidate.notice_period ?? 'Not available' }}</span>
+              <span class="font-medium text-right">{{ candidate.notice_period ?? 'Not specified' }}</span>
             </div>
 
             <!-- Availability Date -->

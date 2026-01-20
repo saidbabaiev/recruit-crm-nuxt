@@ -5,6 +5,7 @@ import { getCandidateExperienceLabel } from '@/utils/candidates'
 import CandidatesTableDropdown from './CandidatesTableDropdown.vue'
 import CandidateInfoCell from './cells/CandidateInfoCell.vue'
 import CandidateContactsCell from './cells/CandidateContactsCell.vue'
+import CandidateSkillsCell from './cells/CandidateSkillsCell.vue'
 
 export const columns: ColumnDef<Candidate>[] = [
   {
@@ -17,13 +18,29 @@ export const columns: ColumnDef<Candidate>[] = [
     header: 'Experience',
     cell: ({ row }) => {
       const candidate = row.original
-      return h('div', { class: 'text-sm' }, getCandidateExperienceLabel(candidate))
+      return h('div', { class: candidate.experience_years ? 'text-xs' : 'text-xs text-muted-foreground' }, getCandidateExperienceLabel(candidate))
     },
   },
   {
     accessorKey: 'contacts',
     header: 'Contacts',
     cell: ({ row }) => h(CandidateContactsCell, { candidate: row.original }),
+  },
+  {
+    accessorKey: 'location',
+    header: 'Location',
+    cell: ({ row }) => {
+      const candidate = row.original
+      const candidateLocation = [candidate.city, candidate.country].filter(Boolean).join(', ')
+      return h('div', {
+        class: candidateLocation ? 'text-xs' : 'text-xs text-muted-foreground',
+      }, candidateLocation || 'Not specified')
+    },
+  },
+  {
+    accessorKey: 'skills',
+    header: 'Skills',
+    cell: ({ row }) => h(CandidateSkillsCell, { candidate: row.original }),
   },
   {
     id: 'actions',
