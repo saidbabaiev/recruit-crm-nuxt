@@ -54,8 +54,10 @@
 - [x] **Candidate Details:** Create dynamic page `pages/candidates/[id].vue`.
     - [ ] **UI:** Display detailed info, Skeletons, and Error handling.
     - [x] **Navigation:** Connect list items to detail view (✅ partially done - table rows clickable).
-- [ ] **Mutations:** Create "Add Candidate" modal using `useMutation` with cache invalidation (`invalidateQueries`).
-- [ ] **Card View (Future):** Preserve `CandidateCard` components in `card/` folder for alternative view or drag-n-drop.
+    - [ ] **Refactor:** Refactor CandidateDetails into smaller components.
+- [ ] **Job Matching:** Implement basic job matching logic in candidate details.
+    - [ ]*Tech:* Simple algorithm based on skills and experience.
+    - [ ]*UI:* Show matched jobs section in candidate details.
 
 ## 5. Feature: Pipeline / Jobs
 - [ ] **Kanban Board:** Implement drag-and-drop interface for candidate stages.
