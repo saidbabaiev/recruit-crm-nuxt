@@ -51,9 +51,9 @@
         - [x] Connected to reactive `filters.page` with automatic query refetch
         - [x] Only shows when `totalCount > limit`
     - [ ] **Sorting UI:** Add UI controls for column sorting (currently only programmatic).
-- [ ] **Candidate Details:** Create dynamic page `pages/candidates/[id].vue`.
+- [x] **Candidate Details:** Create dynamic page `pages/candidates/[id].vue`.
     - [ ] **UI:** Display detailed info, Skeletons, and Error handling.
-    - [ ] **Navigation:** Connect list items to detail view (✅ partially done - table rows clickable).
+    - [x] **Navigation:** Connect list items to detail view (✅ partially done - table rows clickable).
 - [ ] **Mutations:** Create "Add Candidate" modal using `useMutation` with cache invalidation (`invalidateQueries`).
 - [ ] **Card View (Future):** Preserve `CandidateCard` components in `card/` folder for alternative view or drag-n-drop.
 
