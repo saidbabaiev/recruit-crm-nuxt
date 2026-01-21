@@ -1,8 +1,8 @@
 import type { Database } from './supabase'
+import type { ApplicationStatus } from './applications'
 
 // --- ENUMS - Centralized enum definitions ---
 export type AppRole = Database['public']['Enums']['app_role']
-export type ApplicationStatus = Database['public']['Enums']['application_status']
 export type JobStatus = Database['public']['Enums']['job_status']
 export type InterviewStatus = Database['public']['Enums']['interview_status']
 export type InterviewType = Database['public']['Enums']['interview_type']

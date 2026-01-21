@@ -4,7 +4,10 @@ import type { Candidate, CandidateListResponse, CandidateFilters, CandidateInser
 
 export const CandidatesService = {
   /**
-   * Fetch all candidates with optional filters and pagination
+   * Fetches all candidates with optional filters and pagination
+   * @param client - Supabase client instance
+   * @param params - Optional filters (search, page, limit)
+   * @returns Promise with candidates data and total count
    */
   async getAll(client: SupabaseClient<Database>, params?: CandidateFilters): Promise<CandidateListResponse> {
     // 1. Initialize query
@@ -43,8 +46,12 @@ export const CandidatesService = {
       count,
     }
   },
+
   /**
    * Fetch a single candidate by ID
+   * @param client - Supabase client instance
+   * @param id - Candidate ID
+   * @returns Promise with candidate data
    */
   async getById(client: SupabaseClient<Database>, id: string): Promise<Candidate> {
     const { data, error } = await client
@@ -61,6 +68,12 @@ export const CandidatesService = {
     return data
   },
 
+  /**
+   * Creates a new candidate
+   * @param client - Supabase client instance
+   * @param candidate - Candidate data to insert
+   * @returns Promise with created candidate data
+  */
   async create(client: SupabaseClient<Database>, candidate: CandidateInsert) {
     const { data, error } = await client
       .from('candidates')

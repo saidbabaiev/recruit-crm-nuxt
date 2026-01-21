@@ -2,7 +2,7 @@ import type { SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '@/types/supabase'
 import type { Job, JobFilters, JobListResponse } from '@/types/jobs'
 
-export const JobService = {
+export const JobsService = {
   /**
    * Fetches all jobs with optional filters
    * @param client - Supabase client instance
