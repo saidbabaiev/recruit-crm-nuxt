@@ -5,6 +5,8 @@ export type Candidate = Database['public']['Tables']['candidates']['Row']
 export type CandidateInsert = Database['public']['Tables']['candidates']['Insert']
 export type CandidateUpdate = Database['public']['Tables']['candidates']['Update']
 
+export type CandidateSkills = Database['public']['Tables']['candidates']['Row']['skills']
+
 // Candidate Note types
 export type CandidateNote = Database['public']['Tables']['candidate_notes']['Row']
 export type CandidateNoteInsert = Database['public']['Tables']['candidate_notes']['Insert']

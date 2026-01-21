@@ -4,6 +4,8 @@ export type Job = Database['public']['Tables']['jobs']['Row']
 export type JobInsert = Database['public']['Tables']['jobs']['Insert']
 export type JobUpdate = Database['public']['Tables']['jobs']['Update']
 
+export type JobSkills = Database['public']['Tables']['jobs']['Row']['skills']
+
 export interface JobMatch {
   job: Job
   matchPercentage: number // 0-100
