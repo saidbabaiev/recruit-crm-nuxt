@@ -18,7 +18,7 @@ export const columns: ColumnDef<Candidate>[] = [
     header: 'Experience',
     cell: ({ row }) => {
       const candidate = row.original
-      return h('div', { class: candidate.experience_years ? 'text-xs' : 'text-xs text-muted-foreground' }, getCandidateExperienceLabel(candidate))
+      return h('div', { class: candidate.experience_years ? 'text-xs' : 'text-xs text-muted-foreground' }, getCandidateExperienceLabel(candidate.experience_years))
     },
   },
   {

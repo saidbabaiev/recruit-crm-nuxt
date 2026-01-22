@@ -85,3 +85,18 @@ export function calculateJobMatch(
 export function sortByMatchPercentage(matches: JobMatch[]): JobMatch[] {
   return [...matches].sort((a, b) => b.matchPercentage - a.matchPercentage)
 }
+
+export function getSalaryRangeLabel(min: number | null, max: number | null): string {
+  if (min && max) {
+    return `$${min} - $${max} per year`
+  }
+  else if (min) {
+    return `From $${min} per year`
+  }
+  else if (max) {
+    return `Up to $${max} per year`
+  }
+  else {
+    return 'Salary not specified'
+  }
+}

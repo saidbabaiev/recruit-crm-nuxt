@@ -110,7 +110,6 @@ export const useApplications = () => {
     return useQuery({
       queryKey: computed(() => applicationQueryKeys.byCandidate(toValue(candidateId))),
       queryFn: () => ApplicationsService.getByCandidateId(client, toValue(candidateId)),
-      staleTime: 30 * 1000,
     })
   }
 

@@ -20,8 +20,6 @@ export const candidateQueryKeys = {
 export const useCandidates = () => {
   const client = useSupabaseClient()
 
-  // --- Queries (READ) ---
-
   /**
    * Fetches paginated and filtered candidates list.
    *
@@ -56,6 +54,7 @@ export const useCandidates = () => {
       queryKey: computed(() => candidateQueryKeys.detail(unref(id))),
       queryFn: () => CandidatesService.getById(client, unref(id)),
       enabled: computed(() => !!unref(id)), // Request will not be made until there is an ID
+      staleTime: 1000 * 60,
     })
   }
   // TODO: Create, Update and Delete mutations can be added here

@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { Briefcase } from 'lucide-vue-next'
+import { MapPin } from 'lucide-vue-next'
 import type { JobMatch } from '@/types/jobs'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
+import { getCandidateExperienceLabel } from '@/utils/candidates'
+import { getSalaryRangeLabel } from '@/utils/job-matching'
 
 interface Props {
   match: JobMatch
@@ -28,16 +30,17 @@ const buttonState = computed(() => {
 })
 
 const buttonConfig = {
-  invite: { text: 'Invite', variant: 'default' as const, disabled: false },
-  loading: { text: 'Inviting...', variant: 'secondary' as const, disabled: true },
-  applied: { text: 'Applied', variant: 'outline' as const, disabled: true },
+  invite: { text: 'Assign', variant: 'default' as const, disabled: false },
+  loading: { text: 'Assigning...', variant: 'secondary' as const, disabled: true },
+  applied: { text: 'Assigned', variant: 'outline' as const, disabled: true },
 }
 
-// Get badge variant based on match percentage
-function getMatchVariant(percentage: number) {
-  if (percentage >= 80) return 'default' // Green/Success
-  if (percentage >= 50) return 'secondary' // Yellow/Warning
-  return 'outline' // Gray/Low
+// Get badge color based on match percentage
+function getMatchColor(percentage: number) {
+  if (percentage >= 90) return 'bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300'
+  if (percentage >= 70) return 'bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300'
+  if (percentage >= 50) return 'bg-yellow-50 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-300'
+  return 'bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300'
 }
 
 // Handle invite action
@@ -54,30 +57,43 @@ function handleInvite() {
 </script>
 
 <template>
-  <Card>
-    <CardContent class="p-4">
-      <!-- Header: Title + Match Badge -->
-      <div class="flex items-start justify-between gap-4 mb-3">
-        <div class="flex-1 min-w-0">
+  <Card class="h-full flex flex-col">
+    <CardContent>
+      <div>
+        <div class="flex items-center justify-between gap-4 mb-1">
           <h3 class="font-semibold text-base leading-tight truncate">
             {{ match.job.title }}
           </h3>
-          <!-- <div class="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
-            <Building2 class="h-3.5 w-3.5 shrink-0" />
-            <span class="truncate">{{ match.job.company || 'Company not specified' }}</span>
-          </div> -->
+          <Badge
+            :class="getMatchColor(match.matchPercentage)"
+            class="flex shrink-0"
+          >
+            {{ match.matchPercentage }}% Match
+          </Badge>
         </div>
-
-        <Badge
-          :variant="getMatchVariant(match.matchPercentage)"
-          class="flex shrink-0"
-        >
-          {{ match.matchPercentage }}% Match
-        </Badge>
+        <p class="text-xs">
+          {{ match.job.description }}
+        </p>
       </div>
 
       <!-- Skills Comparison -->
       <div class="space-y-2 mb-4">
+        <div class="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
+          <MapPin class="h-3.5 w-3.5 shrink-0" />
+          <span class="truncate">{{ match.job.location || 'Location not specified' }}</span>
+        </div>
+
+        <div class="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
+          <span class="truncate">{{ match.job.work_format || 'Work format not specified' }}</span>
+        </div>
+
+        <div class="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
+          <span class="truncate">{{ getSalaryRangeLabel(match.job.salary_min, match.job.salary_max) }}</span>
+        </div>
+
+        <div class="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
+          <span class="truncate">{{ getCandidateExperienceLabel(match.job.min_experience_value) }}</span>
+        </div>
         <!-- Matched Skills -->
         <div v-if="match.matchedSkills.length > 0">
           <span class="text-xs font-medium text-muted-foreground">Matched Skills:</span>
@@ -108,18 +124,16 @@ function handleInvite() {
           </div>
         </div>
       </div>
-
-      <!-- Action Button -->
+    </CardContent>
+    <CardFooter class="mt-auto flex justify-center">
       <Button
         :variant="buttonConfig[buttonState].variant"
         :disabled="buttonConfig[buttonState].disabled"
-        size="sm"
-        class="w-full"
+        class="cursor-pointer w-3/4"
         @click="handleInvite"
       >
-        <Briefcase class="mr-2 h-4 w-4" />
         {{ buttonConfig[buttonState].text }}
       </Button>
-    </CardContent>
+    </CardFooter>
   </Card>
 </template>

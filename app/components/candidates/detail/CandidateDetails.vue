@@ -52,7 +52,7 @@ const formatVisaStatus = (status: string | null) => {
 
 <template>
   <!-- Unified Details Card -->
-  <Card class="mt-6">
+  <Card>
     <CardContent>
       <div class="grid grid-cols-2 gap-x-16 gap-y-4 text-sm">
         <!-- Current Organization -->
@@ -113,7 +113,7 @@ const formatVisaStatus = (status: string | null) => {
         <div class="flex justify-between items-start">
           <span class="font-medium">Experience</span>
           <span class="text-right font-light">
-            {{ getCandidateExperienceLabel(candidate) }}
+            {{ getCandidateExperienceLabel(candidate.experience_years) }}
           </span>
         </div>
 

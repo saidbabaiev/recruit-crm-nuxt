@@ -1,4 +1,4 @@
-import type { Candidate } from '~/types/database'
+import type { Candidate } from '@/types/candidates'
 
 /**
  * Get full name of the candidate
@@ -20,7 +20,7 @@ export const getCandidateInitials = (c: Pick<Candidate, 'first_name' | 'last_nam
 /**
  * Get candidate experience label
  */
-export const getCandidateExperienceLabel = (c: Pick<Candidate, 'experience_years'> | null) => {
-  const years = c?.experience_years || 0
+export const getCandidateExperienceLabel = (experienceYears: number | null) => {
+  const years = experienceYears || 0
   return years ? `${years}+ years experience` : 'Not specified'
 }
