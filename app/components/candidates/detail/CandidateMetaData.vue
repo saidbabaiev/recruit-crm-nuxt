@@ -18,7 +18,7 @@ const formatDate = (date: string | null) => {
 </script>
 
 <template>
-  <div class="flex items-center justify-between text-xs text-muted-foreground mb-3">
+  <div class="text-xs text-muted-foreground">
     <div class="flex items-center gap-2">
       <Clock class="h-3 w-3" />
       <span>Created: {{ formatDate(candidate.created_at) }}</span>
