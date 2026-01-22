@@ -7,8 +7,11 @@ import SkillsList from '@/components/common/SkillsList.vue'
 import { Separator } from '@/components/ui/separator'
 
 import type { JobMatch } from '@/types/jobs'
-import { getCandidateExperienceLabel } from '@/utils/candidates'
-import { getSalaryRangeLabel, formatRemotePreference } from '@/utils/common'
+import {
+  getSalaryRangeLabel,
+  formatRemotePreference,
+  getCandidateExperienceLabel,
+} from '@/utils/common'
 
 interface Props {
   match: JobMatch

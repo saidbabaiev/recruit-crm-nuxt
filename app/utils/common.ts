@@ -22,6 +22,16 @@ export function getSalaryRangeLabel(min: number | null, max: number | null, curr
 }
 
 /**
+ * Get candidate experience label
+ * @param experienceYears Number of years of experience
+ * @returns Formatted experience label
+ */
+export const getCandidateExperienceLabel = (experienceYears: number | null) => {
+  const years = experienceYears || 0
+  return years ? `${years}+ years` : 'Not specified'
+}
+
+/**
  * Format visa status
  * @param visaStatus Visa status string
  * @returns Formatted visa status

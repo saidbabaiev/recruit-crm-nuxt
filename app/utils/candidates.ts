@@ -16,11 +16,3 @@ export const getCandidateInitials = (c: Pick<Candidate, 'first_name' | 'last_nam
   const last = c.last_name?.charAt(0) || ''
   return (first + last).toUpperCase()
 }
-
-/**
- * Get candidate experience label
- */
-export const getCandidateExperienceLabel = (experienceYears: number | null) => {
-  const years = experienceYears || 0
-  return years ? `${years}+ years` : 'Not specified'
-}

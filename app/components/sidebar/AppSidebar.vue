@@ -3,9 +3,7 @@ import type { SidebarProps } from '@/components/ui/sidebar'
 
 import {
   Briefcase,
-  Building2,
   Command,
-  FileUser,
   LifeBuoy,
   PieChart,
   Send,
@@ -45,16 +43,6 @@ const data = {
       title: 'Jobs',
       url: '/jobs',
       icon: Briefcase,
-    },
-    {
-      title: 'Clients',
-      url: '/clients',
-      icon: Building2,
-    },
-    {
-      title: 'Applications',
-      url: '/applications',
-      icon: FileUser,
     },
   ],
   navSecondary: [

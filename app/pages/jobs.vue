@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { useJobsList } = useJobs()
-const { data: jobsResponse, isPending: isLoadingJobs, error: jobsError } = useJobsList({ status: 'open' })
+const { data: jobsResponse } = useJobsList({ status: 'open' })
 </script>
 
 <template>
@@ -9,13 +9,8 @@ const { data: jobsResponse, isPending: isLoadingJobs, error: jobsError } = useJo
       Jobs page
     </h1>
 
-    <pre class="text-xs text-muted-foreground">
-  isLoadingJobs: {{ isLoadingJobs }} |
-  jobsError: {{ jobsError }}
-</pre>
-
     <pre class="text-xs">
-  jobsResponse: {{ jobsResponse }}
-</pre>
+      {{ jobsResponse }}
+    </pre>
   </div>
 </template>

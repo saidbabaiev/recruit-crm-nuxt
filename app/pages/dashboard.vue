@@ -1,5 +1,6 @@
 <script setup lang="ts">
-const user = useSupabaseUser()
+// redirect to /candidates
+navigateTo('/candidates')
 </script>
 
 <template>
@@ -16,13 +17,6 @@ const user = useSupabaseUser()
           <p class="text-gray-600">
             Welcome to your dashboard!
           </p>
-
-          <div class="bg-blue-50 p-4 rounded">
-            <p class="font-medium">
-              User Info:
-            </p>
-            <pre class="mt-2 text-sm">{{ user }}</pre>
-          </div>
         </div>
       </div>
     </div>
