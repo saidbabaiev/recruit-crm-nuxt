@@ -69,7 +69,7 @@ defineProps<Props>()
             <span class="flex items-center gap-1.5">
               <span class="text-muted-foreground">Willing To Relocate:</span>
               <Badge
-                :variant="candidate.relocation_willingness ? 'default' : 'secondary'"
+                :class="candidate.relocation_willingness ? 'bg-green-500' : 'bg-gray-400'"
                 class="text-xs"
               >
                 {{ candidate.relocation_willingness ? 'Yes' : 'No' }}

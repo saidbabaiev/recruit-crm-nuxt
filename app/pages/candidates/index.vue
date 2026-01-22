@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import {
   Pagination,
   PaginationContent,
@@ -9,6 +11,9 @@ import {
 } from '@/components/ui/pagination'
 import { Plus } from 'lucide-vue-next'
 
+import AsyncState from '@/components/common/AsyncState.vue'
+import { useAppError } from '@/composables/useAppError'
+
 const filters = ref({
   search: '',
   page: 1,
@@ -18,9 +23,10 @@ const filters = ref({
 const { useCandidatesList } = useCandidates()
 const { data: candidatesResponse, isPending, error } = useCandidatesList(filters)
 
+const formatAppError = useAppError(error)
+
 const candidates = computed(() => candidatesResponse.value?.data || [])
 const totalCount = computed(() => candidatesResponse.value?.count || 0)
-// const totalPages = computed(() => Math.ceil(totalCount.value / filters.value.limit))
 
 watch(() => filters.value.search, () => {
   filters.value.page = 1
@@ -34,10 +40,6 @@ watch(() => filters.value.search, () => {
       <h1 class="text-lg font-bold">
         Candidates List
       </h1>
-      <Button>
-        <Plus class="mr-2 h-4 w-4" />
-        Add Candidate
-      </Button>
     </div>
 
     <!-- Filters Section -->
@@ -50,111 +52,78 @@ watch(() => filters.value.search, () => {
           class="w-full"
         />
       </div>
-      <Select>
-        <SelectTrigger class="w-full sm:w-45">
-          <SelectValue placeholder="Position" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="all">
-            All Positions
-          </SelectItem>
-          <SelectItem value="frontend">
-            Frontend Developer
-          </SelectItem>
-          <SelectItem value="backend">
-            Backend Developer
-          </SelectItem>
-          <SelectItem value="fullstack">
-            Full Stack Developer
-          </SelectItem>
-          <SelectItem value="devops">
-            DevOps Engineer
-          </SelectItem>
-        </SelectContent>
-      </Select>
+
+      <Button>
+        <Plus class="mr-2 h-4 w-4" />
+        Add Candidate
+      </Button>
     </div>
 
-    <!-- Candidates Grid -->
-    <div
-      v-if="!isPending && !error && candidates?.length"
-      class="mb-3"
+    <AsyncState
+      :is-loading="isPending"
+      :error="formatAppError"
+      :is-empty="candidates.length === 0"
+      empty-title="No candidates found"
+      empty-description="Try adjusting your search or filters to find candidates."
     >
-      <CandidatesTable
-        :data="candidates"
-      />
-    </div>
-
-    <!-- Pagination -->
-    <div
-      v-if="!isPending && !error && totalCount > filters.limit"
-      class="flex items-center justify-between"
-    >
-      <Pagination
-        v-slot="{ page }"
-        v-model:page="filters.page"
-        :total="totalCount"
-        :items-per-page="filters.limit"
-        :sibling-count="1"
-        show-edges
+      <template #loading>
+        <div class="text-center py-12">
+          <p class="text-muted-foreground">
+            Loading candidates...
+          </p>
+        </div>
+      </template>
+      <div
+        v-if="candidates?.length"
+        class="mb-3"
       >
-        <PaginationContent v-slot="{ items }">
-          <PaginationPrevious />
+        <CandidatesTable
+          :data="candidates"
+        />
+      </div>
 
-          <template
-            v-for="(item, index) in items"
-            :key="index"
-          >
-            <PaginationItem
-              v-if="item.type === 'page'"
-              :value="item.value"
-              :is-active="item.value === page"
-              size="sm"
+      <!-- Pagination -->
+      <div
+        v-if="totalCount > filters.limit"
+        class="flex items-center justify-between"
+      >
+        <Pagination
+          v-slot="{ page }"
+          v-model:page="filters.page"
+          :total="totalCount"
+          :items-per-page="filters.limit"
+          :sibling-count="1"
+          show-edges
+        >
+          <PaginationContent v-slot="{ items }">
+            <PaginationPrevious />
+
+            <template
+              v-for="(item, index) in items"
+              :key="index"
             >
-              {{ item.value }}
-            </PaginationItem>
-            <PaginationEllipsis
-              v-else
-              :index="index"
-            />
-          </template>
+              <PaginationItem
+                v-if="item.type === 'page'"
+                :value="item.value"
+                :is-active="item.value === page"
+                size="sm"
+              >
+                {{ item.value }}
+              </PaginationItem>
+              <PaginationEllipsis
+                v-else
+                :index="index"
+              />
+            </template>
 
-          <PaginationNext />
-        </PaginationContent>
-      </Pagination>
+            <PaginationNext />
+          </PaginationContent>
+        </Pagination>
 
-      <p class="text-xs text-muted-foreground min-w-50">
-        Showing {{ (filters.page - 1) * filters.limit + 1 }}-{{ Math.min(filters.page * filters.limit, totalCount) }} of {{ totalCount }} candidates
-      </p>
-    </div>
-
-    <!-- Loading State -->
-    <div
-      v-if="isPending"
-      class="text-center py-12"
-    >
-      <p class="text-muted-foreground">
-        Loading candidates...
-      </p>
-    </div>
-
-    <!-- Error State -->
-    <div
-      v-if="error"
-      class="text-center py-12"
-    >
-      <p class="text-destructive">
-        {{ error.message }}
-      </p>
-    </div>
-
-    <!-- Empty State -->
-    <div
-      v-if="!isPending && !error && !candidates?.length"
-      class="text-center py-12"
-    >
-      <p class="text-muted-foreground">
-        No candidates found
-      </p>
-    </div>
+        <div class="text-xs text-muted-foreground min-w-50">
+          Showing {{ (filters.page - 1) * filters.limit + 1 }}-{{ Math.min(filters.page * filters.limit, totalCount) }} of {{ totalCount }} candidates
+        </div>
+      </div>
+    </AsyncState>
   </div>
 </template>
