@@ -14,7 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { Skeleton } from '@/components/ui/skeleton' // Импортируем компонент
+import { Skeleton } from '@/components/ui/skeleton'
 import type { Candidate } from '@/types/candidates'
 import { columns } from './columns'
 

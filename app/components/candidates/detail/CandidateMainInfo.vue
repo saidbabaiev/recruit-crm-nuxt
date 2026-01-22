@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import type { Candidate } from '@/types/candidates'
+import { getFullName, getCandidateInitials } from '@/utils/candidates'
 
 interface Props {
   candidate: Candidate
@@ -31,7 +32,7 @@ defineProps<Props>()
             <div class="flex items-center gap-3">
               <!-- Name -->
               <h1 class="text-2xl font-bold tracking-tight">
-                {{ candidate.first_name }} {{ candidate.last_name }}
+                {{ getFullName(candidate) }}
               </h1>
             </div>
 

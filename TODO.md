@@ -23,13 +23,11 @@
   - [x] HTTP status detection with `hasHttpStatus()` type guard
   - [x] Component-level pattern: inline errors for forms, toasts for success only
 
-## 3. Application Shell (Dashboard)
+## 3. Application Shell (✅ Completed)
 - [x] **Default Layout:** Create `layouts/default.vue`.
 - [x] **Auth Layout:** Create `layouts/auth.vue`.
 - [x] **Logout Flow:** Implement `signOut` logic.
     - *Critical:* Must call `queryClient.clear()` to remove cached sensitive data upon logout.
-- [ ] **User Session Helper:** Create `useUserSession` composable.
-    - *Refactor:* Derive `company_name` and user roles directly from metadata without a complex Pinia store.
 
 ## 4. Feature: Candidates (CRM Core)
 - [x] **Domain Logic:** Service Layer (`services/candidates`) & `useCandidates` composable (TanStack Query) implemented.
@@ -52,12 +50,12 @@
         - [x] Only shows when `totalCount > limit`
     - [ ] **Sorting UI:** Add UI controls for column sorting (currently only programmatic).
 - [x] **Candidate Details:** Create dynamic page `pages/candidates/[id].vue`.
-    - [ ] **UI:** Display detailed info, Skeletons, and Error handling.
+    - [x] **UI:** Display detailed info, Skeletons, and Error handling.
     - [x] **Navigation:** Connect list items to detail view (✅ partially done - table rows clickable).
-    - [ ] **Refactor:** Refactor CandidateDetails into smaller components.
+    - [x] **Refactor:** Refactor CandidateDetails into smaller components.
 - [ ] **Job Matching:** Implement basic job matching logic in candidate details.
     - [ ]*Tech:* Simple algorithm based on skills and experience.
-    - [ ]*UI:* Show matched jobs section in candidate details.
+    - [x]*UI:* Show matched jobs section in candidate details.
 
 ## 5. Feature: Pipeline / Jobs
 - [ ] **Kanban Board:** Implement drag-and-drop interface for candidate stages.

@@ -1,26 +1,23 @@
 <script setup lang="ts">
-import { MoreVertical, Edit, UserCheck, FileText, Trash } from 'lucide-vue-next'
+import { MoreVertical, Edit, UserCheck, Trash } from 'lucide-vue-next'
 import type { Candidate } from '@/types/candidates'
 
 interface Props {
   candidate: Candidate
 }
 
-const props = defineProps<Props>()
+defineProps<Props>()
 
 const handleEdit = (e: Event) => {
   e.stopPropagation()
-  console.log('Edit candidate', props.candidate.id)
 }
 
 const handleScheduleInterview = (e: Event) => {
   e.stopPropagation()
-  console.log('Schedule interview for', props.candidate.id)
 }
 
 const handleDelete = (e: Event) => {
   e.stopPropagation()
-  console.log('Delete candidate', props.candidate.id)
 }
 </script>
 
@@ -46,10 +43,6 @@ const handleDelete = (e: Event) => {
       <DropdownMenuItem @click="handleScheduleInterview">
         <UserCheck class="mr-2 h-4 w-4" />
         <span>Schedule Interview</span>
-      </DropdownMenuItem>
-      <DropdownMenuItem>
-        <FileText class="mr-2 h-4 w-4" />
-        <span>View Resume</span>
       </DropdownMenuItem>
       <DropdownMenuSeparator />
       <DropdownMenuItem

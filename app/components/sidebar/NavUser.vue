@@ -30,9 +30,7 @@ import { useMutation } from '@tanstack/vue-query'
 
 const user = useSupabaseUser()
 const { signOut } = useAuth()
-// const { isMobile } = useSidebar()
 
-// Compute user display info
 const userName = computed(() => {
   return user.value?.user_metadata?.full_name || 'User'
 })
@@ -82,12 +80,6 @@ const { mutate: handleLogout, isPending } = useMutation({
           align="end"
           :side-offset="4"
         >
-          <!-- <DropdownMenuLabel class="p-0 font-normal">
-            <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-              Admin Account
-            </div>
-          </DropdownMenuLabel> -->
-          <!-- <DropdownMenuSeparator /> -->
           <DropdownMenuGroup>
             <DropdownMenuItem>
               <Sparkles :size="16" />

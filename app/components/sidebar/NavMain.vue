@@ -37,7 +37,6 @@ const isActiveRoute = (url: string) => {
 
 <template>
   <SidebarGroup>
-    <!-- <SidebarGroupLabel>Navigation</SidebarGroupLabel> -->
     <SidebarMenu>
       <Collapsible
         v-for="item in items"
