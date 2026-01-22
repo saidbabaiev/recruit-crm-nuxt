@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '@/types/supabase'
-import type { Candidate, CandidateListResponse, CandidateFilters, CandidateInsert } from '@/types/candidates'
+import type { Candidate, CandidateListResponse, CandidateFilters } from '@/types/candidates'
 
 export const CandidatesService = {
   /**
@@ -58,27 +58,6 @@ export const CandidatesService = {
       .from('candidates')
       .select('*')
       .eq('id', id)
-      .single()
-
-    if (error) {
-      // We can log the error here to Sentry/Datadog
-      throw error
-    }
-
-    return data
-  },
-
-  /**
-   * Creates a new candidate
-   * @param client - Supabase client instance
-   * @param candidate - Candidate data to insert
-   * @returns Promise with created candidate data
-  */
-  async create(client: SupabaseClient<Database>, candidate: CandidateInsert) {
-    const { data, error } = await client
-      .from('candidates')
-      .insert(candidate)
-      .select() // Promise to return the inserted row
       .single()
 
     if (error) {

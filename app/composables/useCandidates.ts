@@ -1,5 +1,5 @@
-import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/vue-query'
-import type { Candidate, CandidateInsert, CandidateFilters as CandidateParams } from '@/types/candidates'
+import { useQuery, keepPreviousData } from '@tanstack/vue-query'
+import type { CandidateFilters as CandidateParams } from '@/types/candidates'
 import { CandidatesService } from '@/services/candidates'
 
 /**
@@ -19,8 +19,6 @@ export const candidateQueryKeys = {
 
 export const useCandidates = () => {
   const client = useSupabaseClient()
-  const queryClient = useQueryClient()
-  const toast = useNotifications()
 
   // --- Queries (READ) ---
 
@@ -60,73 +58,10 @@ export const useCandidates = () => {
       enabled: computed(() => !!unref(id)), // Request will not be made until there is an ID
     })
   }
-
-  // --- Mutations (WRITE) ---
-
-  /**
-   * Creates a new candidate with automatic cache invalidation and toast notifications.
-   *
-   * **Default behavior:**
-   * - Shows loading toast
-   * - Invalidates all list queries on success
-   * - Shows success/error toast
-   *
-   * **Custom behavior:**
-   * Pass `options.onSuccess` to override (e.g., navigate to detail page, close modal).
-   * Pass `options.onError` to handle errors in component (e.g., inline form validation).
-   *
-   * @param options - Optional callbacks to customize behavior
-   *
-   * @example
-   * ```ts
-   * // Default (shows toasts, invalidates cache)
-   * const { mutate: create } = useCreateCandidate()
-   * create({ first_name: 'John', last_name: 'Doe', ... })
-   *
-   * // Custom (navigate after creation)
-   * const { mutate: createAndNavigate } = useCreateCandidate({
-   *   onSuccess: (data) => navigateTo(`/candidates/${data.id}`)
-   * })
-   * ```
-   */
-  const useCreateCandidate = (options?: {
-    onSuccess?: (data: Candidate) => void | Promise<void>
-    onError?: (error: Error) => void
-  }) => {
-    return useMutation({
-      mutationFn: (newCandidate: CandidateInsert) => CandidatesService.create(client, newCandidate),
-
-      onMutate: () => {
-        const toastId = toast.loading('Creating candidate...')
-        return { toastId }
-      },
-
-      onSuccess: async (data, vars, context) => {
-        queryClient.invalidateQueries({ queryKey: candidateQueryKeys.lists() })
-        if (options?.onSuccess) {
-          await options.onSuccess(data)
-        }
-        else {
-          toast.success('Candidate created successfully', { id: context?.toastId })
-        }
-      },
-      onError: (err, vars, context) => {
-        if (options?.onError) {
-          options.onError(err)
-        }
-        else {
-          const { message } = handleError(err)
-          toast.error(message || 'Failed to create', { id: context?.toastId })
-        }
-      },
-    })
-  }
-
-  // TODO: Update and Delete mutations can be added here
+  // TODO: Create, Update and Delete mutations can be added here
 
   return {
     useCandidatesList,
     useCandidateDetails,
-    useCreateCandidate,
   }
 }

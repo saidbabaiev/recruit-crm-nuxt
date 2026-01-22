@@ -7,6 +7,7 @@ import { JobsService } from '@/services/jobs'
  */
 export const useJobs = () => {
   const client = useSupabaseClient()
+  const { companyId } = useCompanyContext()
 
   // Query Keys Factory (centralized cache management)
   const jobQueryKeys = {
@@ -36,7 +37,13 @@ export const useJobs = () => {
   const useJobsList = (filters?: MaybeRefOrGetter<JobFilters>) => {
     return useQuery({
       queryKey: computed(() => jobQueryKeys.list(toValue(filters))),
-      queryFn: () => JobsService.getAll(client, toValue(filters)),
+      queryFn: async () => {
+        if (!companyId.value) {
+          throw new Error('Company context not loaded')
+        }
+        return JobsService.getAll(client, toValue(filters))
+      },
+      enabled: computed(() => !!companyId.value),
       staleTime: 60 * 1000,
     })
   }

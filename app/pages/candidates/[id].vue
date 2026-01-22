@@ -3,6 +3,7 @@ import { ArrowLeft, Clock, Calendar } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import CandidateMainInfo from '@/components/candidates/detail/CandidateMainInfo.vue'
 import CandidateDetails from '~/components/candidates/detail/CandidateDetails.vue'
+import CandidateJobMatching from '~/components/candidates/detail/CandidateJobMatching.vue'
 
 const route = useRoute()
 const candidateId = computed(() => route.params.id as string)
@@ -86,6 +87,8 @@ const formatDate = (date: string | null) => {
           <span>Last Updated: {{ formatDate(candidate.updated_at) }}</span>
         </div>
       </div>
+
+      <CandidateJobMatching :candidate="candidate" />
     </div>
   </div>
 </template>
