@@ -31,8 +31,8 @@ const jobMatches = computed(() => {
   }
 
   const matches = jobsResponse.value.data.map(job =>
-    calculateJobMatch(candidate.skills, job),
-  )
+    calculateJobMatch(candidate.skills, job))
+    .filter(match => match.matchPercentage > 0)
 
   return sortByMatchPercentage(matches)
 })
