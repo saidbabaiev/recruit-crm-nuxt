@@ -2,52 +2,14 @@
 import CandidateSkillsCell from '@/components/candidates/table/cells/CandidateSkillsCell.vue'
 import type { Candidate } from '@/types/candidates'
 import { Card, CardContent } from '@/components/ui/card'
+import { formatDate } from '@/utils/date'
+import { getSalaryRangeLabel, formatVisaStatus, formatRemotePreference } from '@/utils/common'
 
 interface Props {
   candidate: Candidate
 }
 
 defineProps<Props>()
-
-// Format salary with period
-const formatSalary = (amount: number | null, currency?: string | null, period?: string | null) => {
-  if (!amount) return 'Not specified'
-  const periodText = period ? `/${period}` : ''
-  return `${currency || 'EUR'} ${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}${periodText}`
-}
-
-// Format date
-const formatDate = (date: string | null) => {
-  if (!date) return 'Not specified'
-  return new Date(date).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
-}
-
-// Format remote work preference
-const formatRemotePreference = (preference: string | null) => {
-  if (!preference) return 'Not specified'
-  const map: Record<string, string> = {
-    remote: 'Remote Only',
-    hybrid: 'Hybrid',
-    onsite: 'On-site',
-  }
-  return map[preference] || preference
-}
-
-// Format visa status
-const formatVisaStatus = (status: string | null) => {
-  if (!status) return 'Not specified'
-  const map: Record<string, string> = {
-    citizen: 'Citizen',
-    permanent_resident: 'Permanent Resident',
-    work_permit: 'Work Permit',
-    visa_required: 'Visa Required',
-  }
-  return map[status] || status
-}
 </script>
 
 <template>
@@ -100,7 +62,14 @@ const formatVisaStatus = (status: string | null) => {
           <span class="font-medium">Salary Expectation</span>
           <div class="text-right font-light">
             <div v-if="candidate.expected_salary_min || candidate.expected_salary_max">
-              {{ formatSalary(candidate.expected_salary_min || candidate.expected_salary_max, candidate.salary_currency, candidate.salary_period) }}
+              {{
+                getSalaryRangeLabel(
+                  candidate.expected_salary_min,
+                  candidate.expected_salary_max,
+                  candidate.salary_currency,
+                  candidate.salary_period,
+                )
+              }}
             </div>
             <span
               v-else

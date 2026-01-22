@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { getCandidateExperienceLabel } from '@/utils/candidates'
-import { getSalaryRangeLabel } from '@/utils/job-matching'
+import { getSalaryRangeLabel } from '@/utils/common'
 
 interface Props {
   match: JobMatch
@@ -88,7 +88,16 @@ function handleInvite() {
         </div>
 
         <div class="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
-          <span class="truncate">{{ getSalaryRangeLabel(match.job.salary_min, match.job.salary_max) }}</span>
+          <span class="truncate">
+            {{
+              getSalaryRangeLabel(
+                match.job.salary_min,
+                match.job.salary_max,
+                match.job.salary_currency,
+                match.job.salary_period,
+              )
+            }}
+          </span>
         </div>
 
         <div class="flex items-center gap-2 mt-1 text-sm text-muted-foreground">

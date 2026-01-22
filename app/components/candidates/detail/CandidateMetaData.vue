@@ -1,20 +1,11 @@
 <script setup lang="ts">
 import type { Candidate } from '@/types/candidates'
 import { Calendar, Clock } from 'lucide-vue-next'
+import { formatDate } from '@/utils/date'
 
 defineProps<{
   candidate: Candidate
 }>()
-
-// Format date
-const formatDate = (date: string | null) => {
-  if (!date) return 'Not specified'
-  return new Date(date).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
-}
 </script>
 
 <template>
