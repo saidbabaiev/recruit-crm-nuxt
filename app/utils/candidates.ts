@@ -22,5 +22,5 @@ export const getCandidateInitials = (c: Pick<Candidate, 'first_name' | 'last_nam
  */
 export const getCandidateExperienceLabel = (experienceYears: number | null) => {
   const years = experienceYears || 0
-  return years ? `${years}+ years experience` : 'Not specified'
+  return years ? `${years}+ years` : 'Not specified'
 }

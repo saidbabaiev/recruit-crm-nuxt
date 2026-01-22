@@ -5,9 +5,9 @@ import AsyncState from '@/components/common/AsyncState.vue'
 import { useAppError } from '@/composables/useAppError'
 
 import CandidateMainInfo from '@/components/candidates/detail/CandidateMainInfo.vue'
-import CandidateDetails from '~/components/candidates/detail/CandidateDetails.vue'
-import CandidateJobMatching from '~/components/candidates/detail/CandidateJobMatching.vue'
-import CandidateMetaData from '~/components/candidates/detail/CandidateMetaData.vue'
+import CandidateDetails from '@/components/candidates/detail/CandidateDetails.vue'
+import CandidateJobMatching from '@/components/candidates/detail/CandidateJobMatching.vue'
+import CandidateMetaData from '@/components/candidates/detail/CandidateMetaData.vue'
 
 const route = useRoute()
 const candidateId = computed(() => route.params.id as string)
@@ -42,7 +42,15 @@ const goBack = () => navigateTo('/candidates')
       :is-loading="isPending"
       :error="formatAppError"
       :empty="!candidate"
+      empty-title="Candidate not found"
     >
+      <template #loading>
+        <div class="text-center py-12">
+          <p class="text-muted-foreground">
+            Loading candidate details...
+          </p>
+        </div>
+      </template>
       <div
         v-if="candidate"
         class="space-y-6"

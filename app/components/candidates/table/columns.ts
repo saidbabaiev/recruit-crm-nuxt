@@ -5,7 +5,8 @@ import { getCandidateExperienceLabel } from '@/utils/candidates'
 import CandidatesTableDropdown from './CandidatesTableDropdown.vue'
 import CandidateInfoCell from './cells/CandidateInfoCell.vue'
 import CandidateContactsCell from './cells/CandidateContactsCell.vue'
-import CandidateSkillsCell from './cells/CandidateSkillsCell.vue'
+// import CandidateSkillsCell from './cells/CandidateSkillsCell.vue'
+import SkillsList from '@/components/common/SkillsList.vue'
 
 export const columns: ColumnDef<Candidate>[] = [
   {
@@ -40,7 +41,7 @@ export const columns: ColumnDef<Candidate>[] = [
   {
     accessorKey: 'skills',
     header: 'Skills',
-    cell: ({ row }) => h(CandidateSkillsCell, { candidate: row.original }),
+    cell: ({ row }) => h(SkillsList, { skills: row.original.skills }),
   },
   {
     id: 'actions',

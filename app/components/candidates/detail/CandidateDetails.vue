@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import CandidateSkillsCell from '@/components/candidates/table/cells/CandidateSkillsCell.vue'
+// import CandidateSkillsCell from '@/components/candidates/table/cells/CandidateSkillsCell.vue'
+import SkillsList from '@/components/common/SkillsList.vue'
 import type { Candidate } from '@/types/candidates'
 import { Card, CardContent } from '@/components/ui/card'
 import { formatDate } from '@/utils/date'
@@ -33,8 +34,8 @@ defineProps<Props>()
         <div class="flex justify-between items-start">
           <span class="font-medium">Skills</span>
           <div class="text-right font-light">
-            <CandidateSkillsCell
-              :candidate="candidate"
+            <SkillsList
+              :skills="candidate.skills"
               text-size="sm"
             />
           </div>

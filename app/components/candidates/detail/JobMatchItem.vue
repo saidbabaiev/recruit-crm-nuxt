@@ -1,11 +1,14 @@
 <script setup lang="ts">
 import { MapPin } from 'lucide-vue-next'
-import type { JobMatch } from '@/types/jobs'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardFooter } from '@/components/ui/card'
+import SkillsList from '@/components/common/SkillsList.vue'
+import { Separator } from '@/components/ui/separator'
+
+import type { JobMatch } from '@/types/jobs'
 import { getCandidateExperienceLabel } from '@/utils/candidates'
-import { getSalaryRangeLabel } from '@/utils/common'
+import { getSalaryRangeLabel, formatRemotePreference } from '@/utils/common'
 
 interface Props {
   match: JobMatch
@@ -76,19 +79,23 @@ function handleInvite() {
         </p>
       </div>
 
-      <!-- Skills Comparison -->
-      <div class="space-y-2 mb-4">
-        <div class="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
-          <MapPin class="h-3.5 w-3.5 shrink-0" />
-          <span class="truncate">{{ match.job.location || 'Location not specified' }}</span>
+      <Separator class="my-2" />
+
+      <div class="space-y-2">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2 text-sm ">
+            <MapPin class="h-3.5 w-3.5 shrink-0" />
+            <span>{{ match.job.location || 'Location not specified' }}</span>
+          </div>
+
+          <div class="text-xs">
+            {{ formatRemotePreference(match.job.work_format) || 'Work format not specified' }}
+          </div>
         </div>
 
-        <div class="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
-          <span class="truncate">{{ match.job.work_format || 'Work format not specified' }}</span>
-        </div>
-
-        <div class="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
-          <span class="truncate">
+        <div>
+          <span class="text-xs font-medium text-muted-foreground">Salary:</span>
+          <div class="text-sm">
             {{
               getSalaryRangeLabel(
                 match.job.salary_min,
@@ -97,40 +104,34 @@ function handleInvite() {
                 match.job.salary_period,
               )
             }}
-          </span>
+          </div>
         </div>
 
-        <div class="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
-          <span class="truncate">{{ getCandidateExperienceLabel(match.job.min_experience_value) }}</span>
+        <div>
+          <span class="text-xs font-medium text-muted-foreground">Experience:</span>
+          <div class="text-sm text-foreground">
+            {{ getCandidateExperienceLabel(match.job.min_experience_value) }}
+          </div>
         </div>
         <!-- Matched Skills -->
         <div v-if="match.matchedSkills.length > 0">
           <span class="text-xs font-medium text-muted-foreground">Matched Skills:</span>
-          <div class="flex flex-wrap gap-1.5 mt-1">
-            <Badge
-              v-for="skill in match.matchedSkills"
-              :key="skill"
-              variant="default"
-              class="text-xs"
-            >
-              {{ skill }}
-            </Badge>
-          </div>
+
+          <SkillsList
+            :skills="match.matchedSkills"
+            :max-visible="6"
+            text-size="sm"
+          />
         </div>
 
         <!-- Missing Skills -->
         <div v-if="match.missingSkills.length > 0">
           <span class="text-xs font-medium text-muted-foreground">Missing Skills:</span>
-          <div class="flex flex-wrap gap-1.5 mt-1">
-            <Badge
-              v-for="skill in match.missingSkills"
-              :key="skill"
-              variant="secondary"
-              class="text-xs"
-            >
-              {{ skill }}
-            </Badge>
-          </div>
+          <SkillsList
+            :skills="match.missingSkills"
+            :max-visible="6"
+            text-size="sm"
+          />
         </div>
       </div>
     </CardContent>
