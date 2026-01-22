@@ -63,7 +63,7 @@ const remainingCount = computed(() =>
     </div>
     <span
       v-else
-      :class="`text-muted-foreground text-${props.textSize}`"
+      :class="`text-${props.textSize}`"
     >
       Not specified
     </span>
