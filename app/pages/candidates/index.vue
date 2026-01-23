@@ -48,7 +48,7 @@ watch(() => filters.value.search, () => {
         <Input
           v-model="filters.search"
           type="search"
-          placeholder="Search candidates by name, email, or skills..."
+          placeholder="Search candidates by name, email, phone or location..."
           class="w-full"
         />
       </div>

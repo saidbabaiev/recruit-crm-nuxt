@@ -8,7 +8,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "supabase:generate-types": "npx supabase gen types typescript --project-id yomealkaicuuqvejjvun > types/supabase.ts",
+    "supabase:generate-types": "npx supabase gen types typescript --linked > types/supabase.ts",
     "supabase:generate-types-local": "npx supabase gen types typescript --local > types/supabase.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix"
