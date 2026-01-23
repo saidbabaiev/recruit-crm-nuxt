@@ -1,6 +1,6 @@
 {
   // --- Interface and Fonts ---
-  "workbench.iconTheme": "catppuccin-perfect-aura",
+  "workbench.iconTheme": "catppuccin-mocha",
   "editor.wordWrap": "on",
   "editor.stickyScroll.enabled": true,
   "editor.minimap.enabled": false,
@@ -48,6 +48,7 @@
     "ilike",
     "lucide",
     "Nuxt",
+    "nuxtjs",
     "Pinia",
     "Postgrest",
     "Shadcn",
