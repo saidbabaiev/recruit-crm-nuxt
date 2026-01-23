@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/pagination'
 import { Plus } from 'lucide-vue-next'
 
+import { useDebounceFn } from '@vueuse/core'
 import AsyncState from '@/components/common/AsyncState.vue'
 import { useAppError } from '@/composables/useAppError'
 
@@ -20,17 +21,28 @@ const filters = ref({
   limit: 10,
 })
 
+const debouncedSearch = ref('')
+
+const updateSearch = useDebounceFn((value: string) => {
+  debouncedSearch.value = value
+  filters.value.page = 1
+}, 500)
+
+watch(() => filters.value.search, updateSearch)
+
+const params = computed(() => ({
+  page: filters.value.page,
+  limit: filters.value.limit,
+  search: debouncedSearch.value,
+}))
+
 const { useCandidatesList } = useCandidates()
-const { data: candidatesResponse, isPending, error } = useCandidatesList(filters)
+const { data: candidatesResponse, isPending, error } = useCandidatesList(params)
 
 const formatAppError = useAppError(error)
 
 const candidates = computed(() => candidatesResponse.value?.data || [])
 const totalCount = computed(() => candidatesResponse.value?.count || 0)
-
-watch(() => filters.value.search, () => {
-  filters.value.page = 1
-})
 </script>
 
 <template>

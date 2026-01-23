@@ -54,6 +54,7 @@
     "Signup",
     "sonner",
     "Supabase",
-    "tanstack"
+    "tanstack",
+    "vueuse"
   ]
 }
