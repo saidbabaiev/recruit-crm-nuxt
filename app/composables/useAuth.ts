@@ -1,6 +1,7 @@
 import type { Database } from '@/types/supabase'
 import type { Session, User } from '@supabase/supabase-js'
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
+import { until } from '@vueuse/core'
 
 // --- Types ---
 interface SignInVariables {
@@ -85,17 +86,19 @@ export const useAuth = () => {
           await options.onSuccess(data)
         }
         else {
-          // FIX: Race condition with Supabase auth state sync
+          // Wait for user state to sync (with timeout) to fix race condition
           // Problem: Supabase client returns success, but useSupabaseUser()
           // might not have updated yet. If we redirect immediately,
           // the auth middleware will see `user = null` and redirect back to /auth.
           // Solution: Wait for user state to sync before navigating.
-          if (!user.value) {
-            // User state not ready yet - watch for it to update
-            watch(user, () => navigateTo('/dashboard'), { once: true })
+          try {
+            await until(user).toBeTruthy({ timeout: 3000 })
+            await navigateTo('/dashboard')
           }
-          else {
-            // User state already available - navigate immediately
+          catch (error) {
+            // Timeout: user state never synced
+            console.warn('Auth state sync timeout:', error)
+            // Fallback: try redirect anyway (might work)
             await navigateTo('/dashboard')
           }
         }
