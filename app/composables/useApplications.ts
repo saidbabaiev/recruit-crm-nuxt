@@ -8,7 +8,6 @@ import { ApplicationsService } from '@/services/applications'
 export const useApplications = () => {
   const client = useSupabaseClient()
   const queryClient = useQueryClient()
-  const toast = useNotifications()
   const user = useSupabaseUser()
   const { companyId } = useCompanyContext()
 
@@ -44,32 +43,15 @@ export const useApplications = () => {
           created_by: user.value.sub,
         })
       },
-      onMutate: () => {
-        const toastId = toast.loading('Inviting candidate...')
-        return { toastId }
-      },
-      onSuccess: async (data, vars, context) => {
-        // Invalidate cache
+      onSuccess: async (data, vars) => {
+        // Invalidate applications cache
         await queryClient.invalidateQueries({
           queryKey: applicationQueryKeys.byCandidate(vars.candidate_id),
         })
 
-        if (options?.onSuccess) {
-          await options.onSuccess(data)
-        }
-        else {
-          toast.success('Candidate invited to Interview!', { id: context?.toastId })
-        }
+        await options?.onSuccess?.(data)
       },
-      onError: (err, vars, context) => {
-        if (options?.onError) {
-          options.onError(err)
-        }
-        else {
-          const { message } = handleError(err)
-          toast.error(message, { id: context?.toastId })
-        }
-      },
+      onError: options?.onError,
     })
   }
 

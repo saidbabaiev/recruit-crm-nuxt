@@ -13,6 +13,7 @@ import {
   getCandidateExperienceLabel,
 } from '@/utils/common'
 
+// --- Types ---
 interface Props {
   match: JobMatch
   candidateId: string
@@ -21,8 +22,19 @@ interface Props {
 
 const { match, candidateId, isAlreadyApplied } = defineProps<Props>()
 
+// --- Composables ---
+const toast = useNotifications()
 const { useCreateApplication } = useApplications()
-const { mutate: assignToJob, isPending } = useCreateApplication()
+
+const { mutate: assignToJob, isPending } = useCreateApplication({
+  onSuccess: () => {
+    toast.success('Candidate invited to Interview!')
+  },
+  onError: (error) => {
+    const { message } = handleError(error)
+    toast.error(message)
+  },
+})
 
 // Check company readiness
 const { isReady: isCompanyReady } = useCompanyContext()

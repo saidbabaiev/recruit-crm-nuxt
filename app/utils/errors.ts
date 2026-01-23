@@ -1,4 +1,3 @@
-// ./utils/errors.ts
 import type { PostgrestError, AuthError } from '@supabase/supabase-js'
 import type { AppError } from '@/types/errors'
 import { ERROR_MESSAGES, POSTGRES_ERROR_CODES } from '@/types/errors'
