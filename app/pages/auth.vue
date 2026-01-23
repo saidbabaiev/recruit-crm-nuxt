@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label'
 
 // --- Composables ---
 const { useSignIn, useSignUp } = useAuth()
+const toast = useNotifications()
 
 // --- State ---
 const tabs = ['signin', 'signup'] as const
@@ -44,6 +45,10 @@ const { mutate: login, isPending: isLoginPending } = useSignIn({
 
 const { mutate: register, isPending: isRegisterPending } = useSignUp({
   onSuccess: () => {
+    toast.success(
+      'Account created! Please check your email to verify your account.',
+      { duration: 8000 },
+    )
     mode.value = 'signin'
     form.password = ''
   },

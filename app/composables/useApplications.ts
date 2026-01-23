@@ -20,31 +20,10 @@ export const useApplications = () => {
 
   /**
    * Creates mutation hook for inviting candidate to job
-   *
-   * **Default UI Behavior:**
-   * - Shows loading toast: "Inviting candidate..."
-   * - On success: "Candidate invited to Interview!"
-   * - On error: Shows error message
-   * - Invalidates applications cache automatically
-   * - Automatically adds company_id and created_by from user session
-   *
    * @param options - Optional callbacks to override default behavior
-   * @param options.onSuccess - Custom logic after invite (e.g., analytics, navigation)
+   * @param options.onSuccess - Custom logic after successful invite (e.g., analytics, navigation)
    * @param options.onError - Custom error handling (e.g., inline form errors)
-   *
-   * @example
-   * ```ts
-   * // Default usage (shows toasts)
-   * const { mutate: invite } = useCreateApplication()
-   * invite({ candidate_id: '123', job_id: '456' })
-   *
-   * // Custom usage (with callback)
-   * const { mutate: inviteWithAnalytics } = useCreateApplication({
-   *   onSuccess: (data) => {
-   *     trackEvent('candidate_invited', { jobId: data.job_id })
-   *   }
-   * })
-   * ```
+   * @returns useMutation hook for inviting candidate to job
    */
   const useCreateApplication = (options?: {
     onSuccess?: (data: JobApplication) => void | Promise<void>

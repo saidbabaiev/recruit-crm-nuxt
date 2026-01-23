@@ -52,23 +52,15 @@ interface MutationOptions<TData> {
 export const useAuth = () => {
   const supabase = useSupabaseClient<Database>()
   const queryClient = useQueryClient()
-  // const { $toast } = useNuxtApp()
-  const toast = useNotifications()
   const user = useSupabaseUser()
 
   // --- Sign In Mutation ---
   /**
    * Creates a sign-in mutation hook with built-in loading/success/error handling.
-   *
    * @param options - Optional callbacks to override default behavior
    * @param options.onSuccess - Custom logic after successful sign-in (e.g., specific redirect)
    * @param options.onError - Custom error handling (e.g., show inline form error)
-   *
-   * Default behavior:
-   * - Shows loading toast during request
-   * - Redirects to /dashboard on success
-   * - Handles race condition with useSupabaseUser() sync
-   * - Shows error toast on failure
+   * @returns
    */
   const useSignIn = (options?: MutationOptions<SignInSuccess>) => {
     return useMutation({
@@ -82,15 +74,11 @@ export const useAuth = () => {
       },
       onSuccess: async (data) => {
         if (options?.onSuccess) {
-          // Component-specific logic (e.g., custom redirect, close modal)
+          // Custom logic after successful sign-in (e.g., specific redirect)
           await options.onSuccess(data)
         }
         else {
-          // Wait for user state to sync (with timeout) to fix race condition
-          // Problem: Supabase client returns success, but useSupabaseUser()
-          // might not have updated yet. If we redirect immediately,
-          // the auth middleware will see `user = null` and redirect back to /auth.
-          // Solution: Wait for user state to sync before navigating.
+          // Wait for user state to sync (with timeout) to fix race condition with useSupabaseUser()
           try {
             await until(user).toBeTruthy({ timeout: 3000 })
             await navigateTo('/dashboard')
@@ -103,27 +91,18 @@ export const useAuth = () => {
           }
         }
       },
-      onError: (err) => {
-        // Component MUST handle error display via onError callback
-        options?.onError?.(err)
-      },
+      onError: options?.onError,
     })
   }
 
   // --- Sign Up Mutation ---
   /**
-   * Creates a sign-up mutation hook with built-in toast notifications.
-   *
+   * Creates a sign-up mutation hook with built-in loading/success/error handling.
    * @param options - Optional callbacks to override default behavior
-   * @param options.onSuccess - Custom logic after successful registration (e.g., switch to sign-in mode)
+   * @param options.onSuccess - Custom logic after successful sign-up (e.g., switch to sign-in mode)
    * @param options.onError - Custom error handling (e.g., show inline form error)
-   *
-   * Default behavior:
-   * - Shows loading toast during request
-   * - Shows success message with email verification reminder (8s duration)
-   * - Shows error toast on failure
-   *
-   * Note: Email confirmation is required by default in Supabase auth settings.
+   * @param options
+   * @returns
    */
   const useSignUp = (options?: MutationOptions<SignUpSuccess>) => {
     return useMutation({
@@ -136,34 +115,15 @@ export const useAuth = () => {
         if (error) throw error
         return data
       },
-      onSuccess: (data) => {
-        // Always show success toast (architectural requirement)
-        toast.success(
-          'Account created! Please check your email to verify your account.',
-          { duration: 8000 },
-        )
-
-        // Component-specific logic (e.g., switch tab, clear password)
-        options?.onSuccess?.(data)
-      },
-      onError: (err) => {
-        // Component MUST handle error display via onError callback
-        options?.onError?.(err)
-      },
+      onSuccess: options?.onSuccess,
+      onError: options?.onError,
     })
   }
 
   // --- Sign Out ---
   /**
    * Signs out the current user and clears all cached query data.
-   *
-   * @throws {Error} If sign-out fails
-   *
-   * Usage:
-   * ```ts
-   * const { signOut } = useAuth()
-   * await signOut()
-   * ```
+   * @returns void
    */
   const signOut = async () => {
     const { error } = await supabase.auth.signOut()
