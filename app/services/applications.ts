@@ -10,9 +10,8 @@ import type {
 export const ApplicationsService = {
   /**
    * Fetches all job applications with optional filters
-   * @param client Supabase client instance
-   * @param filters Optional filters (candidate_id, job_id, status)
-   * @returns Promise with job applications data and total count
+   *
+   * Note: Filtering by company_id is handled automatically by RLS policy.
    */
   async getAll(
     client: SupabaseClient<Database>,
@@ -22,29 +21,23 @@ export const ApplicationsService = {
       .from('job_applications')
       .select('*', { count: 'exact' })
 
-    // Apply candidate_id filter
     if (filters?.candidate_id) {
       query = query.eq('candidate_id', filters.candidate_id)
     }
 
-    // Apply job_id filter
     if (filters?.job_id) {
       query = query.eq('job_id', filters.job_id)
     }
 
-    // Apply status filter
     if (filters?.status) {
       query = query.eq('status', filters.status)
     }
 
-    // Sort by created date (newest first)
     query = query.order('created_at', { ascending: false })
 
     const { data, error, count } = await query
 
-    if (error) {
-      throw error
-    }
+    if (error) throw error
 
     return {
       data: data || [],
@@ -54,9 +47,8 @@ export const ApplicationsService = {
 
   /**
    * Fetches a single job application by ID
-   * @param client Supabase client instance
-   * @param id Job application ID
-   * @returns Promise with job application data
+   *
+   * Note: RLS policy ensures the application belongs to user's company.
    */
   async getById(
     client: SupabaseClient<Database>,
@@ -68,18 +60,15 @@ export const ApplicationsService = {
       .eq('id', id)
       .single()
 
-    if (error) {
-      throw error
-    }
+    if (error) throw error
 
     return data
   },
 
   /**
    * Fetches job applications by candidate ID
-   * @param client Supabase client instance
-   * @param candidateId Candidate ID
-   * @returns Promise with job applications array
+   *
+   * Note: RLS automatically filters by company_id.
    */
   async getByCandidateId(
     client: SupabaseClient<Database>,
@@ -91,19 +80,16 @@ export const ApplicationsService = {
       .eq('candidate_id', candidateId)
       .order('created_at', { ascending: false })
 
-    if (error) {
-      throw error
-    }
+    if (error) throw error
 
     return data || []
   },
 
   /**
    * Creates a new job application
-   * Note: company_id and created_by must be included in the data object
-   * @param client Supabase client instance
-   * @param data Job application data to insert (must include company_id, created_by)
-   * @returns Promise with created job application data
+   *
+   * Note: company_id and created_by must be included in the data object.
+   * RLS policy will verify that company_id matches user's company.
    */
   async create(
     client: SupabaseClient<Database>,
@@ -119,9 +105,7 @@ export const ApplicationsService = {
       .select()
       .single()
 
-    if (error) {
-      throw error
-    }
+    if (error) throw error
 
     return createdData
   },

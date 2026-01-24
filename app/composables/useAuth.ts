@@ -20,7 +20,6 @@ interface SignUpVariables {
 
 /**
  * Successful sign-in response data.
- * Extracted from Supabase AuthTokenResponsePassword to avoid type conflicts.
  */
 interface SignInSuccess {
   user: User
@@ -30,7 +29,6 @@ interface SignInSuccess {
 /**
  * Successful sign-up response data.
  * Fields are nullable because email confirmation may be required.
- * User receives confirmation email before session is created.
  */
 interface SignUpSuccess {
   user: User | null
@@ -39,10 +37,9 @@ interface SignUpSuccess {
 
 /**
  * Generic mutation options for overriding default behavior.
+ *
  * Allows components to inject custom success/error handling logic
  * while preserving default toast notifications and cache invalidation.
- *
- * @template TData - The mutation result data type (SignInSuccess | SignUpSuccess)
  */
 interface MutationOptions<TData> {
   onSuccess?: (data: TData) => void | Promise<void>
@@ -54,13 +51,8 @@ export const useAuth = () => {
   const queryClient = useQueryClient()
   const user = useSupabaseUser()
 
-  // --- Sign In Mutation ---
   /**
    * Creates a sign-in mutation hook with built-in loading/success/error handling.
-   * @param options - Optional callbacks to override default behavior
-   * @param options.onSuccess - Custom logic after successful sign-in (e.g., specific redirect)
-   * @param options.onError - Custom error handling (e.g., show inline form error)
-   * @returns
    */
   const useSignIn = (options?: MutationOptions<SignInSuccess>) => {
     return useMutation({
@@ -74,19 +66,16 @@ export const useAuth = () => {
       },
       onSuccess: async (data) => {
         if (options?.onSuccess) {
-          // Custom logic after successful sign-in (e.g., specific redirect)
           await options.onSuccess(data)
         }
         else {
-          // Wait for user state to sync (with timeout) to fix race condition with useSupabaseUser()
+          // Wait for user state to sync to fix race condition with useSupabaseUser()
           try {
             await until(user).toBeTruthy({ timeout: 3000 })
             await navigateTo('/dashboard')
           }
           catch (error) {
-            // Timeout: user state never synced
             console.warn('Auth state sync timeout:', error)
-            // Fallback: try redirect anyway (might work)
             await navigateTo('/dashboard')
           }
         }
@@ -95,14 +84,8 @@ export const useAuth = () => {
     })
   }
 
-  // --- Sign Up Mutation ---
   /**
    * Creates a sign-up mutation hook with built-in loading/success/error handling.
-   * @param options - Optional callbacks to override default behavior
-   * @param options.onSuccess - Custom logic after successful sign-up (e.g., switch to sign-in mode)
-   * @param options.onError - Custom error handling (e.g., show inline form error)
-   * @param options
-   * @returns
    */
   const useSignUp = (options?: MutationOptions<SignUpSuccess>) => {
     return useMutation({
@@ -120,15 +103,12 @@ export const useAuth = () => {
     })
   }
 
-  // --- Sign Out ---
   /**
    * Signs out the current user and clears all cached query data.
-   * @returns void
    */
   const signOut = async () => {
     const { error } = await supabase.auth.signOut()
     if (error) throw error
-    // Clear all cached data on sign-out
     queryClient.clear()
   }
 

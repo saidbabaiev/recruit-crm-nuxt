@@ -4,10 +4,11 @@ import { CandidatesService } from '@/services/candidates'
 
 /**
  * Query keys factory for centralized cache management.
+ *
  * Hierarchical structure allows granular invalidation:
- * - `all`: Invalidates everything
- * - `lists()`: Invalidates all list queries (different filters)
- * - `list(params)`: Invalidates specific filtered list
+ * - all: Invalidates everything
+ * - lists(): All list queries
+ * - list(params): Specific filtered list
  */
 export const candidateQueryKeys = {
   all: ['candidates'] as const,
@@ -19,45 +20,35 @@ export const candidateQueryKeys = {
 
 export const useCandidates = () => {
   const client = useSupabaseClient()
+  const { isReady } = useCompanyContext()
 
   /**
    * Fetches paginated and filtered candidates list.
    *
-   * Query automatically refetch when params change (reactive).
-   * Uses `keepPreviousData` to prevent UI flash during pagination/filtering.
-   * Data stays fresh for 60s to reduce unnecessary requests.
-   *
-   * @param params - Reactive filters (search, status, page, limit)
+   * Note: Filtering by company_id is handled by RLS, but we wait for
+   * company context to be ready before making requests (better UX).
    */
   const useCandidatesList = (params: MaybeRefOrGetter<CandidateParams>) => {
     return useQuery({
-      // Key is reactive: when params change, the query will refetch
       queryKey: computed(() => candidateQueryKeys.list(toValue(params))),
       queryFn: () => CandidatesService.getAll(client, toValue(params)),
-
-      // UX Best Practices:
-      placeholderData: keepPreviousData, // Do not flash an empty screen when changing filter/page
-      staleTime: 60 * 1000, // Data is "fresh" for 1 minute (do not make the request again if you return to the tab)
+      enabled: isReady,
+      placeholderData: keepPreviousData,
+      staleTime: 60 * 1000,
     })
   }
 
   /**
    * Fetches single candidate by ID.
-   *
-   * Query is disabled until ID is provided (prevents invalid requests).
-   * Useful for detail pages and modals.
-   *
-   * @param id - Reactive candidate ID
    */
   const useCandidateDetails = (id: MaybeRef<string>) => {
     return useQuery({
       queryKey: computed(() => candidateQueryKeys.detail(unref(id))),
       queryFn: () => CandidatesService.getById(client, unref(id)),
-      enabled: computed(() => !!unref(id)), // Request will not be made until there is an ID
+      enabled: computed(() => !!unref(id) && isReady.value),
       staleTime: 1000 * 60,
     })
   }
-  // TODO: Create, Update and Delete mutations can be added here
 
   return {
     useCandidatesList,

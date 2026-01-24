@@ -9,25 +9,10 @@ interface CompanyContext {
 /**
  * Provides company context for the current authenticated user.
  *
- * **Architecture:**
+ * Architecture:
  * - Fetches company_id from user's profile once
  * - Caches result in TanStack Query (persists across navigation)
  * - Automatically refetch on user change
- * - Throws error if user is not authenticated
- *
- * **Usage in Composables:**
- * ```ts
- * const { companyId } = useCompanyContext()
- *
- * const useCreateCandidate = () => {
- *   return useMutation({
- *     mutationFn: (data) => CandidatesService.create(client, {
- *       ...data,
- *       company_id: companyId.value,
- *     })
- *   })
- * }
- * ```
  */
 export const useCompanyContext = () => {
   const client = useSupabaseClient<Database>()

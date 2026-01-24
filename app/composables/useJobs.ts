@@ -7,9 +7,8 @@ import { JobsService } from '@/services/jobs'
  */
 export const useJobs = () => {
   const client = useSupabaseClient()
-  const { companyId } = useCompanyContext()
+  const { isReady } = useCompanyContext()
 
-  // Query Keys Factory (centralized cache management)
   const jobQueryKeys = {
     all: ['jobs'] as const,
     lists: () => [...jobQueryKeys.all, 'list'] as const,
@@ -21,29 +20,14 @@ export const useJobs = () => {
   /**
    * Fetches list of jobs with optional filters
    *
-   * @param filters - Optional filters (status, search)
-   * @returns TanStack Query result with jobs data
-   *
-   * @example
-   * ```ts
-   * // Fetch all open jobs
-   * const { data: jobs } = useJobsList({ status: 'open' })
-   *
-   * // With reactive filters
-   * const filters = ref({ search: 'Vue' })
-   * const { data: jobs } = useJobsList(filters)
-   * ```
+   * Note: Filtering by company_id is handled by RLS, but we wait for
+   * company context to be ready before making requests.
    */
   const useJobsList = (filters?: MaybeRefOrGetter<JobFilters>) => {
     return useQuery({
       queryKey: computed(() => jobQueryKeys.list(toValue(filters))),
-      queryFn: async () => {
-        if (!companyId.value) {
-          throw new Error('Company context not loaded')
-        }
-        return JobsService.getAll(client, toValue(filters))
-      },
-      enabled: computed(() => !!companyId.value),
+      queryFn: () => JobsService.getAll(client, toValue(filters)),
+      enabled: isReady,
       staleTime: 60 * 1000,
     })
   }

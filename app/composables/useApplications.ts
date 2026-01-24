@@ -11,7 +11,6 @@ export const useApplications = () => {
   const user = useSupabaseUser()
   const { companyId } = useCompanyContext()
 
-  // Query Keys Factory (centralized cache management)
   const applicationQueryKeys = {
     all: ['applications'] as const,
     byCandidate: (candidateId: string) => [...applicationQueryKeys.all, 'candidate', candidateId] as const,
@@ -19,10 +18,6 @@ export const useApplications = () => {
 
   /**
    * Creates mutation hook for inviting candidate to job
-   * @param options - Optional callbacks to override default behavior
-   * @param options.onSuccess - Custom logic after successful invite (e.g., analytics, navigation)
-   * @param options.onError - Custom error handling (e.g., inline form errors)
-   * @returns TanStack Query mutation hook for inviting candidate to job
    */
   const useCreateApplication = (options?: {
     onSuccess?: (data: JobApplication) => void | Promise<void>
@@ -44,7 +39,6 @@ export const useApplications = () => {
         })
       },
       onSuccess: async (data, vars) => {
-        // Invalidate applications cache
         await queryClient.invalidateQueries({
           queryKey: applicationQueryKeys.byCandidate(vars.candidate_id),
         })
@@ -57,8 +51,6 @@ export const useApplications = () => {
 
   /**
    * Fetches applications for a candidate (to check existing invites)
-   * @param candidateId - Candidate ID (can be ref or getter)
-   * @returns TanStack Query hook for fetching applications by candidate
    */
   const useApplicationsByCandidate = (candidateId: MaybeRefOrGetter<string>) => {
     return useQuery({
