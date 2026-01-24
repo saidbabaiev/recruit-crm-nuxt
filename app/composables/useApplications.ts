@@ -22,7 +22,7 @@ export const useApplications = () => {
    * @param options - Optional callbacks to override default behavior
    * @param options.onSuccess - Custom logic after successful invite (e.g., analytics, navigation)
    * @param options.onError - Custom error handling (e.g., inline form errors)
-   * @returns useMutation hook for inviting candidate to job
+   * @returns TanStack Query mutation hook for inviting candidate to job
    */
   const useCreateApplication = (options?: {
     onSuccess?: (data: JobApplication) => void | Promise<void>
@@ -57,15 +57,8 @@ export const useApplications = () => {
 
   /**
    * Fetches applications for a candidate (to check existing invites)
-   *
    * @param candidateId - Candidate ID (can be ref or getter)
-   * @returns TanStack Query result with applications data
-   *
-   * @example
-   * ```ts
-   * const candidateId = computed(() => route.params.id)
-   * const { data: applications } = useApplicationsByCandidate(candidateId)
-   * ```
+   * @returns TanStack Query hook for fetching applications by candidate
    */
   const useApplicationsByCandidate = (candidateId: MaybeRefOrGetter<string>) => {
     return useQuery({

@@ -6,11 +6,12 @@ import type { AppError } from '@/types/errors'
 import { getErrorMessage } from '@/utils/errors'
 
 interface Props {
-  isLoading: boolean
+  isLoading?: boolean
   error?: AppError | null
   isEmpty?: boolean
   emptyTitle?: string
   emptyDescription?: string | null
+  skipLoading?: boolean
 }
 
 const props = defineProps<Props>()
@@ -24,7 +25,7 @@ const errorMessage = computed(() => {
 
 <template>
   <div
-    v-if="isLoading"
+    v-if="isLoading && !skipLoading"
     class="flex flex-col items-center justify-center py-8 space-y-4 min-h-50"
   >
     <slot name="loading">

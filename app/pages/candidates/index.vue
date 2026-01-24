@@ -72,25 +72,19 @@ const totalCount = computed(() => candidatesResponse.value?.count || 0)
     </div>
 
     <AsyncState
-      :is-loading="isPending"
+      :skip-loading="true"
       :error="formatAppError"
-      :is-empty="candidates.length === 0"
+      :is-empty="!isPending && candidates.length === 0"
       empty-title="No candidates found"
       empty-description="Try adjusting your search or filters to find candidates."
     >
-      <template #loading>
-        <div class="text-center py-12">
-          <p class="text-muted-foreground">
-            Loading candidates...
-          </p>
-        </div>
-      </template>
       <div
-        v-if="candidates?.length"
+        v-if="candidates?.length || isPending"
         class="mb-3"
       >
         <CandidatesTable
           :data="candidates"
+          :is-loading="isPending"
         />
       </div>
 

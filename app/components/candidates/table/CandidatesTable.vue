@@ -62,8 +62,11 @@ const handleRowClick = (candidate: Candidate) => {
           <TableHead
             v-for="header in headerGroup.headers"
             :key="header.id"
-            :class="{
-              'w-12.5': header.id === 'select',
+            :style="{
+              width: header.column.columnDef.size ? `${header.column.columnDef.size}px` : undefined,
+              minWidth: header.column.columnDef.minSize
+                ? `${header.column.columnDef.minSize}px`
+                : undefined,
             }"
           >
             <FlexRender
@@ -86,6 +89,12 @@ const handleRowClick = (candidate: Candidate) => {
             <TableCell
               v-for="cell in row.getVisibleCells()"
               :key="cell.id"
+              :style="{
+                width: cell.column.columnDef.size ? `${cell.column.columnDef.size}px` : undefined,
+                minWidth: cell.column.columnDef.minSize
+                  ? `${cell.column.columnDef.minSize}px`
+                  : undefined,
+              }"
             >
               <FlexRender
                 :render="cell.column.columnDef.cell"
@@ -97,16 +106,19 @@ const handleRowClick = (candidate: Candidate) => {
 
         <template v-else-if="isLoading">
           <TableRow
-            v-for="i in 5"
+            v-for="i in 10"
             :key="i"
           >
             <TableCell
               v-for="(column, j) in columns"
               :key="j"
+              :style="{
+                width: column.size ? `${column.size}px` : undefined,
+                minWidth: column.minSize ? `${column.minSize}px` : undefined,
+              }"
             >
               <Skeleton
-                class="h-5 rounded-md"
-                :class="j === 0 ? 'w-35' : 'w-full'"
+                class="h-9 rounded-md w-full"
               />
             </TableCell>
           </TableRow>

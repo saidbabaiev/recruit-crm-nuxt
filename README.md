@@ -1,75 +1,43 @@
 # Nuxt Minimal Starter
+# Recruit Pro - IT Recruitment CRM
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Modern recruitment CRM built with Nuxt 4, Supabase, and TanStack Query.
+
+## Features
+- 🔐 Authentication (Supabase Auth)
+- 👥 Candidate Management (CRUD)
+- 🔍 Smart Search & Filtering
+- 📊 Job Matching Algorithm
+- 🎨 Modern UI (shadcn-vue + Tailwind)
+- ⚡ Optimized Performance (TanStack Query caching)
+
+## Tech Stack
+- **Frontend**: Nuxt 4, Vue 3, TypeScript
+- **Backend**: Supabase (PostgreSQL + Auth)
+- **State Management**: TanStack Query v5
+- **UI**: shadcn-vue, Tailwind CSS
+- **Icons**: lucide-vue-next
+
+## Architecture
+3-layer pattern: Types → Services → Composables
+[Add architecture diagram or link to copilot-instructions.md]
 
 ## Setup
-
-Make sure to install dependencies:
+1. Clone the repository
+2. Install dependencies
+3. Set up Supabase
+4. Run the development server
 
 ```bash
-# npm
 npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
-```
-
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
-```bash
-# npm
 npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
+## Configuration
+1. Create a `.env` file and add your Supabase credentials
+2. Run `npm run supabase:generate-types` to generate the Supabase types
+3. Run `npm run supabase:push` to push the migrations to the database
+4. Run `npm run dev` to start the development server
 
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## Demo
+[Add live demo link if deployed on Vercel/Netlify]
