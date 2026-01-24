@@ -9,7 +9,7 @@ defineProps<Props>()
 </script>
 
 <template>
-  <div class="flex flex-col gap-1 min-w-45">
+  <div class="flex flex-col gap-1 min-w-[160px]">
     <div class="flex items-center gap-1.5 text-xs">
       <Mail class="h-3 w-3 shrink-0" />
       <span

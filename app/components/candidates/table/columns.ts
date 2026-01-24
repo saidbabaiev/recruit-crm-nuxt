@@ -11,8 +11,8 @@ export const columns: ColumnDef<Candidate>[] = [
   {
     accessorKey: 'candidate',
     header: 'Candidate',
-    size: 200,
-    minSize: 180,
+    size: 220,
+    minSize: 200,
     cell: ({ row }) => h(CandidateInfoCell, { candidate: row.original }),
   },
   {
@@ -28,15 +28,15 @@ export const columns: ColumnDef<Candidate>[] = [
   {
     accessorKey: 'contacts',
     header: 'Contacts',
-    size: 120,
-    minSize: 100,
+    size: 200,
+    minSize: 180,
     cell: ({ row }) => h(CandidateContactsCell, { candidate: row.original }),
   },
   {
     accessorKey: 'location',
     header: 'Location',
-    size: 120,
-    minSize: 100,
+    size: 200,
+    minSize: 180,
     cell: ({ row }) => {
       const candidate = row.original
       const candidateLocation = [candidate.city, candidate.country].filter(Boolean).join(', ')
@@ -48,15 +48,15 @@ export const columns: ColumnDef<Candidate>[] = [
   {
     accessorKey: 'skills',
     header: 'Skills',
-    size: 200,
-    minSize: 180,
+    size: 220,
+    minSize: 200,
     cell: ({ row }) => h(SkillsList, { skills: row.original.skills }),
   },
   {
     id: 'actions',
     enableHiding: false,
-    size: 50,
-    maxSize: 50,
+    size: 60,
+    maxSize: 60,
     cell: ({ row }) => {
       const candidate = row.original
       return h('div', {

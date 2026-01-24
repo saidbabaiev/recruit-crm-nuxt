@@ -53,7 +53,7 @@ const handleRowClick = (candidate: Candidate) => {
 
 <template>
   <div class="rounded-md border">
-    <Table>
+    <Table class="table-fixed">
       <TableHeader>
         <TableRow
           v-for="headerGroup in table.getHeaderGroups()"
