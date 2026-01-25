@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import type { JobApplication, JobApplicationInvite } from '@/types/applications'
 import { ApplicationsService } from '@/services/applications'
+import { createAuthError, createValidationError } from '@/utils/errors'
 
 /**
  * Composable for Applications data operations
@@ -26,10 +27,10 @@ export const useApplications = () => {
     return useMutation({
       mutationFn: async (data: JobApplicationInvite) => {
         if (!companyId.value || typeof companyId.value !== 'string') {
-          throw new Error('Company context is not ready. Please refresh the page.')
+          throw createValidationError('Company context is not ready. Please refresh the page.')
         }
         if (!user.value?.sub) {
-          throw new Error('User not authenticated')
+          throw createAuthError('User not authenticated')
         }
 
         return ApplicationsService.create(client, {

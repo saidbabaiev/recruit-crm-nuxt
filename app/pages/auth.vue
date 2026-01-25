@@ -4,6 +4,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { handleError } from '@/utils/errors'
 
 // --- Composables ---
 const { useSignIn, useSignUp } = useAuth()
@@ -39,7 +40,8 @@ watch(() => form.password, () => {
 // --- Mutations ---
 const { mutate: login, isPending: isLoginPending } = useSignIn({
   onError: (err) => {
-    error.value = err.message || 'Your login or password is incorrect.'
+    const { message } = handleError(err)
+    error.value = message
   },
 })
 
@@ -53,7 +55,8 @@ const { mutate: register, isPending: isRegisterPending } = useSignUp({
     form.password = ''
   },
   onError: (err) => {
-    error.value = err.message || 'Failed to create account. Please try again.'
+    const { message } = handleError(err)
+    error.value = message
   },
 })
 

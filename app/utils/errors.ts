@@ -195,3 +195,24 @@ export function handleError(error: unknown) {
     shouldRedirectToAuth: isAuthRedirectError(normalized),
   }
 }
+
+/**
+ * Factory functions to create typed errors
+ */
+export const createAuthError = (message: string, code = '401'): AppError => ({
+  type: 'auth',
+  code,
+  message,
+})
+
+export const createValidationError = (message: string): AppError => ({
+  type: 'validation',
+  fields: {},
+  message,
+})
+
+export const createNotFoundError = (resource: string, id?: string): AppError => ({
+  type: 'not_found',
+  resource,
+  id,
+})

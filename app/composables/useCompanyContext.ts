@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/vue-query'
 import type { Database } from '@/types/supabase'
+import { createAuthError, createNotFoundError } from '@/utils/errors'
 
 interface CompanyContext {
   company_id: string
@@ -22,7 +23,7 @@ export const useCompanyContext = () => {
     queryKey: ['company-context', user.value?.sub] as const,
     queryFn: async (): Promise<CompanyContext> => {
       if (!user.value?.sub) {
-        throw new Error('User not authenticated')
+        throw createAuthError('User not authenticated')
       }
 
       const { data, error } = await client
@@ -32,7 +33,7 @@ export const useCompanyContext = () => {
         .single()
 
       if (error) throw error
-      if (!data) throw new Error('Profile not found')
+      if (!data) throw createNotFoundError('Profile not found')
 
       return {
         company_id: data.company_id,

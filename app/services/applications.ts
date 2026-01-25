@@ -6,6 +6,7 @@ import type {
   JobApplicationFilters,
   JobApplicationListResponse,
 } from '@/types/applications'
+import { createValidationError } from '~/utils/errors'
 
 export const ApplicationsService = {
   /**
@@ -96,7 +97,7 @@ export const ApplicationsService = {
     data: JobApplicationCreate,
   ): Promise<JobApplication> {
     if (!data.company_id || !data.created_by) {
-      throw new Error('company_id and created_by are required')
+      throw createValidationError('company_id and created_by are required')
     }
 
     const { data: createdData, error } = await client
