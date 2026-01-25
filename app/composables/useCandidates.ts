@@ -20,7 +20,7 @@ export const candidateQueryKeys = {
 
 export const useCandidates = () => {
   const client = useSupabaseClient()
-  const { isReady } = useCompanyContext()
+  const user = useSupabaseUser()
 
   /**
    * Fetches paginated and filtered candidates list.
@@ -32,7 +32,7 @@ export const useCandidates = () => {
     return useQuery({
       queryKey: computed(() => candidateQueryKeys.list(toValue(params))),
       queryFn: () => CandidatesService.getAll(client, toValue(params)),
-      enabled: isReady,
+      enabled: computed(() => !!user.value),
       placeholderData: keepPreviousData,
       staleTime: 60 * 1000,
     })
@@ -45,7 +45,7 @@ export const useCandidates = () => {
     return useQuery({
       queryKey: computed(() => candidateQueryKeys.detail(unref(id))),
       queryFn: () => CandidatesService.getById(client, unref(id)),
-      enabled: computed(() => !!unref(id) && isReady.value),
+      enabled: computed(() => !!unref(id) && !!user.value),
       staleTime: 1000 * 60,
     })
   }

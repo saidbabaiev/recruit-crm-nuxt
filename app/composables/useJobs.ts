@@ -7,7 +7,7 @@ import { JobsService } from '@/services/jobs'
  */
 export const useJobs = () => {
   const client = useSupabaseClient()
-  const { isReady } = useCompanyContext()
+  const user = useSupabaseUser()
 
   const jobQueryKeys = {
     all: ['jobs'] as const,
@@ -27,7 +27,7 @@ export const useJobs = () => {
     return useQuery({
       queryKey: computed(() => jobQueryKeys.list(toValue(filters))),
       queryFn: () => JobsService.getAll(client, toValue(filters)),
-      enabled: isReady,
+      enabled: computed(() => !!user.value),
       staleTime: 60 * 1000,
     })
   }

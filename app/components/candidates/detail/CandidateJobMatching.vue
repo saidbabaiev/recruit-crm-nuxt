@@ -16,7 +16,6 @@ const { candidate } = defineProps<Props>()
 // Fetch jobs (open positions only)
 const { useJobsList } = useJobs()
 const { data: jobsResponse, refetch: refetchJobs, isPending: isLoadingJobs, error: jobsError } = useJobsList({ status: 'open' })
-const { isReady: isCompanyReady } = useCompanyContext()
 
 // Fetch existing applications for this candidate
 const { useApplicationsByCandidate } = useApplications()
@@ -47,7 +46,7 @@ const formatAppError = useAppError(jobsError)
 
 // Loading state
 const isLoading = computed(() =>
-  isLoadingJobs.value || isLoadingApplications.value || !isCompanyReady.value,
+  isLoadingJobs.value || isLoadingApplications.value,
 )
 
 // Empty state messages

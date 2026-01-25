@@ -36,12 +36,8 @@ const { mutate: assignToJob, isPending } = useCreateApplication({
   },
 })
 
-// Check company readiness
-const { isReady: isCompanyReady } = useCompanyContext()
-
 // Determine button state
 const buttonState = computed(() => {
-  if (!isCompanyReady.value) return 'loading' // Block until loaded
   if (isPending.value) return 'loading'
   if (isAlreadyApplied) return 'applied'
   return 'invite'
@@ -63,7 +59,6 @@ function getMatchColor(percentage: number) {
 
 // Handle invite action
 function handleInvite() {
-  if (!isCompanyReady.value) return
   if (isAlreadyApplied || isPending.value) return
 
   assignToJob({
