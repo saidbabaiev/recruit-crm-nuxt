@@ -10,7 +10,6 @@ export const useApplications = () => {
   const client = useSupabaseClient()
   const queryClient = useQueryClient()
   const user = useSupabaseUser()
-  const { companyId } = useCompanyContext()
 
   const applicationQueryKeys = {
     all: ['applications'] as const,
@@ -26,16 +25,21 @@ export const useApplications = () => {
   }) => {
     return useMutation({
       mutationFn: async (data: JobApplicationInvite) => {
-        if (!companyId.value || typeof companyId.value !== 'string') {
-          throw createValidationError('Company context is not ready. Please refresh the page.')
-        }
+        // Validate user is authenticated
         if (!user.value?.sub) {
           throw createAuthError('User not authenticated')
+        }
+        // Get company_id from database function
+        const { data: companyId, error: companyError } = await client
+          .rpc('get_user_company_id')
+
+        if (companyError || !companyId) {
+          throw createValidationError('Unable to get company context. Please refresh the page.')
         }
 
         return ApplicationsService.create(client, {
           ...data,
-          company_id: companyId.value,
+          company_id: companyId,
           created_by: user.value.sub,
         })
       },
