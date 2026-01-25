@@ -55,6 +55,8 @@ export const ERROR_MESSAGES = {
   DUPLICATE: 'This record already exists',
   FOREIGN_KEY: 'Cannot delete: related records exist',
   NOT_FOUND: 'Record not found',
+  NOT_NULL: 'Required field is missing',
+  CHECK_VIOLATION: 'Invalid value provided',
 
   // Network
   OFFLINE: 'No internet connection. Please check your network.',

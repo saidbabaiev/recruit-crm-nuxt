@@ -130,23 +130,23 @@ export function normalizeError(error: unknown): AppError {
 }
 
 /**
+ * Map common Postgres errors to user-friendly messages
+ */
+const DB_ERROR_MESSAGES: Record<string, string> = {
+  [POSTGRES_ERROR_CODES.UNIQUE_VIOLATION]: ERROR_MESSAGES.DUPLICATE,
+  [POSTGRES_ERROR_CODES.FOREIGN_KEY_VIOLATION]: ERROR_MESSAGES.FOREIGN_KEY,
+  [POSTGRES_ERROR_CODES.NOT_NULL_VIOLATION]: ERROR_MESSAGES.NOT_NULL,
+  [POSTGRES_ERROR_CODES.CHECK_VIOLATION]: ERROR_MESSAGES.CHECK_VIOLATION,
+  PGRST116: ERROR_MESSAGES.NOT_FOUND,
+}
+/**
  * Get user-friendly message from AppError
  * This is what you show in toasts/UI
  */
 export function getErrorMessage(error: AppError): string {
   switch (error.type) {
     case 'database':
-      // Map common Postgres errors
-      switch (error.code) {
-        case POSTGRES_ERROR_CODES.UNIQUE_VIOLATION:
-          return ERROR_MESSAGES.DUPLICATE
-        case POSTGRES_ERROR_CODES.FOREIGN_KEY_VIOLATION:
-          return ERROR_MESSAGES.FOREIGN_KEY
-        case 'PGRST116':
-          return ERROR_MESSAGES.NOT_FOUND
-        default:
-          return error.message
-      }
+      return DB_ERROR_MESSAGES[error.code] || error.message
 
     case 'auth':
       if (error.code === '401' || error.code === '403') {
