@@ -284,10 +284,6 @@ Utility function `cn()` from [lib/utils.ts](app/lib/utils.ts) merges Tailwind cl
 - **Types**: Match database table names (e.g., `Candidate`, `CandidateInsert`)
 - **Utils**: Feature-scoped in `utils/[feature].ts` (e.g., `utils/candidates.ts`)
 
-## Known Issues & Warnings
-
-The terminal shows repeated warnings about `database.types.ts` not found - this is expected. The file should be at `app/types/database.types.ts` but types are currently in `app/types/supabase.ts`. This doesn't break functionality but should be resolved by running `npm run supabase:generate-types` or updating the Nuxt config.
-
 ## Development Workflow
 
 1. **Add new feature**: Start with types → service → composable → component
