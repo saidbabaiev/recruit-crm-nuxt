@@ -56,16 +56,9 @@ export const useCandidates = () => {
   const client = useSupabaseClient()
   const queryClient = useQueryClient()
   
-  // Query Keys Factory (centralized cache management)
-  const candidateQueryKeys = {
-    all: ['candidates'] as const,
-    lists: () => [...candidateQueryKeys.all, 'list'] as const,
-    list: (params) => [...candidateQueryKeys.lists(), params] as const,
-  }
-  
   const useCandidatesList = (params: MaybeRefOrGetter<CandidateFilters>) => {
     return useQuery({
-      queryKey: computed(() => candidateQueryKeys.list(toValue(params))),
+      queryKey: computed(() => ['candidates', 'list', toValue(params)]),
       queryFn: () => CandidatesService.getAll(client, toValue(params)),
       placeholderData: keepPreviousData, // UX: no flash on filter change
       staleTime: 60 * 1000,
@@ -90,7 +83,7 @@ Error handling uses a **6-type classification system** configured in [plugins/vu
 
 **Key Functions:**
 - `normalizeError(error: unknown): AppError` - Converts any error to typed AppError
-- `useAppError(errorRef)` - Reactive adapter for TanStack Query errors in components
+- Error normalization is handled automatically in `AsyncState.vue` component
 
 **Retry Logic:** Network errors retry 2x, server errors retry 1x. No retry for auth/validation/client errors.
 
@@ -104,10 +97,39 @@ const { mutate } = useSignIn({
   }
 })
 
-// In components - use useAppError for reactive queries
+// In components - pass error directly to AsyncState
 const { error } = useCandidatesList()
-const appError = useAppError(error) // Converts to AppError | null
+
+// AsyncState component handles normalization internally
+<AsyncState :error="error" :is-loading="isPending">
+  <!-- content -->
+</AsyncState>
 ```
+
+## Error Display in Components
+
+All error display is handled through the `AsyncState.vue` component, which:
+- Accepts `error` prop as `unknown` type
+- Automatically normalizes errors using `normalizeError()`
+- Displays user-friendly error messages with retry button
+- Supports validation error fields display
+
+**Usage:**
+<script setup lang="ts">
+const { data, isPending, error } = useCandidatesList(params)
+</script>
+
+<template>
+  <AsyncState
+    :is-loading="isPending"
+    :error="error"
+    :is-empty="!data?.length"
+    empty-title="No candidates found"
+  >
+    <!-- Success state content -->
+  </AsyncState>
+</template>
+
 
 ## Authentication Flow
 
@@ -188,7 +210,7 @@ export const use[Feature] = () => {
     return useMutation({
       mutationFn: (data) => [Feature]Service.create(client, data),
       onSuccess: async (data) => {
-        await queryClient.invalidateQueries({ queryKey: [feature]QueryKeys.lists() })
+        await queryClient.invalidateQueries({ queryKey: ['[feature]', 'list'] })
         
         if (options?.onSuccess) {
           await options.onSuccess(data)
@@ -270,7 +292,7 @@ The terminal shows repeated warnings about `database.types.ts` not found - this 
 ## Development Workflow
 
 1. **Add new feature**: Start with types → service → composable → component
-2. **Data fetching**: Use `useQuery` with Query Key Factory pattern
+2. **Data fetching**: Use `useQuery` with inline query keys (e.g., `['entity', 'type', params]`)
 3. **Mutations**: Use `useMutation` with loading/success/error toasts
 4. **Forms**: Use shadcn Form components + validation (not yet implemented)
 5. **Auth-protected pages**: All pages except `/` and `/auth` require authentication

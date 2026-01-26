@@ -2,11 +2,11 @@
 import { Loader2, AlertCircle, FileQuestion } from 'lucide-vue-next'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import type { AppError } from '@/types/errors'
+import { normalizeError } from '@/utils/errors'
 
 interface Props {
   isLoading?: boolean
-  error?: AppError | null
+  error?: unknown
   isEmpty?: boolean
   emptyTitle?: string
   emptyDescription?: string | null
@@ -16,8 +16,13 @@ interface Props {
 const props = defineProps<Props>()
 defineEmits(['retry'])
 
+const normalizedError = computed(() => {
+  if (!props.error) return null
+  return normalizeError(props.error)
+})
+
 const errorMessage = computed(() => {
-  return props.error?.message || ''
+  return normalizedError.value?.message || ''
 })
 </script>
 
@@ -46,10 +51,10 @@ const errorMessage = computed(() => {
           <p>{{ errorMessage }}</p>
 
           <div
-            v-if="error?.type === 'validation'"
+            v-if="normalizedError?.type === 'validation'"
             class="p-2 rounded bg-destructive/10 text-xs font-mono"
           >
-            Fields: {{ Object.keys(error.fields || {}).join(', ') }}
+            Fields: {{ Object.keys(normalizedError.fields || {}).join(', ') }}
           </div>
 
           <div class="pt-1">

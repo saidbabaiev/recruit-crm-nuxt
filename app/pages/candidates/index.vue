@@ -13,7 +13,6 @@ import { Plus } from 'lucide-vue-next'
 
 import { useDebounceFn } from '@vueuse/core'
 import AsyncState from '@/components/common/AsyncState.vue'
-import { useAppError } from '@/composables/useAppError'
 
 const filters = ref({
   search: '',
@@ -38,8 +37,6 @@ const params = computed(() => ({
 
 const { useCandidatesList } = useCandidates()
 const { data: candidatesResponse, isPending, error } = useCandidatesList(params)
-
-const formatAppError = useAppError(error)
 
 const candidates = computed(() => candidatesResponse.value?.data || [])
 const totalCount = computed(() => candidatesResponse.value?.count || 0)
@@ -73,7 +70,7 @@ const totalCount = computed(() => candidatesResponse.value?.count || 0)
 
     <AsyncState
       :skip-loading="true"
-      :error="formatAppError"
+      :error="error"
       :is-empty="!isPending && candidates.length === 0"
       empty-title="No candidates found"
       empty-description="Try adjusting your search or filters to find candidates."

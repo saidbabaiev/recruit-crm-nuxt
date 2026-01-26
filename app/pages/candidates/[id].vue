@@ -2,7 +2,6 @@
 import { ArrowLeft } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import AsyncState from '@/components/common/AsyncState.vue'
-import { useAppError } from '@/composables/useAppError'
 
 import CandidateMainInfo from '@/components/candidates/detail/CandidateMainInfo.vue'
 import CandidateDetails from '@/components/candidates/detail/CandidateDetails.vue'
@@ -14,8 +13,6 @@ const candidateId = computed(() => route.params.id as string)
 
 const { useCandidateDetails } = useCandidates()
 const { data: candidate, isPending, error } = useCandidateDetails(candidateId)
-
-const formatAppError = useAppError(error)
 
 // Navigate back to list
 const goBack = () => navigateTo('/candidates')
@@ -40,7 +37,7 @@ const goBack = () => navigateTo('/candidates')
 
     <AsyncState
       :is-loading="isPending"
-      :error="formatAppError"
+      :error="error"
       :empty="!candidate"
       empty-title="Candidate not found"
     >

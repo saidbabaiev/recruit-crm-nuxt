@@ -5,7 +5,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { calculateJobMatch, sortByMatchPercentage } from '@/utils/job-matching'
 import JobMatchItem from './JobMatchItem.vue'
 import AsyncState from '@/components/common/AsyncState.vue'
-import { useAppError } from '@/composables/useAppError'
 
 interface Props {
   candidate: Candidate
@@ -42,8 +41,6 @@ function isAlreadyApplied(jobId: string): boolean {
   return applications.value.some(app => app.job_id === jobId)
 }
 
-const formatAppError = useAppError(jobsError)
-
 // Loading state
 const isLoading = computed(() =>
   isLoadingJobs.value || isLoadingApplications.value,
@@ -76,7 +73,7 @@ const emptyStateMessage = computed(() => {
     <CardContent>
       <AsyncState
         :is-loading="isLoading"
-        :error="formatAppError"
+        :error="jobsError"
         :is-empty="jobMatches.length === 0"
         empty-title="No matches found"
         :empty-description="emptyStateMessage"
