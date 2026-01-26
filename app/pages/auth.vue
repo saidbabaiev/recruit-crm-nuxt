@@ -8,7 +8,7 @@ import { normalizeError } from '@/utils/errors'
 
 // --- Composables ---
 const { useSignIn, useSignUp } = useAuth()
-const toast = useNotifications()
+const { $toast } = useNuxtApp()
 
 // --- State ---
 const tabs = ['signin', 'signup'] as const
@@ -47,7 +47,7 @@ const { mutate: login, isPending: isLoginPending } = useSignIn({
 
 const { mutate: register, isPending: isRegisterPending } = useSignUp({
   onSuccess: () => {
-    toast.success(
+    $toast.success(
       'Account created! Please check your email to verify your account.',
       { duration: 8000 },
     )

@@ -24,16 +24,16 @@ interface Props {
 const { match, candidateId, isAlreadyApplied } = defineProps<Props>()
 
 // --- Composables ---
-const toast = useNotifications()
+const { $toast } = useNuxtApp()
 const { useCreateApplication } = useApplications()
 
 const { mutate: assignToJob, isPending } = useCreateApplication({
   onSuccess: () => {
-    toast.success('Candidate invited to Interview!')
+    $toast.success('Candidate invited to Interview!')
   },
   onError: (error) => {
     const normalizedError = normalizeError(error)
-    toast.error(normalizedError.message)
+    $toast.error(normalizedError.message)
   },
 })
 

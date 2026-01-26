@@ -173,9 +173,8 @@ Auth composable in [composables/useAuth.ts](app/composables/useAuth.ts) wraps Su
 - Example: `await navigateTo('/dashboard')` or `navigateTo({ path: '/auth', query: { redirectTo } })`
 
 #### 6. Toast Notifications Standard
-- **ALWAYS use `useNotifications()` hook** for toast notifications
-- NEVER access `$toast` directly via `useNuxtApp()`
-- Example: `const toast = useNotifications()` → `toast.success('Done!')`
+- **ALWAYS use `$toast` from `useNuxtApp()`** for toast notifications
+- Example: `const { $toast } = useNuxtApp()` → `$toast.success('Done!')`
 
 #### 7. Documentation Standard
 - **ALL composables MUST have detailed JSDoc comments** that explicitly describe:
