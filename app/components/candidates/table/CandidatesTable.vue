@@ -52,8 +52,8 @@ const handleRowClick = (candidate: Candidate) => {
 </script>
 
 <template>
-  <div class="rounded-md border">
-    <Table class="table-fixed">
+  <div class="rounded-md border w-full grid grid-cols-1">
+    <Table>
       <TableHeader>
         <TableRow
           v-for="headerGroup in table.getHeaderGroups()"

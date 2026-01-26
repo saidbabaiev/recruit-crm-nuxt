@@ -4,44 +4,52 @@ import type { Candidate } from '@/types/candidates'
 import { getCandidateExperienceLabel } from '@/utils/formatters'
 import CandidatesTableDropdown from './CandidatesTableDropdown.vue'
 import CandidateInfoCell from './cells/CandidateInfoCell.vue'
-import CandidateContactsCell from './cells/CandidateContactsCell.vue'
+import CandidateEmailCell from './cells/CandidateEmailCell.vue'
+import CandidatePhoneCell from './cells/CandidatePhoneCell.vue'
 import SkillsList from '@/components/common/SkillsList.vue'
 
 export const columns: ColumnDef<Candidate>[] = [
   {
     accessorKey: 'candidate',
     header: 'Candidate',
-    size: 220,
-    minSize: 200,
+    size: 240,
+    minSize: 220,
     cell: ({ row }) => h(CandidateInfoCell, { candidate: row.original }),
   },
   {
     accessorKey: 'experience_years',
     header: 'Experience',
-    size: 120,
-    minSize: 100,
+    size: 140,
+    minSize: 120,
     cell: ({ row }) => {
       const candidate = row.original
-      return h('div', { class: candidate.experience_years ? 'text-xs' : 'text-xs text-muted-foreground' }, getCandidateExperienceLabel(candidate.experience_years))
+      return h('div', { class: candidate.experience_years ? 'text-sm' : 'text-sm text-muted-foreground' }, getCandidateExperienceLabel(candidate.experience_years))
     },
   },
   {
-    accessorKey: 'contacts',
-    header: 'Contacts',
-    size: 200,
-    minSize: 180,
-    cell: ({ row }) => h(CandidateContactsCell, { candidate: row.original }),
+    accessorKey: 'email',
+    header: 'Email',
+    size: 240,
+    minSize: 220,
+    cell: ({ row }) => h(CandidateEmailCell, { candidate: row.original }),
+  },
+  {
+    accessorKey: 'phone',
+    header: 'Phone',
+    size: 220,
+    minSize: 220,
+    cell: ({ row }) => h(CandidatePhoneCell, { candidate: row.original }),
   },
   {
     accessorKey: 'location',
     header: 'Location',
-    size: 200,
-    minSize: 180,
+    size: 220,
+    minSize: 200,
     cell: ({ row }) => {
       const candidate = row.original
       const candidateLocation = [candidate.city, candidate.country].filter(Boolean).join(', ')
       return h('div', {
-        class: candidateLocation ? 'text-xs' : 'text-xs text-muted-foreground',
+        class: candidateLocation ? 'text-sm' : 'text-sm text-muted-foreground',
       }, candidateLocation || 'Not specified')
     },
   },
@@ -50,7 +58,7 @@ export const columns: ColumnDef<Candidate>[] = [
     header: 'Skills',
     size: 220,
     minSize: 200,
-    cell: ({ row }) => h(SkillsList, { skills: row.original.skills }),
+    cell: ({ row }) => h(SkillsList, { skills: row.original.skills, textSize: 'sm' }),
   },
   {
     id: 'actions',
