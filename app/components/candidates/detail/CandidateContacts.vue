@@ -13,10 +13,9 @@ defineProps<Props>()
 </script>
 
 <template>
-  <!-- Contact Info Grid -->
-  <div class="grid grid-cols-4 px-6 text-sm">
+  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 px-6 text-sm gap-2">
     <!-- Email -->
-    <div class="flex items-center gap-2">
+    <div class="flex items-center justify-center sm:justify-start gap-2">
       <Mail class="h-4 w-4 text-muted-foreground shrink-0" />
       <div
         v-if="candidate.email"
@@ -37,7 +36,7 @@ defineProps<Props>()
     </div>
 
     <!-- Phone -->
-    <div class="flex items-center gap-2">
+    <div class="flex items-center justify-center sm:justify-start gap-2">
       <Phone class="h-4 w-4 text-muted-foreground shrink-0" />
       <div
         v-if="candidate.phone"
@@ -58,7 +57,7 @@ defineProps<Props>()
     </div>
 
     <!-- Resume -->
-    <div class="flex items-center gap-2">
+    <div class="flex items-center justify-center sm:justify-start gap-2">
       <FileText class="h-4 w-4 text-muted-foreground shrink-0" />
       <a
         v-if="candidate.resume_url"
@@ -74,7 +73,7 @@ defineProps<Props>()
         class="text-muted-foreground"
       >Not specified</span>
     </div>
-    <div class="flex items-center justify-end">
+    <div class="flex items-center justify-center sm:justify-end">
       <CandidateSocials
         :github-url="candidate.github_url"
         :linkedin-url="candidate.linkedin_url"

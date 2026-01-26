@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Edit, MapPin } from 'lucide-vue-next'
+import { Pencil, EllipsisVertical } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import CandidateContacts from '@/components/candidates/detail/CandidateContacts.vue'
@@ -27,47 +27,48 @@ defineProps<Props>()
           </AvatarFallback>
         </Avatar>
 
-        <div class="flex-1 space-y-4">
-          <div class="flex items-center justify-between mb-0">
-            <div class="flex items-center gap-3">
-              <!-- Name -->
-              <h1 class="text-2xl font-bold tracking-tight">
-                {{ getFullName(candidate) }}
-              </h1>
-            </div>
+        <div class="flex-1 space-y-2">
+          <div class="flex items-center justify-between">
+            <!-- Name -->
+            <h1 class="text-xl font-bold tracking-tight">
+              {{ getFullName(candidate) }}
+            </h1>
 
             <!-- Actions -->
             <div class="flex gap-2">
               <Button
                 variant="outline"
-                size="sm"
+                size="icon"
+                class="w-8 h-8 rounded-full cursor-pointer"
               >
-                <Edit class="mr-2 h-4 w-4" />
-                Edit
+                <Pencil class="h-4 w-4" />
               </Button>
-              <Button size="sm">
-                Schedule Interview
+              <Button
+                variant="outline"
+                size="icon"
+                class="w-8 h-8 rounded-full cursor-pointer"
+              >
+                <EllipsisVertical class="h-4 w-4" />
               </Button>
             </div>
           </div>
 
-          <!-- Position & Location & Relocation (new line below) -->
-          <div class="flex items-center gap-6 text-sm">
+          <!-- Position & Location -->
+          <div class="flex flex-col md:flex-row items-start md:items-center gap-2 md:gap-6 text-sm">
             <p
               v-if="candidate.current_position"
-              class=" text-muted-foreground"
+              class="text-muted-foreground"
             >
               {{ candidate.current_position }}
             </p>
-            <span
+            <p
               v-if="candidate.city || candidate.country"
               class="flex items-center gap-1.5 text-muted-foreground"
             >
-              <MapPin class="h-4 w-4" />
               {{ candidate.city ? `${candidate.city}, ` : '' }}{{ candidate.country }}
-            </span>
+            </p>
 
-            <span class="flex items-center gap-1.5">
+            <p class="flex items-center gap-1.5">
               <span class="text-muted-foreground">Willing To Relocate:</span>
               <Badge
                 :class="candidate.relocation_willingness ? 'bg-green-500' : 'bg-gray-400'"
@@ -75,7 +76,7 @@ defineProps<Props>()
               >
                 {{ candidate.relocation_willingness ? 'Yes' : 'No' }}
               </Badge>
-            </span>
+            </p>
           </div>
         </div>
       </div>
