@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Candidate } from '@/types/candidates'
 import { Calendar, Clock } from 'lucide-vue-next'
-import { formatDate } from '@/utils/date'
+import { formatDate } from '@/utils/formatters'
 
 defineProps<{
   candidate: Candidate

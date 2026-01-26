@@ -1,7 +1,7 @@
 import { h } from 'vue'
 import type { ColumnDef } from '@tanstack/vue-table'
 import type { Candidate } from '@/types/candidates'
-import { getCandidateExperienceLabel } from '@/utils/common'
+import { getCandidateExperienceLabel } from '@/utils/formatters'
 import CandidatesTableDropdown from './CandidatesTableDropdown.vue'
 import CandidateInfoCell from './cells/CandidateInfoCell.vue'
 import CandidateContactsCell from './cells/CandidateContactsCell.vue'

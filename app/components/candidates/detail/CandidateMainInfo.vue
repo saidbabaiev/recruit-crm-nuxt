@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import type { Candidate } from '@/types/candidates'
-import { getFullName, getCandidateInitials } from '@/utils/candidates'
+import { getFullName, getCandidateInitials } from '@/utils/formatters'
 
 interface Props {
   candidate: Candidate

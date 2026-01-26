@@ -8,10 +8,11 @@ import { Separator } from '@/components/ui/separator'
 
 import type { JobMatch } from '@/types/jobs'
 import {
-  getSalaryRangeLabel,
   formatRemotePreference,
   getCandidateExperienceLabel,
-} from '@/utils/common'
+  getSalaryRangeLabel,
+} from '@/utils/formatters'
+
 import { normalizeError } from '@/utils/errors'
 
 // --- Types ---
