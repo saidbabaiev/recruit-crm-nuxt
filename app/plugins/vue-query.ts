@@ -5,31 +5,29 @@ import {
   MutationCache,
   type VueQueryPluginOptions,
 } from '@tanstack/vue-query'
-import { normalizeError, isAuthRedirectError } from '@/utils/errors'
+import { normalizeError, shouldRedirectToAuth } from '@/utils/errors'
 
 export default defineNuxtPlugin((nuxtApp) => {
   const router = useRouter()
   const { $toast } = useNuxtApp()
 
   const handleGlobalError = (error: unknown) => {
-    const normalized = normalizeError(error)
+    const err = normalizeError(error)
 
-    // Dev logging - only in dev mode
     if (import.meta.dev) {
-      console.error('[Global Query Error]:', {
-        type: normalized.type,
-        normalized,
-        original: error,
-      })
+      // eslint-disable-next-line no-console
+      console.error('[Query Error]:', err)
     }
 
-    // 1. Auth Redirect → redirect + toast
-    if (isAuthRedirectError(normalized)) {
+    // 1. Auth → redirect
+    if (shouldRedirectToAuth(err)) {
       const currentPath = router.currentRoute.value.path
+
       if (currentPath !== '/auth') {
-        $toast.error('Your session has expired', {
+        $toast.error('Session expired', {
           description: 'Please sign in to continue',
         })
+
         router.push({
           path: '/auth',
           query: { redirectTo: currentPath },
@@ -38,36 +36,35 @@ export default defineNuxtPlugin((nuxtApp) => {
       return
     }
 
-    // 2. Network (Offline, timeout) → toast
-    if (normalized.type === 'network') {
+    // 2. Network → toast
+    if (err.type === 'network') {
       $toast.error('No internet connection', {
-        description: 'Please check your network settings and try again.',
+        description: 'Please check your network and try again.',
       })
       return
     }
 
-    // 3. Database 5xx (PostgreSQL down, connection issues) → toast
-    if (normalized.type === 'database') {
-      $toast.error('Database error occurred', {
-        description: normalized.hint || 'Please try again later',
-      })
-      return
-    }
-
-    // 4. HTTP 5xx → toast (server errors)
-    if (normalized.type === 'http' && normalized.status >= 500) {
+    // 3. Server → toast
+    if (err.type === 'server') {
       $toast.error('Server error', {
         description: 'Please try again later',
       })
       return
     }
 
-    // 5. HTTP 4xx → silent fail (handled locally)
-    if (normalized.type === 'http' && normalized.status >= 400) {
+    // 4. Client → toast
+    if (err.type === 'client') {
+      if (err.status === 404) {
+        $toast.error('Resource not found')
+      }
+      if (err.status === 409) {
+        $toast.error('Conflict: resource already exists')
+      }
+      if (err.status === 429) {
+        $toast.error('Too many requests, slow down')
+      }
       return
     }
-
-    // Other errors (validation, not_found, auth) are handled locally
   }
 
   const queryClient = new QueryClient({
@@ -82,26 +79,20 @@ export default defineNuxtPlugin((nuxtApp) => {
         staleTime: 1000 * 60 * 5,
         refetchOnWindowFocus: false,
         retry: (failureCount, error) => {
-          const normalized = normalizeError(error)
+          const err = normalizeError(error)
 
-          // No retry auth redirect (expired session)
-          if (isAuthRedirectError(normalized)) return false
-
-          // No retry 400-level (validation, not_found, bad credentials)
-          if (normalized.type === 'validation' || normalized.type === 'not_found') {
-            return false
+          // Retry network errors (up to 2 times)
+          if (err.type === 'network') {
+            return failureCount < 2
           }
 
-          // No retry auth errors (bad credentials)
-          if (normalized.type === 'auth') return false
-
-          // Retry network up to 2 times
-          if (normalized.type === 'network' && failureCount < 2) {
-            return true
+          // Retry server errors (once)
+          if (err.type === 'server') {
+            return failureCount < 1
           }
 
-          // Retry 5xx up to 1 time
-          return failureCount < 1
+          // Don't retry: auth, validation, client, unknown
+          return false
         },
         retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
       },

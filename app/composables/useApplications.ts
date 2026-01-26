@@ -1,7 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import type { JobApplication, JobApplicationInvite } from '@/types/applications'
 import { ApplicationsService } from '@/services/applications'
-import { createAuthError, createValidationError } from '@/utils/errors'
 
 /**
  * Composable for Applications data operations
@@ -27,14 +26,14 @@ export const useApplications = () => {
       mutationFn: async (data: JobApplicationInvite) => {
         // Validate user is authenticated
         if (!user.value?.sub) {
-          throw createAuthError('User not authenticated')
+          throw new Error('User not authenticated')
         }
         // Get company_id from database function
         const { data: companyId, error: companyError } = await client
           .rpc('get_user_company_id')
 
         if (companyError || !companyId) {
-          throw createValidationError('Unable to get company context. Please refresh the page.')
+          throw new Error('Unable to get company context. Please refresh the page.')
         }
 
         return ApplicationsService.create(client, {
@@ -54,9 +53,7 @@ export const useApplications = () => {
     })
   }
 
-  /**
-   * Fetches applications for a candidate (to check existing invites)
-   */
+  // Fetches applications for a candidate (to check existing invites)
   const useApplicationsByCandidate = (candidateId: MaybeRefOrGetter<string>) => {
     return useQuery({
       queryKey: computed(() => applicationQueryKeys.byCandidate(toValue(candidateId))),

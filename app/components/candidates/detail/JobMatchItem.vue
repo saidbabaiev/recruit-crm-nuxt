@@ -12,6 +12,7 @@ import {
   formatRemotePreference,
   getCandidateExperienceLabel,
 } from '@/utils/common'
+import { normalizeError } from '@/utils/errors'
 
 // --- Types ---
 interface Props {
@@ -31,8 +32,8 @@ const { mutate: assignToJob, isPending } = useCreateApplication({
     toast.success('Candidate invited to Interview!')
   },
   onError: (error) => {
-    const { message } = handleError(error)
-    toast.error(message)
+    const normalizedError = normalizeError(error)
+    toast.error(normalizedError.message)
   },
 })
 

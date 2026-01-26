@@ -1,10 +1,17 @@
 import type { PostgrestError, AuthError } from '@supabase/supabase-js'
 import type { AppError } from '@/types/errors'
-import { ERROR_MESSAGES, POSTGRES_ERROR_CODES } from '@/types/errors'
+import { ERROR_MESSAGES } from '@/types/errors'
 
-/**
- * Type guards
- */
+// Type guards
+function isAuthError(error: unknown): error is AuthError {
+  return (
+    typeof error === 'object'
+    && error !== null
+    && 'name' in error
+    && error.name === 'AuthError'
+  )
+}
+
 function isPostgrestError(error: unknown): error is PostgrestError {
   return (
     typeof error === 'object'
@@ -15,16 +22,7 @@ function isPostgrestError(error: unknown): error is PostgrestError {
   )
 }
 
-function isAuthError(error: unknown): error is AuthError {
-  return (
-    typeof error === 'object'
-    && error !== null
-    && 'name' in error
-    && error.name === 'AuthError'
-  )
-}
-
-function hasHttpStatus(error: unknown): error is { status: number, message?: string } {
+function hasStatus(error: unknown): error is { status: number, message?: string } {
   return (
     typeof error === 'object'
     && error !== null
@@ -51,42 +49,20 @@ function isNetworkError(error: unknown): boolean {
 }
 
 /**
- * Safely extract status code from auth error
- */
-function getAuthErrorCode(error: AuthError): string {
-  // AuthError may have a status property
-  if ('status' in error && typeof error.status === 'number') {
-    return error.status.toString()
-  }
-  return 'AUTH_ERROR'
-}
-
-/**
  * Normalize any error to AppError
  * This is the ONLY function that converts unknown -> AppError
  */
 export function normalizeError(error: unknown): AppError {
-  // 1. Supabase Database Errors
-  if (isPostgrestError(error)) {
-    return {
-      type: 'database',
-      code: error.code,
-      message: error.message,
-      details: error.details,
-      hint: error.hint,
-    }
-  }
-
-  // 2. Supabase Auth Errors
+  // 1. Auth errors
   if (isAuthError(error)) {
     return {
       type: 'auth',
-      code: getAuthErrorCode(error),
       message: error.message,
+      status: error.status || 401,
     }
   }
 
-  // 3. Network Errors
+  // 2. Network errors
   if (isNetworkError(error)) {
     return {
       type: 'network',
@@ -94,125 +70,68 @@ export function normalizeError(error: unknown): AppError {
     }
   }
 
-  // 4. HTTP Errors (fetch responses)
-  if (hasHttpStatus(error)) {
+  // 3. Supabase Database errors
+  if (isPostgrestError(error)) {
     return {
-      type: 'http',
-      status: error.status,
-      message: error.message || `HTTP ${error.status}`,
+      type: 'server',
+      message: ERROR_MESSAGES.SERVER_ERROR,
+      status: 500,
     }
   }
 
-  // 5. Standard Error
+  // 4. HTTP 5xx
+  if (hasStatus(error) && error.status >= 500) {
+    return {
+      type: 'server',
+      message: ERROR_MESSAGES.SERVER_ERROR,
+      status: error.status,
+    }
+  }
+
+  // 5. Validation errors (only 400, 422)
+  if (hasStatus(error) && (error.status === 400 || error.status === 422)) {
+    return {
+      type: 'validation',
+      message: error.message || ERROR_MESSAGES.VALIDATION,
+      status: error.status,
+    }
+  }
+
+  // 6. Other client errors (404, 409, 429, etc)
+  if (hasStatus(error) && error.status >= 400 && error.status < 500) {
+    return {
+      type: 'client',
+      message: error.message || ERROR_MESSAGES.CLIENT_ERROR,
+      status: error.status,
+    }
+  }
+
+  // 7. Standard Error
   if (error instanceof Error) {
     return {
       type: 'unknown',
       message: error.message || ERROR_MESSAGES.UNKNOWN,
-      originalError: error,
     }
   }
 
-  // 6. String (bad practice but happens)
+  // 8. String
   if (typeof error === 'string') {
     return {
       type: 'unknown',
       message: error,
-      originalError: error,
     }
   }
 
-  // 7. Complete unknown
+  // 8. Complete unknown
   return {
     type: 'unknown',
     message: ERROR_MESSAGES.UNKNOWN,
-    originalError: error,
   }
 }
 
 /**
- * Map common Postgres errors to user-friendly messages
+ * Should redirect to auth page
  */
-const DB_ERROR_MESSAGES: Record<string, string> = {
-  [POSTGRES_ERROR_CODES.UNIQUE_VIOLATION]: ERROR_MESSAGES.DUPLICATE,
-  [POSTGRES_ERROR_CODES.FOREIGN_KEY_VIOLATION]: ERROR_MESSAGES.FOREIGN_KEY,
-  [POSTGRES_ERROR_CODES.NOT_NULL_VIOLATION]: ERROR_MESSAGES.NOT_NULL,
-  [POSTGRES_ERROR_CODES.CHECK_VIOLATION]: ERROR_MESSAGES.CHECK_VIOLATION,
-  PGRST116: ERROR_MESSAGES.NOT_FOUND,
+export function shouldRedirectToAuth(error: AppError): boolean {
+  return error.type === 'auth' && (error.status === 401 || error.status === 403)
 }
-/**
- * Get user-friendly message from AppError
- * This is what you show in toasts/UI
- */
-export function getErrorMessage(error: AppError): string {
-  switch (error.type) {
-    case 'database':
-      return DB_ERROR_MESSAGES[error.code] || error.message
-
-    case 'auth':
-      if (error.code === '401' || error.code === '403') {
-        return ERROR_MESSAGES.SESSION_EXPIRED
-      }
-      return error.message
-
-    case 'network':
-      return error.message
-
-    case 'validation':
-      return error.message || ERROR_MESSAGES.VALIDATION
-
-    case 'not_found':
-      return `${error.resource} not found`
-
-    case 'http':
-      return `HTTP Error ${error.status}: ${error.message}`
-
-    case 'unknown':
-      return error.message
-  }
-}
-
-/**
- * Check if error requires auth redirect
- */
-export function isAuthRedirectError(error: AppError): boolean {
-  return (
-    error.type === 'auth'
-    || (error.type === 'database' && error.code === 'PGRST301')
-  )
-}
-
-/**
- * ALL-IN-ONE: normalize + get message
- * Use this in 90% of cases
- */
-export function handleError(error: unknown) {
-  const normalized = normalizeError(error)
-  const message = getErrorMessage(normalized)
-
-  return {
-    error: normalized,
-    message,
-    shouldRedirectToAuth: isAuthRedirectError(normalized),
-  }
-}
-
-/**
- * Factory functions to create typed errors
- */
-export const createAuthError = (message: string, code = '401'): AppError => ({
-  type: 'auth',
-  code,
-  message,
-})
-
-export const createValidationError = (message: string): AppError => ({
-  type: 'validation',
-  fields: {},
-  message,
-})
-
-export const createNotFoundError = (resource: string, id?: string): AppError => ({
-  type: 'not_found',
-  resource,
-  id,
-})

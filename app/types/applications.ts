@@ -1,18 +1,5 @@
 import type { Database } from './supabase'
 
-/**
- *        applied_at?: string | null
-          candidate_id: string
-          company_id: string
-          created_at?: string | null
-          created_by: string
-          id?: string
-          job_id: string
-          notes?: string | null
-          status?: Database['public']['Enums']['application_status']
-          updated_at?: string | null
- */
-
 export type JobApplication = Database['public']['Tables']['job_applications']['Row']
 
 export type ApplicationStatus = Database['public']['Enums']['application_status']

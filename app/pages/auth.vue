@@ -4,7 +4,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { handleError } from '@/utils/errors'
+import { normalizeError } from '@/utils/errors'
 
 // --- Composables ---
 const { useSignIn, useSignUp } = useAuth()
@@ -40,8 +40,8 @@ watch(() => form.password, () => {
 // --- Mutations ---
 const { mutate: login, isPending: isLoginPending } = useSignIn({
   onError: (err) => {
-    const { message } = handleError(err)
-    error.value = message
+    const normalizedError = normalizeError(err)
+    error.value = normalizedError.message
   },
 })
 
@@ -55,8 +55,8 @@ const { mutate: register, isPending: isRegisterPending } = useSignUp({
     form.password = ''
   },
   onError: (err) => {
-    const { message } = handleError(err)
-    error.value = message
+    const normalizedError = normalizeError(err)
+    error.value = normalizedError.message
   },
 })
 

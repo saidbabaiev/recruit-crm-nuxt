@@ -195,8 +195,8 @@ export const use[Feature] = () => {
         if (options?.onError) {
           options.onError(err)
         } else {
-          const { message } = handleError(err)
-          toast.error(message, { id: context?.toastId })
+          const normalizedError = normalizeError(err)
+          toast.error(normalizedError.message, { id: context?.toastId })
         }
       },
     })

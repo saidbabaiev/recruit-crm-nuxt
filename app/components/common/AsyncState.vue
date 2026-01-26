@@ -3,7 +3,6 @@ import { Loader2, AlertCircle, FileQuestion } from 'lucide-vue-next'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import type { AppError } from '@/types/errors'
-import { getErrorMessage } from '@/utils/errors'
 
 interface Props {
   isLoading?: boolean
@@ -18,8 +17,7 @@ const props = defineProps<Props>()
 defineEmits(['retry'])
 
 const errorMessage = computed(() => {
-  if (!props.error) return ''
-  return getErrorMessage(props.error)
+  return props.error?.message || ''
 })
 </script>
 
@@ -48,10 +46,10 @@ const errorMessage = computed(() => {
           <p>{{ errorMessage }}</p>
 
           <div
-            v-if="error.type === 'validation'"
+            v-if="error?.type === 'validation'"
             class="p-2 rounded bg-destructive/10 text-xs font-mono"
           >
-            Fields: {{ Object.keys(error.fields).join(', ') }}
+            Fields: {{ Object.keys(error.fields || {}).join(', ') }}
           </div>
 
           <div class="pt-1">
