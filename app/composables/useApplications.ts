@@ -20,7 +20,7 @@ export const useApplications = () => {
    */
   const useCreateApplication = (options?: {
     onSuccess?: (data: JobApplication) => void | Promise<void>
-    onError?: (error: Error) => void
+    onError?: (error: unknown) => void
   }) => {
     return useMutation({
       mutationFn: async (data: JobApplicationInvite) => {

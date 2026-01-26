@@ -43,7 +43,7 @@ interface SignUpSuccess {
  */
 interface MutationOptions<TData> {
   onSuccess?: (data: TData) => void | Promise<void>
-  onError?: (error: Error) => void
+  onError?: (error: unknown) => void
 }
 
 export const useAuth = () => {

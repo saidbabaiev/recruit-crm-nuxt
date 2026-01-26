@@ -78,12 +78,36 @@ export const useCandidates = () => {
 
 ## Global Error Handling
 
-Configured in [plugins/vue-query.ts](app/plugins/vue-query.ts):
-- **Network errors**: Show "No internet connection" toast
-- **Auth errors (401/403)**: Redirect to `/auth` with returnUrl
-- **5xx errors**: Show generic error toast and log to console (dev mode)
+Error handling uses a **6-type classification system** configured in [plugins/vue-query.ts](app/plugins/vue-query.ts) and [utils/errors.ts](app/utils/errors.ts):
 
-Component-level 4xx errors are handled with `vue-sonner` toasts in mutation callbacks.
+**Error Types:**
+- `auth` (401/403) → Auto-redirect to `/auth` + toast
+- `network` (offline/timeout) → Global toast
+- `server` (5xx, DB errors) → Global toast  
+- `validation` (400/422) → Handled locally in components
+- `client` (404/409/429) → Handled locally or selective toast
+- `unknown` → Fallback for unexpected errors
+
+**Key Functions:**
+- `normalizeError(error: unknown): AppError` - Converts any error to typed AppError
+- `useAppError(errorRef)` - Reactive adapter for TanStack Query errors in components
+
+**Retry Logic:** Network errors retry 2x, server errors retry 1x. No retry for auth/validation/client errors.
+
+**Usage Examples:**
+```typescript
+// In composables - normalize errors in onError
+const { mutate } = useSignIn({
+  onError: (err) => {
+    const normalized = normalizeError(err)
+    error.value = normalized.message
+  }
+})
+
+// In components - use useAppError for reactive queries
+const { error } = useCandidatesList()
+const appError = useAppError(error) // Converts to AppError | null
+```
 
 ## Authentication Flow
 
@@ -150,53 +174,34 @@ export const use[Feature] = () => {
   /**
    * Creates a mutation hook for creating a new [Feature].
    * 
-   * **Default UI Behavior:**
-   * - Shows loading toast: "Creating..."
-   * - On success: Updates toast to "Created successfully"
-   * - On error: Shows error toast with message
-   * - Invalidates [feature] list cache automatically
+   * **Default Behavior:**
+   * - Success: Shows toast + invalidates cache
+   * - Error: Shows toast with normalized error message
    * 
-   * @param options - Optional callbacks to override default behavior
-   * @param options.onSuccess - Custom logic after successful creation (e.g., navigate to detail page)
-   * @param options.onError - Custom error handling (e.g., show inline form error instead of toast)
-   * 
-   * @example
-   * ```ts
-   * // Default usage (shows toasts)
-   * const { mutate: create } = useCreate[Feature]()
-   * create({ name: 'New Item' })
-   * 
-   * // Custom usage (navigate on success)
-   * const { mutate: createAndRedirect } = useCreate[Feature]({
-   *   onSuccess: (data) => navigateTo(`/[feature]/${data.id}`)
-   * })
-   * ```
+   * @param options.onSuccess - Override success handling (e.g., navigate)
+   * @param options.onError - Override error handling (use normalizeError for typed errors)
    */
   const useCreate[Feature] = (options?: {
     onSuccess?: (data: [Feature]) => void | Promise<void>
-    onError?: (error: Error) => void
+    onError?: (error: unknown) => void // ✅ Use 'unknown', not 'Error'
   }) => {
     return useMutation({
       mutationFn: (data) => [Feature]Service.create(client, data),
-      onMutate: () => {
-        const toastId = toast.loading('Creating...') // ✅ Use toast hook
-        return { toastId }
-      },
-      onSuccess: async (data, vars, context) => {
-        queryClient.invalidateQueries({ queryKey: [feature]QueryKeys.lists() })
+      onSuccess: async (data) => {
+        await queryClient.invalidateQueries({ queryKey: [feature]QueryKeys.lists() })
         
         if (options?.onSuccess) {
-          await options.onSuccess(data) // Custom logic
+          await options.onSuccess(data)
         } else {
-          toast.success('Created successfully', { id: context?.toastId })
+          toast.success('Created successfully')
         }
       },
-      onError: (err, vars, context) => {
+      onError: (err) => {
         if (options?.onError) {
           options.onError(err)
         } else {
-          const normalizedError = normalizeError(err)
-          toast.error(normalizedError.message, { id: context?.toastId })
+          const normalized = normalizeError(err)
+          toast.error(normalized.message)
         }
       },
     })
