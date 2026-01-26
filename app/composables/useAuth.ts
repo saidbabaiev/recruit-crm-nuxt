@@ -18,42 +18,29 @@ interface SignUpVariables {
   }
 }
 
-/**
- * Successful sign-in response data.
- */
 interface SignInSuccess {
   user: User
   session: Session
 }
 
-/**
- * Successful sign-up response data.
- * Fields are nullable because email confirmation may be required.
- */
 interface SignUpSuccess {
   user: User | null
   session: Session | null
 }
 
-/**
- * Generic mutation options for overriding default behavior.
- *
- * Allows components to inject custom success/error handling logic
- * while preserving default toast notifications and cache invalidation.
- */
+// Mutation options for overriding default behavior with custom success/error handling logic
 interface MutationOptions<TData> {
   onSuccess?: (data: TData) => void | Promise<void>
   onError?: (error: unknown) => void
 }
 
+// --- UseAuth composable ---
 export const useAuth = () => {
   const supabase = useSupabaseClient<Database>()
   const queryClient = useQueryClient()
   const user = useSupabaseUser()
 
-  /**
-   * Creates a sign-in mutation hook with built-in loading/success/error handling.
-   */
+  // Sign In
   const useSignIn = (options?: MutationOptions<SignInSuccess>) => {
     return useMutation({
       mutationFn: async ({ email, password }: SignInVariables) => {
@@ -69,7 +56,6 @@ export const useAuth = () => {
           await options.onSuccess(data)
         }
         else {
-          // Wait for user state to sync to fix race condition with useSupabaseUser()
           try {
             await until(user).toBeTruthy({ timeout: 3000 })
             await navigateTo('/dashboard')
@@ -84,9 +70,7 @@ export const useAuth = () => {
     })
   }
 
-  /**
-   * Creates a sign-up mutation hook with built-in loading/success/error handling.
-   */
+  // Sign Up
   const useSignUp = (options?: MutationOptions<SignUpSuccess>) => {
     return useMutation({
       mutationFn: async ({ email, password, metadata }: SignUpVariables) => {
@@ -103,9 +87,7 @@ export const useAuth = () => {
     })
   }
 
-  /**
-   * Signs out the current user and clears all cached query data.
-   */
+  // Sign Out
   const signOut = async () => {
     const { error } = await supabase.auth.signOut()
     if (error) throw error
