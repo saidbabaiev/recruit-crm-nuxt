@@ -3,7 +3,6 @@ export default defineNuxtRouteMiddleware((to) => {
 
   const publicRoutes = ['/', '/auth']
   const isPublic = publicRoutes.some((route) => {
-    // Exact match or starts with (for /blog/*)
     return to.path === route || to.path.startsWith(route + '/')
   })
 

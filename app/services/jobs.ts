@@ -3,11 +3,7 @@ import type { Database } from '@/types/supabase'
 import type { Job, JobFilters, JobListResponse } from '@/types/jobs'
 
 export const JobsService = {
-  /**
-   * Fetches all jobs with optional filters
-   *
-   * Note: Filtering by company_id is handled automatically by RLS policy.
-   */
+  // Fetches all jobs with optional filters
   async getAll(
     client: SupabaseClient<Database>,
     filters?: JobFilters,
@@ -38,11 +34,7 @@ export const JobsService = {
     }
   },
 
-  /**
-   * Fetches a single job by ID
-   *
-   * Note: RLS policy ensures the job belongs to user's company.
-   */
+  // Fetches a single job by ID
   async getById(
     client: SupabaseClient<Database>,
     id: string,

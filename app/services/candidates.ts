@@ -3,11 +3,7 @@ import type { Database } from '@/types/supabase'
 import type { Candidate, CandidateListResponse, CandidateFilters } from '@/types/candidates'
 
 export const CandidatesService = {
-  /**
-   * Fetches all candidates with optional filters and pagination
-   *
-   * Note: Filtering by company_id is handled automatically by RLS policy.
-   */
+  // Fetches all candidates with optional filters and pagination
   async getAll(client: SupabaseClient<Database>, params?: CandidateFilters): Promise<CandidateListResponse> {
     let query = client
       .from('candidates')
@@ -36,11 +32,7 @@ export const CandidatesService = {
     }
   },
 
-  /**
-   * Fetch a single candidate by ID
-   *
-   * Note: RLS policy ensures the candidate belongs to user's company.
-   */
+  // Fetch a single candidate by ID
   async getById(client: SupabaseClient<Database>, id: string): Promise<Candidate> {
     const { data, error } = await client
       .from('candidates')

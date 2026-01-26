@@ -3,6 +3,7 @@ import { FileText, Mail, Phone } from 'lucide-vue-next'
 
 import type { Candidate } from '@/types/candidates'
 import CandidateSocials from './CandidateSocials.vue'
+import CopyButton from '@/components/common/CopyButton.vue'
 
 interface Props {
   candidate: Candidate
@@ -17,13 +18,18 @@ defineProps<Props>()
     <!-- Email -->
     <div class="flex items-center gap-2">
       <Mail class="h-4 w-4 text-muted-foreground shrink-0" />
-      <a
+      <div
         v-if="candidate.email"
-        :href="`mailto:${candidate.email}`"
-        class="text-primary hover:underline truncate"
+        class="flex items-center gap-1 min-w-0"
       >
-        {{ candidate.email }}
-      </a>
+        <a
+          :href="`mailto:${candidate.email}`"
+          class="text-primary hover:underline truncate"
+        >
+          {{ candidate.email }}
+        </a>
+        <CopyButton :value="candidate.email" />
+      </div>
       <span
         v-else
         class="text-muted-foreground"
@@ -33,13 +39,18 @@ defineProps<Props>()
     <!-- Phone -->
     <div class="flex items-center gap-2">
       <Phone class="h-4 w-4 text-muted-foreground shrink-0" />
-      <a
+      <div
         v-if="candidate.phone"
-        :href="`tel:${candidate.phone}`"
-        class="text-primary hover:underline"
+        class="flex items-center gap-1"
       >
-        {{ candidate.phone }}
-      </a>
+        <a
+          :href="`tel:${candidate.phone}`"
+          class="text-primary hover:underline"
+        >
+          {{ candidate.phone }}
+        </a>
+        <CopyButton :value="candidate.phone" />
+      </div>
       <span
         v-else
         class="text-muted-foreground"

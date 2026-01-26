@@ -8,11 +8,7 @@ import type {
 } from '@/types/applications'
 
 export const ApplicationsService = {
-  /**
-   * Fetches all job applications with optional filters
-   *
-   * Note: Filtering by company_id is handled automatically by RLS policy.
-   */
+  // Fetches all job applications with optional filters
   async getAll(
     client: SupabaseClient<Database>,
     filters?: JobApplicationFilters,
@@ -45,11 +41,7 @@ export const ApplicationsService = {
     }
   },
 
-  /**
-   * Fetches a single job application by ID
-   *
-   * Note: RLS policy ensures the application belongs to user's company.
-   */
+  // Fetches a single job application by ID
   async getById(
     client: SupabaseClient<Database>,
     id: string,
@@ -65,11 +57,7 @@ export const ApplicationsService = {
     return data
   },
 
-  /**
-   * Fetches job applications by candidate ID
-   *
-   * Note: RLS automatically filters by company_id.
-   */
+  // Fetches job applications by candidate ID
   async getByCandidateId(
     client: SupabaseClient<Database>,
     candidateId: string,
@@ -85,12 +73,7 @@ export const ApplicationsService = {
     return data || []
   },
 
-  /**
-   * Creates a new job application
-   *
-   * Note: company_id and created_by must be included in the data object.
-   * RLS policy will verify that company_id matches user's company.
-   */
+  // Creates a new job application
   async create(
     client: SupabaseClient<Database>,
     data: JobApplicationCreate,

@@ -2,6 +2,7 @@
 import SkillsList from '@/components/common/SkillsList.vue'
 import type { Candidate } from '@/types/candidates'
 import { Card, CardContent } from '@/components/ui/card'
+import CandidateDetailsItem from './CandidateDetailsItem.vue'
 import {
   formatDate,
   formatRemotePreference,
@@ -9,7 +10,6 @@ import {
   getCandidateExperienceLabel,
   getSalaryRangeLabel,
 } from '@/utils/formatters'
-import CandidateDetailsItem from './CandidateDetailsItem.vue'
 
 interface Props {
   candidate: Candidate

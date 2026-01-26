@@ -14,11 +14,9 @@ export const useApplications = () => {
   }) => {
     return useMutation({
       mutationFn: async (data: JobApplicationInvite) => {
-        // Validate user is authenticated with auth error
         if (!user.value?.sub) {
           throw new Error('User not authenticated')
         }
-        // Get company_id from database function
         const { data: companyId, error: companyError } = await client
           .rpc('get_user_company_id')
 
