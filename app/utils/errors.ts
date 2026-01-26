@@ -53,7 +53,6 @@ function isNetworkError(error: unknown): boolean {
  * This is the ONLY function that converts unknown -> AppError
  */
 export function normalizeError(error: unknown): AppError {
-  // 1. Auth errors
   if (isAuthError(error)) {
     return {
       type: 'auth',
@@ -130,7 +129,7 @@ export function normalizeError(error: unknown): AppError {
 }
 
 /**
- * Should redirect to auth page
+ * Function to check if the error should redirect to auth page
  */
 export function shouldRedirectToAuth(error: AppError): boolean {
   return error.type === 'auth' && (error.status === 401 || error.status === 403)
