@@ -1,4 +1,4 @@
-# 📝 TODO: Hirecrm Rewrite (Nuxt 4 + Supabase)
+# 📝 TO DO: Hirecrm Rewrite (Nuxt 4 + Supabase)
 
 # CRM Implementation Plan
 
@@ -53,8 +53,8 @@
     - [x] **UI:** Display detailed info, Skeletons, and Error handling.
     - [x] **Navigation:** Connect list items to detail view (✅ partially done - table rows clickable).
     - [x] **Refactor:** Refactor CandidateDetails into smaller components.
-- [ ] **Job Matching:** Implement basic job matching logic in candidate details.
-    - [ ]*Tech:* Simple algorithm based on skills and experience.
+- [x] **Job Matching:** Implement basic job matching logic in candidate details.
+    - [x]*Tech:* Simple algorithm based on skills and experience.
     - [x]*UI:* Show matched jobs section in candidate details.
 
 ## 5. Feature: Pipeline / Jobs
@@ -65,3 +65,9 @@
 ## 6. Quality Assurance & Polish
 - [ ] **Performance:** Check bundle size and lazy load heavy route components.
 - [ ] **Edge Cases:** Handle "Network Offline" state.
+
+## 7. Error Handling Enhancement (Production Readiness)
+- [ ] **Error Boundary Component:** Implement `ErrorBoundary.vue` with `onErrorCaptured` hook.
+- [ ] **Global Vue Error Handler:** Add `app.config.errorHandler` in plugin.
+- [ ] **Unhandled Promise Rejection Handler:** Add `window.unhandledrejection` listener.
+- [ ] **Error Handling Tests:** Add test coverage for error scenarios.

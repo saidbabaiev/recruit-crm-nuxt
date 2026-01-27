@@ -56,6 +56,7 @@ export const useAuth = () => {
           await options.onSuccess(data)
         }
         else {
+          // Race condition: user is not immediately available after sign in.
           try {
             await until(user).toBeTruthy({ timeout: 3000 })
             await navigateTo('/dashboard')

@@ -11,7 +11,7 @@ export const useCandidates = () => {
     return useQuery({
       queryKey: computed(() => ['candidates', 'list', toValue(params)]),
       queryFn: () => CandidatesService.getAll(client, toValue(params)),
-      enabled: computed(() => !!user.value), // Wait for user context to be ready
+      enabled: computed(() => !!user.value),
       placeholderData: keepPreviousData, // UX: no flash on filter change
       staleTime: 60 * 1000,
     })
