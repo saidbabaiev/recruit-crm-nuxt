@@ -1,6 +1,6 @@
 {
   // --- Interface and Fonts ---
-  "workbench.iconTheme": "catppuccin-perfect-aura",
+  "workbench.iconTheme": "material-icon-theme",
   "editor.wordWrap": "on",
   "editor.stickyScroll.enabled": true,
   "editor.minimap.enabled": false,

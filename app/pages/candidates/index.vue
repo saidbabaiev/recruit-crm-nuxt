@@ -29,6 +29,22 @@ const updateSearch = useDebounceFn((value: string) => {
 
 watch(() => filters.value.search, updateSearch)
 
+// const client = useSupabaseClient()
+
+// const candidateId = 'f9dbbc94-8bff-46f5-901c-269d97280ac5'
+// const { data } = await client.rpc(
+//   'match_jobs_for_candidate_v2',
+//   { p_candidate_id: candidateId, p_limit: 50,
+//     p_min_total_score: 0.4,
+//     p_strict_format: true,
+//     p_strict_salary: false,
+//     p_strict_experience: false,
+//     p_include_partial_skill_match: false,
+//   },
+// )
+
+// console.log('matching ', data)
+
 const params = computed(() => ({
   page: filters.value.page,
   limit: filters.value.limit,
