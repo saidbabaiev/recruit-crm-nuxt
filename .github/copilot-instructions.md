@@ -1,20 +1,17 @@
 # Recruit Pro - AI Development Guide
 
-You are the **Senior Frontend Architect** for "Hire CRM", a high-quality application built for a digital agency environment.
-
-**Your Goal:** Guide the development of a scalable, strictly typed, and maintainable application.
-
 **Your Philosophy:** **Pragmatic Quality.** Code must be clean, readable, and robust ("Good Code"), but avoiding unnecessary over-engineering. We prioritize Type Safety, Separation of Concerns, and Scalability (ready for AWS/Cloud growth).
 
 ## Architecture Overview
 
-This is a **Nuxt 4 + Supabase + TanStack Query** recruitment CRM built with strict TypeScript and the "Service Pattern" for clean separation of concerns. The app is designed for scalability with type safety as a top priority.
+This is a **Nuxt 4 + Supabase + TanStack Query** recruitment CRM built with strict TypeScript and the "Service Pattern" for clean separation of concerns. 
+The app is designed for scalability with type safety as a top priority.
 
 ### Core Stack
 - **Framework**: Nuxt 4 (Vue 3 Composition API, `<script setup lang="ts">`)
 - **Backend**: Supabase (Auth, PostgreSQL, Real-time)
 - **State Management**: TanStack Query v5 (Vue Query) for server state
-- **UI**: shadcn-vue (Radix Vue) + Tailwind CSS + lucide-vue-next icons
+- **UI**: shadcn-vue + Tailwind CSS + lucide-vue-next icons
 - **Utilities**: @vueuse/core, vue-sonner (toasts)
 
 ## Critical Architectural Pattern: The Service Layer
@@ -39,11 +36,9 @@ Pure async functions with **dependency injection**. Services accept `client` as 
 export const CandidatesService = {
   async getAll(client: SupabaseClient<Database>, params?: CandidateFilters) {
     let query = client.from('candidates').select('*', { count: 'exact' })
-    // Dynamic query building with filters
     if (params?.search) {
       query = query.or(`first_name.ilike.%${params.search}%,last_name.ilike.%${params.search}%`)
     }
-    // ... pagination, sorting
     return { data, count }
   }
 }
@@ -60,7 +55,7 @@ export const useCandidates = () => {
     return useQuery({
       queryKey: computed(() => ['candidates', 'list', toValue(params)]),
       queryFn: () => CandidatesService.getAll(client, toValue(params)),
-      placeholderData: keepPreviousData, // UX: no flash on filter change
+      placeholderData: keepPreviousData,
       staleTime: 60 * 1000,
     })
   }
@@ -142,108 +137,119 @@ Auth composable in [composables/useAuth.ts](app/composables/useAuth.ts) wraps Su
 
 ## Component & Mutation Patterns
 
-### Smart Composables: Unified Approach (Architectural Standard)
+### Pure Composables: Clean Architecture (Architectural Standard)
 
-**ALL composables (`useAuth`, `useCandidates`, etc.) MUST follow this unified pattern:**
+**ALL composables (`useAuth`, `useCandidates`, etc.) MUST follow this pure composable pattern:**
 
-#### 1. Logic Inside Composables
-- All `useMutation` and `useQuery` hooks MUST be created inside composables
-- NEVER move `useMutation` to `.vue` components
-- Composables are the single source of truth for data operations
-- **Components are maximally simple** - they only consume ready-made mutation hooks from composables
+#### 1. Composables are Pure Data Layer
+- Composables return **factory functions** that create `useQuery` and `useMutation` hooks
+- Composables contain ONLY data fetching/mutation logic - NO side effects
+- NO toasts, NO cache invalidation, NO navigation inside composables
+- Composables accept optional `options` parameter for custom callbacks (`onSuccess`, `onError`)
 
-#### 2. Side Effects Handling
-- Standard actions (toast notifications, cache invalidation) MUST be defined inside composables
-- Default UX behavior (loading/success/error toasts) is built into mutation hooks
-- Cache invalidation via `queryClient` is part of the composable, not the component
+#### 2. Components Handle Side Effects
+- `.vue` components import `useMutation`/`useQuery` from `@tanstack/vue-query`
+- Components call factory functions from composables and handle ALL side effects:
+  - Toast notifications via `useNuxtApp().$toast`
+  - Cache invalidation via `useQueryClient()`
+  - Navigation via `navigateTo()`
+  - Modal closing, form resets, etc.
 
-#### 3. Flexibility via Options
-- Composable mutation hooks SHOULD accept optional `options` parameter with callbacks (`onSuccess`, `onError`)
-- This allows components to add specific logic (e.g., navigation, closing modals) without duplicating base functionality
-- Default behavior executes if no custom callback is provided
+#### 3. Separation of Concerns
+- **Composables:** Pure data operations (fetching, mutations)
+- **Components:** User experience (toasts, navigation, UI state)
+- This keeps composables reusable and testable
 
-#### 4. Clean Components
-- `.vue` files MUST NOT contain data fetching business logic
-- Components only call ready-made methods from composables
-- Component responsibility: UI state, user interactions, and custom UX flows
-
-#### 5. Navigation Standard
+#### 4. Navigation Standard
 - **ALWAYS use `navigateTo()`** for programmatic navigation (Nuxt built-in)
 - NEVER use `useRouter().push()` or `window.location.href`
 - Example: `await navigateTo('/dashboard')` or `navigateTo({ path: '/auth', query: { redirectTo } })`
 
-#### 6. Toast Notifications Standard
-- **ALWAYS use `$toast` from `useNuxtApp()`** for toast notifications
-- Example: `const { $toast } = useNuxtApp()` → `$toast.success('Done!')`
+#### 5. Exception: Critical Domain Logic
+- Auth flow navigation (sign-in → dashboard) MAY be in composable as default behavior
+- Use `options?.onSuccess` to allow override if needed
+- Document such exceptions with JSDoc comments explaining the reasoning
 
-#### 7. Documentation Standard
-- **ALL composables MUST have detailed JSDoc comments** that explicitly describe:
-  - Default UI behavior (toasts shown, redirects performed)
-  - Complex logic explanations (e.g., race conditions, auth state sync)
-  - Parameters and return types
-  - Usage examples for common scenarios
-- This provides critical context for developers working with smart composables
+#### 6. Documentation Standard
+- Composables SHOULD have JSDoc comments for complex logic
+- Document race conditions, auth state sync issues, query strategies
+- Keep comments focused on technical details, not UX behavior
 
 **Example Pattern:**
-```typescript
-// composables/use[Feature].ts
-export const use[Feature] = () => {
-  const client = useSupabaseClient()
-  const queryClient = useQueryClient()
-  const toast = useNotifications() // ✅ Use hook, not $toast
 
-  /**
-   * Creates a mutation hook for creating a new [Feature].
-   * 
-   * **Default Behavior:**
-   * - Success: Shows toast + invalidates cache
-   * - Error: Shows toast with normalized error message
-   * 
-   * @param options.onSuccess - Override success handling (e.g., navigate)
-   * @param options.onError - Override error handling (use normalizeError for typed errors)
-   */
-  const useCreate[Feature] = (options?: {
-    onSuccess?: (data: [Feature]) => void | Promise<void>
-    onError?: (error: unknown) => void // ✅ Use 'unknown', not 'Error'
-  }) => {
-    return useMutation({
-      mutationFn: (data) => [Feature]Service.create(client, data),
-      onSuccess: async (data) => {
-        await queryClient.invalidateQueries({ queryKey: ['[feature]', 'list'] })
-        
-        if (options?.onSuccess) {
-          await options.onSuccess(data)
-        } else {
-          toast.success('Created successfully')
-        }
-      },
-      onError: (err) => {
-        if (options?.onError) {
-          options.onError(err)
-        } else {
-          const normalized = normalizeError(err)
-          toast.error(normalized.message)
-        }
-      },
+```typescript
+// composables/useCandidates.ts - Pure composable
+export const useCandidates = () => {
+  const client = useSupabaseClient()
+
+  // Factory function that returns useQuery hook
+  const useCandidatesList = (params: MaybeRefOrGetter<CandidateParams>) => {
+    return useQuery({
+      queryKey: computed(() => ['candidates', 'list', toValue(params)]),
+      queryFn: () => CandidatesService.getAll(client, toValue(params)),
+      enabled: computed(() => !!user.value),
+      placeholderData: keepPreviousData,
+      staleTime: 60 * 1000,
     })
   }
 
-  return { useCreate[Feature] }
+  // Factory function that returns useMutation hook
+  const useCreateCandidate = (options?: MutationOptions<Candidate>) => {
+    return useMutation({
+      mutationFn: (data: CreateCandidateInput) => 
+        CandidatesService.create(client, data),
+      onSuccess: options?.onSuccess,
+      onError: options?.onError,
+    })
+  }
+
+  return {
+    useCandidatesList,
+    useCreateCandidate,
+  }
 }
 
-// pages/[feature].vue
-const { useCreate[Feature] } = use[Feature]()
+// pages/candidates.vue - Component handles side effects
+<script setup lang="ts">
+import { useMutation, useQueryClient } from '@tanstack/vue-query'
 
-// Standard usage (default toasts)
-const { mutate: create } = useCreate[Feature]()
+const { useCandidatesList, useCreateCandidate } = useCandidates()
+const queryClient = useQueryClient()
+const { $toast } = useNuxtApp()
 
-// Custom usage (override behavior)
-const { mutate: createWithRedirect } = useCreate[Feature]({
+// Query - simple usage
+const { data: candidates } = useCandidatesList(params)
+
+// Mutation - component handles all side effects
+const { mutate: createCandidate, isPending } = useCreateCandidate({
   onSuccess: async (data) => {
-    await navigateTo(`/[feature]/${data.id}`) // ✅ Use navigateTo
-  }
+    $toast.success('Candidate created successfully')
+    await queryClient.invalidateQueries({ queryKey: ['candidates', 'list'] })
+    await navigateTo(`/candidates/${data.id}`)
+  },
+  onError: (error) => {
+    const normalized = normalizeError(error)
+    $toast.error(normalized.message)
+  },
 })
+
+// Or: wrap regular function in useMutation directly
+const { signOut } = useAuth()
+const { mutate: handleLogout, isPending: isLoggingOut } = useMutation({
+  mutationFn: signOut,
+  onSuccess: async () => {
+    await navigateTo('/auth')
+  },
+})
+</script>
 ```
+
+**Key Benefits:**
+- ✅ Composables are testable without mocking UI concerns
+- ✅ Components have full control over UX flows
+- ✅ Clear separation: data vs. presentation
+- ✅ Easy to customize behavior per component
+- ✅ No hidden side effects
 
 ## Essential Commands
 
@@ -306,132 +312,4 @@ app/
 ├── middleware/       # Global auth middleware
 ├── plugins/          # Vue Query setup, error handling
 └── layouts/          # auth.vue, default.vue
-```
-
-## Job Matching Algorithm
-
-```sql
-create function public.match_jobs_for_candidate(
-  p_candidate_id uuid,
-  p_limit int default 50
-)
-returns table (
-  job_id uuid,
-  total_score numeric,
-  skills_score numeric,
-  experience_score numeric,
-  salary_score numeric,
-  format_score numeric,
-  matched_count int,
-  required_count int,
-  matched_skills text[]
-)
-language sql
-stable
-as $$
-with ctx as (
-  select public.get_user_company_id() as company_id
-),
-cand as (
-  select c.*
-  from public.candidates c
-  join ctx on true
-  where c.id = p_candidate_id
-    and c.company_id = ctx.company_id
-),
-jobs as (
-  select j.*
-  from public.jobs j
-  join ctx on true
-  where j.company_id = ctx.company_id
-),
-calc as (
-  select
-    j.id as job_id,
-
-    coalesce(ms.matched_skills, '{}'::text[]) as matched_skills,
-    coalesce(ms.matched_count, 0) as matched_count,
-    cardinality(j.skills) as required_count,
-
-    case
-      when cardinality(j.skills) = 0 then 0
-      else round(coalesce(ms.matched_count,0)::numeric / cardinality(j.skills)::numeric, 4)
-    end as skills_score,
-
-    case
-      when c.remote_work_preference is null then 0.7
-      when c.remote_work_preference::text = j.work_format::text then 1
-      else 0
-    end as format_score,
-
-    case
-      when j.min_experience_value is null then 0.7
-      when c.experience_years is null then 0.6
-      else
-        case
-          when c.experience_years >=
-            case
-              when j.min_experience_period is null then j.min_experience_value::numeric
-              when lower(j.min_experience_period) like 'month%' then (j.min_experience_value::numeric / 12.0)
-              else j.min_experience_value::numeric
-            end
-          then 1
-          else round(
-            greatest(
-              c.experience_years::numeric /
-              nullif(
-                case
-                  when j.min_experience_period is null then j.min_experience_value::numeric
-                  when lower(j.min_experience_period) like 'month%' then (j.min_experience_value::numeric / 12.0)
-                  else j.min_experience_value::numeric
-                end
-              , 0)
-            , 0)
-          , 4)
-        end
-    end as experience_score,
-
-    case
-      when (j.salary_min is null and j.salary_max is null) then 0.7
-      when (c.expected_salary_min is null and c.expected_salary_max is null) then 0.7
-      when j.salary_currency is not null and c.salary_currency is not null and j.salary_currency <> c.salary_currency then 0.7
-      when j.salary_period is not null and c.salary_period is not null and j.salary_period <> c.salary_period then 0.7
-      else
-        case
-          when j.salary_max is not null and c.expected_salary_min is not null and c.expected_salary_min > j.salary_max then 0
-          when j.salary_min is not null and c.expected_salary_max is not null and c.expected_salary_max < j.salary_min then 0
-          else 1
-        end
-    end as salary_score
-
-  from jobs j
-  cross join cand c
-  left join lateral (
-    select
-      array_agg(distinct s) as matched_skills,
-      count(distinct s)::int as matched_count
-    from unnest(c.skills) s
-    join unnest(j.skills) r on r = s
-  ) ms on true
-  where c.skills && j.skills
-)
-select
-  job_id,
-  round(
-    (skills_score      * 0.70) +
-    (format_score      * 0.10) +
-    (experience_score  * 0.15) +
-    (salary_score      * 0.05)
-  , 4) as total_score,
-  skills_score,
-  experience_score,
-  salary_score,
-  format_score,
-  matched_count,
-  required_count,
-  matched_skills
-from calc
-order by total_score desc, matched_count desc
-limit p_limit;
-$$;
 ```

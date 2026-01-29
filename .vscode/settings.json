@@ -29,7 +29,7 @@
     "source.organizeImports": "never" // Disabled to avoid lag
   },
 
-  // --- Vue Specifc ---
+  // --- Vue Specific ---
   "[vue]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
@@ -42,6 +42,13 @@
     "typescriptreact",
     "vue"
   ],
+  "cSpell.ignorePaths": [
+  "TODO.md",
+  "node_modules",
+  ".nuxt",
+  "dist",
+  ".vscode/settings.json"
+],
   "cSpell.words": [
     "fkey",
     "formkit",
