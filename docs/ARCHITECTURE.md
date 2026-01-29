@@ -68,8 +68,8 @@ export type CandidateInsert = Database['public']['Tables']['candidates']['Insert
 
 export interface CandidateFilters {
   page?: number
+  limit?: number
   search?: string
-  status?: string | null
 }
 ```
 
@@ -77,6 +77,27 @@ export interface CandidateFilters {
 - Single source of truth for data shapes
 - Auto-generated from Supabase schema
 - Enables full type safety across layers
+
+**Additional Type Files:**
+
+- **`types/supabase.ts`** - Auto-generated from database schema via `npm run supabase:generate-types`
+- **`types/enums.ts`** - Centralized enum definitions and UI helpers
+  ```typescript
+  // Database enums
+  export type JobStatus = Database['public']['Enums']['job_status']
+  export type WorkFormat = Database['public']['Enums']['work_format']
+  
+  // UI helpers for enums
+  export const jobStatusVariants: Record<JobStatus, BadgeVariant> = {
+    open: 'default',
+    closed: 'destructive',
+    // ...
+  }
+  ```
+- **`types/errors.ts`** - Error type definitions (`AppError`, `ERROR_MESSAGES`)
+- **`types/candidates.ts`** - Candidate-specific types and filters
+- **`types/jobs.ts`** - Job-specific types and filters
+- **`types/applications.ts`** - Application-specific types and filters
 
 ### Layer 2: Services (`app/services/*.ts`)
 
@@ -87,30 +108,42 @@ Pure async functions with **dependency injection**. Services accept `client` as 
 ```typescript
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '@/types/supabase'
-import type { CandidateFilters } from '@/types/candidates'
+import type { CandidateFilters, CandidateListResponse } from '@/types/candidates'
 
 export const CandidatesService = {
   async getAll(
     client: SupabaseClient<Database>, 
     params?: CandidateFilters
-  ) {
+  ): Promise<CandidateListResponse> {
     let query = client
       .from('candidates')
       .select('*', { count: 'exact' })
     
     if (params?.search) {
+      const q = params.search.trim()
       query = query.or(
-        `first_name.ilike.%${params.search}%,last_name.ilike.%${params.search}%`
+        `first_name.ilike.%${q}%,last_name.ilike.%${q}%,email.ilike.%${q}%`
       )
+    }
+    
+    query = query.order('created_at', { ascending: false })
+    
+    if (params?.page && params?.limit) {
+      const from = (params.page - 1) * params.limit
+      const to = from + params.limit - 1
+      query = query.range(from, to)
     }
     
     const { data, error, count } = await query
     if (error) throw error
     
-    return { data, count }
+    return {
+      data: data || [],
+      count,
+    }
   },
 
-  async getById(client: SupabaseClient<Database>, id: string) {
+  async getById(client: SupabaseClient<Database>, id: string): Promise<Candidate> {
     const { data, error } = await client
       .from('candidates')
       .select('*')
@@ -179,25 +212,62 @@ export const useCandidates = () => {
 
 ```
 app/
-├── composables/       # TanStack Query hooks (useAuth, useCandidates)
-├── services/          # Pure async functions with DI (CandidatesService)
-├── types/            # Database types + DTOs (Candidate, CandidateFilters)
-├── utils/            # Pure utility functions (errors, formatting)
+├── composables/       # TanStack Query hooks
+│   ├── useAuth.ts        # Authentication (sign in, sign out)
+│   ├── useCandidates.ts  # Candidate queries
+│   ├── useJobs.ts        # Job queries
+│   └── useApplications.ts # Application queries
+├── services/          # Pure async functions with DI
+│   ├── candidates.ts     # CandidatesService (CRUD)
+│   ├── jobs.ts          # JobsService (CRUD)
+│   └── applications.ts  # ApplicationsService (CRUD)
+├── types/            # Database types + DTOs
+│   ├── supabase.ts      # Auto-generated from DB schema
+│   ├── errors.ts        # AppError, ERROR_MESSAGES
+│   ├── enums.ts         # Centralized enums + UI helpers
+│   ├── candidates.ts    # Candidate types & filters
+│   ├── jobs.ts          # Job types & filters
+│   └── applications.ts  # Application types & filters
+├── utils/            # Pure utility functions
+│   └── errors.ts        # normalizeError(), shouldRedirectToAuth()
 ├── components/
-│   ├── ui/           # shadcn-vue components (DON'T EDIT)
-│   ├── common/       # Shared components (AsyncState, CopyButton)
-│   ├── candidates/   # Feature-specific components
-│   └── sidebar/      # Navigation components
-├── pages/            # File-based routing (index.vue, dashboard.vue)
-├── middleware/       # Global auth middleware (auth.global.ts)
-├── plugins/          # Vue Query setup, error handling (vue-query.ts)
-└── layouts/          # Page layouts (default.vue, auth.vue)
+│   ├── ui/              # shadcn-vue components (DON'T EDIT)
+│   ├── common/          # Shared components
+│   │   ├── AsyncState.vue   # Loading/error/empty states
+│   │   ├── CopyButton.vue   # Copy to clipboard
+│   │   └── SkillsList.vue   # Skills display
+│   ├── candidates/      # Candidate-specific components
+│   │   ├── detail/          # Candidate detail page components
+│   │   └── table/           # Candidate table components
+│   └── sidebar/         # Navigation components
+├── pages/            # File-based routing
+│   ├── index.vue         # Landing page (public)
+│   ├── auth.vue          # Sign in/up page (public)
+│   ├── dashboard.vue     # Dashboard (protected)
+│   ├── jobs.vue          # Jobs list (protected)
+│   └── candidates/       # Candidates section (protected)
+│       ├── index.vue         # Candidates list
+│       └── [id].vue          # Candidate detail
+├── middleware/       # Route middleware
+│   └── auth.global.ts    # Global auth check + redirects
+├── plugins/          # Nuxt plugins
+│   └── vue-query.ts      # TanStack Query setup + error handling
+├── layouts/          # Page layouts
+│   ├── default.vue       # Default layout (with sidebar)
+│   └── auth.vue          # Auth layout (centered, no sidebar)
+└── lib/              # Library utilities
+    └── utils.ts          # cn() - Tailwind class merger
 
 supabase/
-├── migrations/       # Database migrations
+├── migrations/       # Database migrations (*.sql)
 └── config.toml       # Supabase configuration
 
-docs/                 # Project documentation (you are here!)
+docs/                 # Project documentation
+├── README.md         # Documentation overview
+├── ARCHITECTURE.md   # System design (you are here!)
+├── PATTERNS.md       # Code patterns & best practices
+├── API.md            # API reference
+└── CONTRIBUTING.md   # Development guidelines
 ```
 
 ## Authentication Flow

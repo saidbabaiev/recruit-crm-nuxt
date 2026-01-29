@@ -364,28 +364,87 @@ const className = cn(
 
 ### Global Config
 
-Configured in `plugins/vue-query.ts`:
+Configured in `app/plugins/vue-query.ts`:
 
 ```typescript
-defaultOptions: {
-  queries: {
-    staleTime: 30 * 1000,        // 30 seconds
-    gcTime: 5 * 60 * 1000,       // 5 minutes
-    retry: (failureCount, error) => {
-      const normalized = normalizeError(error)
-      
-      // Network errors: retry 2x
-      if (normalized.type === 'network' && failureCount < 2) return true
-      
-      // Server errors: retry 1x
-      if (normalized.type === 'server' && failureCount < 1) return true
-      
-      // No retry for other error types
-      return false
+const queryClient = new QueryClient({
+  queryCache: new QueryCache({
+    onError: handleGlobalError, // Global error handler
+  }),
+  mutationCache: new MutationCache({
+    onError: handleGlobalError, // Global error handler
+  }),
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5,        // 5 minutes
+      refetchOnWindowFocus: false,      // Don't refetch on focus
+      retry: (failureCount, error) => {
+        const err = normalizeError(error)
+        
+        // Network errors: retry 2x
+        if (err.type === 'network') {
+          return failureCount < 2
+        }
+        
+        // Server errors: retry 1x
+        if (err.type === 'server') {
+          return failureCount < 1
+        }
+        
+        // No retry for: auth, validation, client, unknown
+        return false
+      },
+      retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
+    },
+    mutations: {
+      retry: false, // Never retry mutations
     },
   },
+})
+```
+
+### Global Error Handler
+
+The plugin includes a global error handler that:
+- **Auth errors (401/403)**: Redirects to `/auth` with toast
+- **Network errors**: Shows toast notification
+- **Server errors (5xx)**: Shows toast notification
+- **Client errors (404/409/429)**: Shows specific toast messages
+- **Validation errors**: Handled locally in components
+
+```typescript
+const handleGlobalError = (error: unknown) => {
+  const err = normalizeError(error)
+  
+  // Auth → redirect to /auth
+  if (shouldRedirectToAuth(err)) {
+    $toast.error('Session expired')
+    router.push({ path: '/auth', query: { redirectTo: currentPath } })
+    return
+  }
+  
+  // Network → toast
+  if (err.type === 'network') {
+    $toast.error('No internet connection')
+    return
+  }
+  
+  // Server → toast
+  if (err.type === 'server') {
+    $toast.error('Server error')
+    return
+  }
+  
+  // Client → specific messages
+  if (err.type === 'client') {
+    if (err.status === 404) $toast.error('Resource not found')
+    if (err.status === 409) $toast.error('Conflict: resource already exists')
+    if (err.status === 429) $toast.error('Too many requests')
+  }
 }
 ```
+
+This means **most errors are handled automatically** - components only need to handle validation errors locally.
 
 ### Query Options Reference
 

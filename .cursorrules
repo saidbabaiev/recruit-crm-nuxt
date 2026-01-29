@@ -178,18 +178,22 @@ await queryClient.invalidateQueries({ queryKey: ['candidates'] })
 
 ```
 app/
-├── composables/    # use*.ts (TanStack Query hooks)
-├── services/       # *Service.ts (pure async functions)
-├── types/          # Database types + DTOs
-├── components/     # Feature components
+├── composables/    # useAuth, useCandidates, useJobs, useApplications
+├── services/       # CandidatesService, JobsService, ApplicationsService
+├── types/          # supabase.ts, errors.ts, enums.ts, candidates.ts, jobs.ts
+├── utils/          # errors.ts (normalizeError)
+├── components/
 │   ├── ui/         # shadcn-vue (don't edit)
-│   ├── common/     # Shared components
-│   └── [feature]/  # Feature-specific
-├── pages/          # File-based routing
+│   ├── common/     # AsyncState, CopyButton, SkillsList
+│   ├── candidates/ # Candidate components
+│   └── sidebar/    # Navigation
+├── pages/          # index.vue, auth.vue, dashboard.vue, jobs.vue, candidates/
 ├── middleware/     # auth.global.ts
-└── plugins/        # vue-query.ts, etc.
+├── plugins/        # vue-query.ts
+├── layouts/        # default.vue, auth.vue
+└── lib/            # utils.ts (cn)
 
-docs/               # Project documentation
+docs/               # ARCHITECTURE.md, PATTERNS.md, API.md, CONTRIBUTING.md
 ```
 
 ---

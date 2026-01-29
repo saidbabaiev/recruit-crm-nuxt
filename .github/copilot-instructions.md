@@ -130,12 +130,14 @@ const { mutate } = useCreateCandidate({
 
 ```
 app/
-├── composables/    # use*.ts (TanStack Query hooks)
-├── services/       # *Service.ts (pure async functions)
-├── types/          # Database types + DTOs
-├── components/     # Feature components
-├── pages/          # File-based routing
-└── middleware/     # auth.global.ts
+├── composables/    # useAuth, useCandidates, useJobs, useApplications
+├── services/       # CandidatesService, JobsService, ApplicationsService
+├── types/          # supabase.ts, errors.ts, enums.ts, candidates.ts, jobs.ts
+├── components/     # ui/, common/, candidates/, sidebar/
+├── pages/          # index.vue, auth.vue, dashboard.vue, jobs.vue, candidates/
+├── middleware/     # auth.global.ts
+├── plugins/        # vue-query.ts
+└── lib/            # utils.ts (cn)
 ```
 
 ---

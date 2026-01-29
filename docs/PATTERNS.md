@@ -53,19 +53,11 @@ export const useCandidates = () => {
     })
   }
 
-  // Factory function that returns useMutation hook
-  const useCreateCandidate = (options?: MutationOptions<Candidate>) => {
-    return useMutation({
-      mutationFn: (data: CreateCandidateInput) => 
-        CandidatesService.create(client, data),
-      onSuccess: options?.onSuccess,
-      onError: options?.onError,
-    })
-  }
+  // Note: For mutations, see useAuth.ts for MutationOptions pattern
+  // Real composables may not include mutation factories (services handle data only)
 
   return {
     useCandidatesList,
-    useCreateCandidate,
   }
 }
 ```
@@ -74,29 +66,17 @@ export const useCandidates = () => {
 
 ```vue
 <script setup lang="ts">
-import { useMutation, useQueryClient } from '@tanstack/vue-query'
+const { useCandidatesList } = useCandidates()
 
-const { useCandidatesList, useCreateCandidate } = useCandidates()
-const queryClient = useQueryClient()
-const { $toast } = useNuxtApp()
+// Query - simple usage with reactive params
+const params = ref({ search: '', page: 1, limit: 20 })
+const { data, isPending, error } = useCandidatesList(params)
 
-// Query - simple usage
-const { data: candidates, isPending, error } = useCandidatesList(params)
+// Extract data from response
+const candidates = computed(() => data.value?.data || [])
+const totalCount = computed(() => data.value?.count || 0)
 
-// Mutation - component handles all side effects
-const { mutate: createCandidate, isPending: isCreating } = useCreateCandidate({
-  onSuccess: async (data) => {
-    $toast.success('Candidate created successfully')
-    await queryClient.invalidateQueries({ queryKey: ['candidates', 'list'] })
-    await navigateTo(`/candidates/${data.id}`)
-  },
-  onError: (error) => {
-    const normalized = normalizeError(error)
-    $toast.error(normalized.message)
-  },
-})
-
-// Alternative: wrap regular function in useMutation directly
+// Example: Wrap service function in useMutation for mutations
 const { signOut } = useAuth()
 const { mutate: handleLogout, isPending: isLoggingOut } = useMutation({
   mutationFn: signOut,
@@ -110,9 +90,15 @@ const { mutate: handleLogout, isPending: isLoggingOut } = useMutation({
   <AsyncState 
     :is-loading="isPending" 
     :error="error"
-    :is-empty="!candidates?.length"
+    :is-empty="!candidates.length"
+    empty-title="No candidates found"
   >
-    <!-- Success state content -->
+    <div>
+      <p class="text-sm text-muted-foreground mb-4">
+        Total: {{ totalCount }} candidates
+      </p>
+      <!-- Candidate list content -->
+    </div>
   </AsyncState>
 </template>
 ```
