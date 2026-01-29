@@ -1,0 +1,197 @@
+# Cursor AI Rules for Recruit Pro
+
+> **📚 Full documentation:** See `/docs` folder for comprehensive guides
+> - [ARCHITECTURE.md](./docs/ARCHITECTURE.md) - System design, 3-layer pattern
+> - [PATTERNS.md](./docs/PATTERNS.md) - Code patterns, best practices
+> - [API.md](./docs/API.md) - TypeScript rules, commands, utilities
+> - [CONTRIBUTING.md](./docs/CONTRIBUTING.md) - Development workflow
+
+---
+
+## Language Preference
+
+**Always respond in Russian** to the user.
+
+---
+
+## Core Architectural Rules
+
+### 3-Layer Pattern (Non-negotiable)
+
+All data operations MUST follow this pattern:
+
+```
+Components → Composables → Services → Types
+   (UI)      (Queries)    (Data)     (Schema)
+```
+
+1. **Types** (`app/types/*.ts`) - Database types, DTOs
+2. **Services** (`app/services/*.ts`) - Pure async functions with dependency injection
+3. **Composables** (`app/composables/use*.ts`) - TanStack Query hooks (pure, no side effects)
+4. **Components** (`.vue`) - UI + side effects (toasts, navigation, cache invalidation)
+
+### Pure Composables Pattern
+
+**Composables MUST be pure:**
+- Return factory functions that create `useQuery`/`useMutation` hooks
+- NO toasts, NO navigation, NO cache invalidation
+- Accept `options` parameter for `onSuccess`/`onError` callbacks
+
+**Components handle side effects:**
+- Import `useMutation`/`useQuery` from `@tanstack/vue-query`
+- Handle toasts via `$toast` from `useNuxtApp()`
+- Handle navigation via `navigateTo()`
+- Handle cache invalidation via `useQueryClient()`
+
+**Example:**
+
+```typescript
+// composables/useCandidates.ts - PURE
+export const useCandidates = () => {
+  const client = useSupabaseClient()
+  
+  const useCreateCandidate = (options?: MutationOptions<Candidate>) => {
+    return useMutation({
+      mutationFn: (data) => CandidatesService.create(client, data),
+      onSuccess: options?.onSuccess,
+      onError: options?.onError,
+    })
+  }
+  
+  return { useCreateCandidate }
+}
+
+// components/MyComponent.vue - SIDE EFFECTS
+const { $toast } = useNuxtApp()
+const queryClient = useQueryClient()
+
+const { mutate: createCandidate } = useCreateCandidate({
+  onSuccess: async (data) => {
+    $toast.success('Кандидат создан успешно')
+    await queryClient.invalidateQueries({ queryKey: ['candidates', 'list'] })
+    await navigateTo(`/candidates/${data.id}`)
+  },
+})
+```
+
+---
+
+## TypeScript Strict Rules
+
+- ❌ **NO `any` allowed** - use `unknown` and type guards
+- ✅ Explicit component props: `defineProps<Props>()`
+- ✅ Type imports: `import type { ... }`
+- ✅ Reactive params in composables: `MaybeRefOrGetter` + `toValue()`
+- ✅ Return types for public functions
+
+---
+
+## UI & UX Standards
+
+### Components
+- ✅ Always use shadcn-vue components: `<Button>`, `<Input>`, `<Select>`
+- ❌ Never use raw HTML: `<button>`, `<input>`, `<select>`
+- ✅ Use `cn()` utility for class merging
+
+### Navigation
+- ✅ `navigateTo('/dashboard')` (Nuxt built-in, SSR-safe)
+- ❌ `useRouter().push()` or `window.location.href`
+
+### Toasts
+- ✅ `const { $toast } = useNuxtApp()`
+- ✅ `$toast.success()`, `$toast.error()`, etc.
+
+### Error Display
+- ✅ Use `<AsyncState>` component for error/loading states
+- ✅ Pass `error` prop as `unknown` - component normalizes it
+
+---
+
+## Naming Conventions
+
+- **Composables**: `use[Feature].ts` (e.g., `useCandidates`, `useAuth`)
+- **Services**: `[feature].ts` with export `[Feature]Service` (e.g., `CandidatesService`)
+- **Types**: Match database table names (e.g., `Candidate`, `CandidateInsert`)
+- **Components**: PascalCase (e.g., `CandidateCard.vue`)
+- **Utils**: Feature-scoped (e.g., `utils/errors.ts`)
+
+---
+
+## Development Workflow
+
+When adding a new feature, follow this order:
+
+1. **Types** - Define in `app/types/[feature].ts`
+2. **Service** - Create CRUD functions in `app/services/[feature].ts`
+3. **Composable** - Wrap in TanStack Query hooks in `app/composables/use[Feature].ts`
+4. **Component** - Build UI in `app/components/[feature]/` or `app/pages/`
+
+---
+
+## Error Handling
+
+- 6-type system: `auth`, `network`, `server`, `validation`, `client`, `unknown`
+- Use `normalizeError(error)` to convert errors to `AppError`
+- Use `<AsyncState>` for automatic error display
+- Network errors auto-retry 2x, server errors 1x
+
+---
+
+## Query Keys Pattern
+
+Format: `[entity, operation, ...params]`
+
+```typescript
+// Lists
+['candidates', 'list', { search: 'John', page: 1 }]
+
+// Details
+['candidates', 'detail', candidateId]
+
+// Invalidation
+await queryClient.invalidateQueries({ queryKey: ['candidates'] })
+```
+
+---
+
+## Cursor-Specific Preferences
+
+- **Batch operations**: Prefer running multiple independent tool calls in parallel
+- **File paths**: Always show full file paths in code references
+- **Context**: Read existing code before making changes to understand patterns
+- **Documentation**: Link to `/docs` when explaining architectural decisions
+
+---
+
+## Tech Stack Quick Reference
+
+- **Framework**: Nuxt 4 (Vue 3 Composition API, `<script setup lang="ts">`)
+- **Backend**: Supabase (Auth, PostgreSQL, Real-time)
+- **State**: TanStack Query v5 (no Pinia)
+- **UI**: shadcn-vue + Tailwind CSS
+- **Icons**: lucide-vue-next
+- **Language**: TypeScript strict mode
+
+---
+
+## File Structure
+
+```
+app/
+├── composables/    # use*.ts (TanStack Query hooks)
+├── services/       # *Service.ts (pure async functions)
+├── types/          # Database types + DTOs
+├── components/     # Feature components
+│   ├── ui/         # shadcn-vue (don't edit)
+│   ├── common/     # Shared components
+│   └── [feature]/  # Feature-specific
+├── pages/          # File-based routing
+├── middleware/     # auth.global.ts
+└── plugins/        # vue-query.ts, etc.
+
+docs/               # Project documentation
+```
+
+---
+
+**For detailed documentation, always refer to `/docs` folder.**
