@@ -7,6 +7,7 @@ import CandidateInfoCell from './cells/CandidateInfoCell.vue'
 import CandidateEmailCell from './cells/CandidateEmailCell.vue'
 import CandidatePhoneCell from './cells/CandidatePhoneCell.vue'
 import SkillsList from '@/components/common/SkillsList.vue'
+import { ArrowUpDown } from 'lucide-vue-next'
 
 export const columns: ColumnDef<Candidate>[] = [
   {
@@ -18,7 +19,15 @@ export const columns: ColumnDef<Candidate>[] = [
   },
   {
     accessorKey: 'experience_years',
-    header: 'Experience',
+    header: ({ column }) => {
+      return h('div', {
+        class: 'flex items-center cursor-pointer',
+        onClick: () => column.toggleSorting(column.getIsSorted() === 'asc'),
+      }, [
+        'Experience',
+        h(ArrowUpDown, { class: 'ml-2 h-3.5 w-3.5' }),
+      ])
+    },
     size: 140,
     minSize: 120,
     cell: ({ row }) => {
