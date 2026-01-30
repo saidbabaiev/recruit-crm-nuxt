@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import type { JobApplication, JobApplicationInvite } from '@/types/applications'
 import { ApplicationsService } from '@/services/applications'
+import type { MutationOptions } from '@/types/common'
 
 export const useApplications = () => {
   const client = useSupabaseClient()
@@ -8,10 +9,7 @@ export const useApplications = () => {
   const user = useSupabaseUser()
 
   // Creates mutation hook for inviting candidate to job
-  const useCreateApplication = (options?: {
-    onSuccess?: (data: JobApplication) => void | Promise<void>
-    onError?: (error: unknown) => void
-  }) => {
+  const useCreateApplication = (options?: MutationOptions<JobApplication>) => {
     return useMutation({
       mutationFn: async (data: JobApplicationInvite) => {
         if (!user.value?.sub) {

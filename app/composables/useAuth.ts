@@ -2,6 +2,7 @@ import type { Database } from '@/types/supabase'
 import type { Session, User } from '@supabase/supabase-js'
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
 import { until } from '@vueuse/core'
+import type { MutationOptions } from '@/types/common'
 
 // --- Types ---
 interface SignInVariables {
@@ -26,12 +27,6 @@ interface SignInSuccess {
 interface SignUpSuccess {
   user: User | null
   session: Session | null
-}
-
-// Mutation options for overriding default behavior with custom success/error handling logic
-interface MutationOptions<TData> {
-  onSuccess?: (data: TData) => void | Promise<void>
-  onError?: (error: unknown) => void
 }
 
 // --- UseAuth composable ---

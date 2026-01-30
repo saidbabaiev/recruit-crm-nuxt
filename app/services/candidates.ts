@@ -44,4 +44,5 @@ export const CandidatesService = {
 
     return data
   },
+
 }
