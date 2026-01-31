@@ -8,6 +8,10 @@ interface Props {
 
 defineProps<Props>()
 
+const emit = defineEmits<{
+  delete: []
+}>()
+
 const handleEdit = (e: Event) => {
   e.stopPropagation()
 }
@@ -18,6 +22,7 @@ const handleScheduleInterview = (e: Event) => {
 
 const handleDelete = (e: Event) => {
   e.stopPropagation()
+  emit('delete')
 }
 </script>
 

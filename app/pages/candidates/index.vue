@@ -1,4 +1,12 @@
 <script setup lang="ts">
+// External libraries
+import { useQueryClient } from '@tanstack/vue-query'
+import { useDebounceFn } from '@vueuse/core'
+
+// Icons
+import { Plus } from 'lucide-vue-next'
+
+// UI Components
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -9,11 +17,24 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination'
-import { Plus } from 'lucide-vue-next'
 
-import { useDebounceFn } from '@vueuse/core'
+// Local Components
 import AsyncState from '@/components/common/AsyncState.vue'
+import CandidatesTable from '@/components/candidates/table/CandidatesTable.vue'
+import { createColumns } from '@/components/candidates/table/columns'
 
+// Types
+import type { Candidate } from '@/types/candidates'
+
+// Utils
+import { normalizeError } from '@/utils/errors'
+
+// --- Composables & Instances ---
+const queryClient = useQueryClient()
+const { $toast } = useNuxtApp()
+const { useCandidatesList, useDeleteCandidate } = useCandidates()
+
+// --- Reactive State ---
 const filters = ref({
   search: '',
   page: 1,
@@ -27,35 +48,42 @@ const updateSearch = useDebounceFn((value: string) => {
   filters.value.page = 1
 }, 500)
 
-watch(() => filters.value.search, updateSearch)
-
-// const client = useSupabaseClient()
-
-// const candidateId = 'f9dbbc94-8bff-46f5-901c-269d97280ac5'
-// const { data } = await client.rpc(
-//   'match_jobs_for_candidate_v2',
-//   { p_candidate_id: candidateId, p_limit: 50,
-//     p_min_total_score: 0.4,
-//     p_strict_format: true,
-//     p_strict_salary: false,
-//     p_strict_experience: false,
-//     p_include_partial_skill_match: false,
-//   },
-// )
-
-// console.log('matching ', data)
-
+// --- Computed ---
 const params = computed(() => ({
   page: filters.value.page,
   limit: filters.value.limit,
   search: debouncedSearch.value,
 }))
 
-const { useCandidatesList } = useCandidates()
-const { data: candidatesResponse, isPending, error } = useCandidatesList(params)
-
 const candidates = computed(() => candidatesResponse.value?.data || [])
 const totalCount = computed(() => candidatesResponse.value?.count || 0)
+const tableColumns = computed(() => createColumns(handleDeleteCandidate))
+
+// --- Watchers ---
+watch(() => filters.value.search, updateSearch)
+
+// --- Queries & Mutations ---
+const { data: candidatesResponse, isPending, error } = useCandidatesList(params)
+
+const { mutate: deleteCandidate } = useDeleteCandidate({
+  onSuccess: () => {
+    $toast.success('Candidate deleted successfully')
+    queryClient.invalidateQueries({ queryKey: ['candidates', 'list'] })
+  },
+  onError: (err: unknown) => {
+    const normalizedError = normalizeError(err)
+    $toast.error(normalizedError.message)
+  },
+})
+
+// --- Handlers ---
+const handleDeleteCandidate = (candidate: Candidate) => {
+  const fullName = `${candidate.first_name} ${candidate.last_name}`
+
+  if (confirm(`Are you sure you want to delete ${fullName}?`)) {
+    deleteCandidate(candidate.id)
+  }
+}
 </script>
 
 <template>
@@ -98,6 +126,7 @@ const totalCount = computed(() => candidatesResponse.value?.count || 0)
         <CandidatesTable
           :data="candidates"
           :is-loading="isPending"
+          :columns="tableColumns"
         />
       </div>
 

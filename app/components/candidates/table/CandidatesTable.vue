@@ -5,6 +5,7 @@ import {
   useVueTable,
   getSortedRowModel,
   type SortingState,
+  type ColumnDef,
 } from '@tanstack/vue-table'
 import {
   Table,
@@ -16,11 +17,12 @@ import {
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
 import type { Candidate } from '@/types/candidates'
-import { columns } from './columns'
+// import { createColumns } from './columns'
 
 interface Props {
   data: Candidate[]
   isLoading?: boolean
+  columns: ColumnDef<Candidate>[]
 }
 
 const props = defineProps<Props>()
@@ -31,7 +33,9 @@ const table = useVueTable({
   get data() {
     return props.data
   },
-  columns,
+  get columns() {
+    return props.columns
+  },
   getCoreRowModel: getCoreRowModel(),
   getSortedRowModel: getSortedRowModel(),
   onSortingChange: (updaterOrValue) => {

@@ -1,6 +1,7 @@
-import { useQuery, keepPreviousData } from '@tanstack/vue-query'
+import { useQuery, useMutation, keepPreviousData } from '@tanstack/vue-query'
 import type { CandidateFilters as CandidateParams } from '@/types/candidates'
 import { CandidatesService } from '@/services/candidates'
+import type { MutationOptions } from '@/types/common'
 
 export const useCandidates = () => {
   const client = useSupabaseClient()
@@ -27,8 +28,17 @@ export const useCandidates = () => {
     })
   }
 
+  const useDeleteCandidate = (options?: MutationOptions<void>) => {
+    return useMutation({
+      mutationFn: (id: string) => CandidatesService.delete(client, id),
+      onSuccess: options?.onSuccess,
+      onError: options?.onError,
+    })
+  }
+
   return {
     useCandidatesList,
     useCandidateDetails,
+    useDeleteCandidate,
   }
 }

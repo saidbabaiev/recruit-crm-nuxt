@@ -45,4 +45,19 @@ export const CandidatesService = {
     return data
   },
 
+  // Delete a candidate by ID
+  async delete(client: SupabaseClient<Database>, id: string): Promise<void> {
+    const { error, count } = await client
+      .from('candidates')
+      .delete({ count: 'exact' })
+      .eq('id', id)
+      .select()
+
+    if (error) throw error
+
+    if (!count || count !== 1) {
+      throw new Error('Candidate not found')
+    }
+  },
+
 }

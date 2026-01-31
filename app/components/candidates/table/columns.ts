@@ -9,7 +9,9 @@ import CandidatePhoneCell from './cells/CandidatePhoneCell.vue'
 import SkillsList from '@/components/common/SkillsList.vue'
 import { ArrowUpDown } from 'lucide-vue-next'
 
-export const columns: ColumnDef<Candidate>[] = [
+export const createColumns = (
+  onDelete: (candidate: Candidate) => void,
+): ColumnDef<Candidate>[] => [
   {
     accessorKey: 'candidate',
     header: 'Candidate',
@@ -80,7 +82,10 @@ export const columns: ColumnDef<Candidate>[] = [
         class: 'text-right',
         onClick: e => e.stopPropagation(),
       }, [
-        h(CandidatesTableDropdown, { candidate }),
+        h(CandidatesTableDropdown, {
+          candidate,
+          onDelete: () => onDelete(candidate),
+        }),
       ])
     },
   },
