@@ -171,11 +171,10 @@ const handleDeleteCandidate = (candidate: Candidate) => {
     </AsyncState>
 
     <DeleteConfirmDialog
+      v-model:open="isDeleteAlertOpen"
       title="Delete Candidate"
-      :open="isDeleteAlertOpen"
       :entity-name="candidateToDelete?.first_name + ' ' + candidateToDelete?.last_name"
       entity-type="candidate"
-      @update:open="isDeleteAlertOpen = $event"
       @confirm="deleteCandidateMutation(candidateToDelete!.id)"
     />
   </div>
