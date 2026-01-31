@@ -1,12 +1,9 @@
 <script setup lang="ts">
-// External libraries
 import { useQueryClient } from '@tanstack/vue-query'
 import { useDebounceFn } from '@vueuse/core'
 
-// Icons
 import { Plus } from 'lucide-vue-next'
 
-// UI Components
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -17,16 +14,24 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog'
 
-// Local Components
 import AsyncState from '@/components/common/AsyncState.vue'
 import CandidatesTable from '@/components/candidates/table/CandidatesTable.vue'
 import { createColumns } from '@/components/candidates/table/columns'
 
-// Types
 import type { Candidate } from '@/types/candidates'
 
-// Utils
 import { normalizeError } from '@/utils/errors'
 
 // --- Composables & Instances ---
@@ -42,6 +47,8 @@ const filters = ref({
 })
 
 const debouncedSearch = ref('')
+const isDeleteAlertOpen = ref(false)
+const candidateToDelete = ref<Candidate | null>(null)
 
 const updateSearch = useDebounceFn((value: string) => {
   debouncedSearch.value = value
@@ -57,7 +64,6 @@ const params = computed(() => ({
 
 const candidates = computed(() => candidatesResponse.value?.data || [])
 const totalCount = computed(() => candidatesResponse.value?.count || 0)
-const tableColumns = computed(() => createColumns(handleDeleteCandidate))
 
 // --- Watchers ---
 watch(() => filters.value.search, updateSearch)
@@ -65,10 +71,12 @@ watch(() => filters.value.search, updateSearch)
 // --- Queries & Mutations ---
 const { data: candidatesResponse, isPending, error } = useCandidatesList(params)
 
-const { mutate: deleteCandidate } = useDeleteCandidate({
+const { mutate: deleteCandidateMutation } = useDeleteCandidate({
   onSuccess: () => {
     $toast.success('Candidate deleted successfully')
     queryClient.invalidateQueries({ queryKey: ['candidates', 'list'] })
+    isDeleteAlertOpen.value = false
+    candidateToDelete.value = null
   },
   onError: (err: unknown) => {
     const normalizedError = normalizeError(err)
@@ -76,13 +84,11 @@ const { mutate: deleteCandidate } = useDeleteCandidate({
   },
 })
 
-// --- Handlers ---
-const handleDeleteCandidate = (candidate: Candidate) => {
-  const fullName = `${candidate.first_name} ${candidate.last_name}`
+const tableColumns = computed(() => createColumns(handleDeleteCandidate))
 
-  if (confirm(`Are you sure you want to delete ${fullName}?`)) {
-    deleteCandidate(candidate.id)
-  }
+const handleDeleteCandidate = (candidate: Candidate) => {
+  isDeleteAlertOpen.value = true
+  candidateToDelete.value = candidate
 }
 </script>
 
@@ -173,5 +179,23 @@ const handleDeleteCandidate = (candidate: Candidate) => {
         </div>
       </div>
     </AsyncState>
+
+    <AlertDialog v-model:open="isDeleteAlertOpen">
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone. This will permanently delete the candidate
+            <span class="font-bold">{{ candidateToDelete?.first_name }} {{ candidateToDelete?.last_name }}</span>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction @click="deleteCandidateMutation(candidateToDelete!.id)">
+            Delete
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   </div>
 </template>
