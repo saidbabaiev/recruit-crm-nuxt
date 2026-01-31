@@ -14,18 +14,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/pagination'
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
 
+import DeleteConfirmDialog from '@/components/common/DeleteConfirmDialog.vue'
 import AsyncState from '@/components/common/AsyncState.vue'
 import CandidatesTable from '@/components/candidates/table/CandidatesTable.vue'
 import { createColumns } from '@/components/candidates/table/columns'
@@ -180,22 +170,13 @@ const handleDeleteCandidate = (candidate: Candidate) => {
       </div>
     </AsyncState>
 
-    <AlertDialog v-model:open="isDeleteAlertOpen">
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete the candidate
-            <span class="font-bold">{{ candidateToDelete?.first_name }} {{ candidateToDelete?.last_name }}</span>
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction @click="deleteCandidateMutation(candidateToDelete!.id)">
-            Delete
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <DeleteConfirmDialog
+      title="Delete Candidate"
+      :open="isDeleteAlertOpen"
+      :entity-name="candidateToDelete?.first_name + ' ' + candidateToDelete?.last_name"
+      entity-type="candidate"
+      @update:open="isDeleteAlertOpen = $event"
+      @confirm="deleteCandidateMutation(candidateToDelete!.id)"
+    />
   </div>
 </template>
