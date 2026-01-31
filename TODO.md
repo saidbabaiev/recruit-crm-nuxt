@@ -2,7 +2,7 @@
 
 # CRM Implementation Plan
 
-## 1. Авторизация
+## 1. Authentication ( Paused )
 - [x] Sign In
 - [ ] Sign Up
 - [x] Sign Out
@@ -11,7 +11,7 @@
 - [ ] Reset Password
 - [ ] Change Password
 
-## 2. Кандидаты
+## 2. Candidates ( In Progress )
 - [x] List
 - [_] Create
 - [ ] Edit
