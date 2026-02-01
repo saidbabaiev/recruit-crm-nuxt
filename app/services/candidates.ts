@@ -14,6 +14,22 @@ export const CandidatesService = {
       query = query.or(`first_name.ilike.%${q}%,last_name.ilike.%${q}%,email.ilike.%${q}%,phone.ilike.%${q}%,city.ilike.%${q}%, country.ilike.%${q}%`)
     }
 
+    if (params?.experience) {
+      const raw = params.experience.trim()
+
+      if (raw.endsWith('+')) {
+        const min = Number(raw.slice(0, -1))
+        if (Number.isFinite(min)) query = query.gte('experience_years', min)
+      }
+      else {
+        const [minStr, maxStr] = raw.split('-')
+        const min = Number(minStr)
+        const max = Number(maxStr)
+        if (Number.isFinite(min)) query = query.gte('experience_years', min)
+        if (Number.isFinite(max)) query = query.lte('experience_years', max)
+      }
+    }
+
     query = query.order('created_at', { ascending: false })
 
     if (params?.page && params.limit) {

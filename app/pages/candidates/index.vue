@@ -16,7 +16,7 @@ import AsyncState from '@/components/common/AsyncState.vue'
 import CandidatesTable from '@/components/candidates/table/CandidatesTable.vue'
 import { createColumns } from '@/components/candidates/table/columns'
 
-import type { Candidate } from '@/types/candidates'
+import type { Candidate, CandidateExperienceRange } from '@/types/candidates'
 
 import { normalizeError } from '@/utils/errors'
 
@@ -30,6 +30,7 @@ const filters = ref({
   search: '',
   page: 1,
   limit: 10,
+  experience: '' as CandidateExperienceRange,
 })
 
 const debouncedSearch = ref('')
@@ -46,6 +47,7 @@ const params = computed(() => ({
   page: filters.value.page,
   limit: filters.value.limit,
   search: debouncedSearch.value,
+  experience: filters.value.experience,
 }))
 
 const candidates = computed(() => candidatesResponse.value?.data || [])
@@ -53,6 +55,9 @@ const totalCount = computed(() => candidatesResponse.value?.count || 0)
 
 // --- Watchers ---
 watch(() => filters.value.search, updateSearch)
+watch(() => filters.value.experience, () => {
+  params.value.page = 1
+})
 
 // --- Queries & Mutations ---
 const { data: candidatesResponse, isPending, error } = useCandidatesList(params)
@@ -90,6 +95,7 @@ const handleDeleteCandidate = (candidate: Candidate) => {
     <!-- Filters Section -->
     <CandidatesFilters
       v-model:search="filters.search"
+      v-model:experience="filters.experience"
     />
 
     <AsyncState

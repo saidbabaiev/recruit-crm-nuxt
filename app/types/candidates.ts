@@ -13,10 +13,13 @@ export type CandidateNoteInsert = Database['public']['Tables']['candidate_notes'
 export type CandidateNoteUpdate = Database['public']['Tables']['candidate_notes']['Update']
 
 // Filters for querying candidates
+export type CandidateExperienceRange = '' | '0-1' | '1-3' | '3-5' | '5-10' | '10+'
+
 export interface CandidateFilters {
   page?: number
   limit?: number
   search?: string
+  experience?: CandidateExperienceRange
 }
 
 // Interface for candidate list response with data and count
