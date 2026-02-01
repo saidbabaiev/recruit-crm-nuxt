@@ -1,6 +1,7 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '@/types/supabase'
 import type { Candidate, CandidateListResponse, CandidateFilters } from '@/types/candidates'
+import type { WorkFormat } from '@/types/enums'
 
 export const CandidatesService = {
   // Fetches all candidates with optional filters and pagination
@@ -28,6 +29,10 @@ export const CandidatesService = {
         if (Number.isFinite(min)) query = query.gte('experience_years', min)
         if (Number.isFinite(max)) query = query.lte('experience_years', max)
       }
+    }
+
+    if (params?.workFormat) {
+      query = query.eq('remote_work_preference', params.workFormat)
     }
 
     query = query.order('created_at', { ascending: false })

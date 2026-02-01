@@ -17,6 +17,7 @@ import CandidatesTable from '@/components/candidates/table/CandidatesTable.vue'
 import { createColumns } from '@/components/candidates/table/columns'
 
 import type { Candidate, CandidateExperienceRange } from '@/types/candidates'
+import type { WorkFormat } from '@/types/enums'
 
 import { normalizeError } from '@/utils/errors'
 
@@ -31,6 +32,7 @@ const filters = ref({
   page: 1,
   limit: 10,
   experience: '' as CandidateExperienceRange,
+  workFormat: '' as WorkFormat,
 })
 
 const debouncedSearch = ref('')
@@ -48,6 +50,7 @@ const params = computed(() => ({
   limit: filters.value.limit,
   search: debouncedSearch.value,
   experience: filters.value.experience,
+  workFormat: filters.value.workFormat,
 }))
 
 const candidates = computed(() => candidatesResponse.value?.data || [])
@@ -55,7 +58,12 @@ const totalCount = computed(() => candidatesResponse.value?.count || 0)
 
 // --- Watchers ---
 watch(() => filters.value.search, updateSearch)
+
 watch(() => filters.value.experience, () => {
+  params.value.page = 1
+})
+
+watch(() => filters.value.workFormat, () => {
   params.value.page = 1
 })
 
@@ -96,6 +104,7 @@ const handleDeleteCandidate = (candidate: Candidate) => {
     <CandidatesFilters
       v-model:search="filters.search"
       v-model:experience="filters.experience"
+      v-model:work-format="filters.workFormat"
     />
 
     <AsyncState
@@ -107,7 +116,7 @@ const handleDeleteCandidate = (candidate: Candidate) => {
     >
       <div
         v-if="candidates?.length || isPending"
-        class="mb-3"
+        class="pb-4"
       >
         <CandidatesTable
           :data="candidates"
@@ -119,7 +128,7 @@ const handleDeleteCandidate = (candidate: Candidate) => {
       <!-- Pagination -->
       <div
         v-if="totalCount > filters.limit"
-        class="flex items-center justify-between"
+        class="flex items-center justify-between pb-8"
       >
         <Pagination
           v-slot="{ page }"

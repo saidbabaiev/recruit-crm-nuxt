@@ -1,4 +1,5 @@
 import type { Database } from '@/types/supabase'
+import type { WorkFormat } from './enums'
 
 // Candidate types
 export type Candidate = Database['public']['Tables']['candidates']['Row']
@@ -20,6 +21,7 @@ export interface CandidateFilters {
   limit?: number
   search?: string
   experience?: CandidateExperienceRange
+  workFormat?: WorkFormat
 }
 
 // Interface for candidate list response with data and count

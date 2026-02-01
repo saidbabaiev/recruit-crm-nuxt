@@ -19,7 +19,7 @@
     - [x] Delete
     - [ ] Filters
         - [x] Experience Years
-        - [ ] Expected Salary
+        - [ ] Work Format
         - [ ] Skills
         - [ ] Country
         - [ ] City

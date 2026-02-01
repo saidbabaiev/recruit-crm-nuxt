@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { Plus } from 'lucide-vue-next'
 import type { CandidateExperienceRange } from '@/types/candidates'
+import type { WorkFormat } from '@/types/enums'
 
 interface Props {
   search: string
   experience: CandidateExperienceRange
+  workFormat: WorkFormat
 }
 
 const props = defineProps<Props>()
@@ -12,6 +14,7 @@ const props = defineProps<Props>()
 const emit = defineEmits<{
   (e: 'update:search', value: string): void
   (e: 'update:experience', value: CandidateExperienceRange): void
+  (e: 'update:workFormat', value: WorkFormat): void
 }>()
 
 const search = computed({
@@ -24,14 +27,21 @@ const experience = computed({
   set: value => emit('update:experience', value as CandidateExperienceRange),
 })
 
+const workFormat = computed({
+  get: () => props.workFormat,
+  set: value => emit('update:workFormat', value as WorkFormat),
+})
+
 const clearFilters = () => {
   experience.value = '' as CandidateExperienceRange
+  workFormat.value = '' as WorkFormat
 }
 </script>
 
 <template>
   <div class="flex flex-col sm:flex-row justify-between gap-4">
     <div class="flex items-center gap-4">
+      <!-- Search -->
       <Input
         v-model="search"
         type="search"
@@ -39,6 +49,7 @@ const clearFilters = () => {
         class="w-full"
       />
 
+      <!-- Experience Years -->
       <Select v-model="experience">
         <SelectTrigger>
           <SelectValue placeholder="Experience" />
@@ -62,8 +73,27 @@ const clearFilters = () => {
         </SelectContent>
       </Select>
 
+      <!-- Work Format -->
+      <Select v-model="workFormat">
+        <SelectTrigger>
+          <SelectValue placeholder="Work Format" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="remote">
+            Remote
+          </SelectItem>
+          <SelectItem value="hybrid">
+            Hybrid
+          </SelectItem>
+          <SelectItem value="onsite">
+            On-site
+          </SelectItem>
+        </SelectContent>
+      </Select>
+
+      <!-- Clear Filters -->
       <Button
-        v-if="experience"
+        v-if="experience || workFormat"
         variant="ghost"
         class="cursor-pointer"
         @click="clearFilters"
