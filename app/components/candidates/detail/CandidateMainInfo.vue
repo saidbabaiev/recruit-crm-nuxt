@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Pencil, EllipsisVertical } from 'lucide-vue-next'
+import { Pencil } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import CandidateContacts from '@/components/candidates/detail/CandidateContacts.vue'
@@ -8,12 +8,21 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
 import type { Candidate } from '@/types/candidates'
 import { getFullName, getCandidateInitials } from '@/utils/formatters'
+import CandidateActionsDropdown from '@/components/candidates/detail/CandidateActionsDropdown.vue'
 
 interface Props {
   candidate: Candidate
 }
 
 defineProps<Props>()
+
+const emit = defineEmits<{
+  delete: []
+}>()
+
+const handleDeleteCandidate = () => {
+  emit('delete')
+}
 </script>
 
 <template>
@@ -43,13 +52,11 @@ defineProps<Props>()
               >
                 <Pencil class="h-4 w-4" />
               </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                class="w-8 h-8 rounded-full cursor-pointer"
-              >
-                <EllipsisVertical class="h-4 w-4" />
-              </Button>
+              <CandidateActionsDropdown
+                v-if="candidate"
+                :candidate="candidate"
+                @delete="handleDeleteCandidate"
+              />
             </div>
           </div>
 

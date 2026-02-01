@@ -8,11 +8,50 @@ import CandidateDetails from '@/components/candidates/detail/CandidateDetails.vu
 import CandidateJobMatching from '@/components/candidates/detail/CandidateJobMatching.vue'
 import CandidateMetaData from '@/components/candidates/detail/CandidateMetaData.vue'
 
+import { useQueryClient } from '@tanstack/vue-query'
+import DeleteConfirmDialog from '@/components/common/DeleteConfirmDialog.vue'
+import { normalizeError } from '@/utils/errors'
+
 const route = useRoute()
 const candidateId = computed(() => route.params.id as string)
 
-const { useCandidateDetails } = useCandidates()
+const { $toast } = useNuxtApp()
+const queryClient = useQueryClient()
+const { useCandidateDetails, useDeleteCandidate } = useCandidates()
+
 const { data: candidate, isPending, error } = useCandidateDetails(candidateId)
+
+const isDeleteAlertOpen = ref(false)
+
+const { mutate: deleteCandidateMutation } = useDeleteCandidate({
+  onSuccess: async () => {
+    queryClient.removeQueries({
+      queryKey: ['candidates', 'detail', candidateId.value],
+    })
+
+    queryClient.removeQueries({
+      queryKey: ['candidates', 'list'],
+    })
+
+    $toast.success('Candidate deleted successfully')
+
+    await navigateTo('/candidates')
+  },
+  onError: (err: unknown) => {
+    const normalizedError = normalizeError(err)
+    $toast.error(normalizedError.message)
+  },
+})
+
+const handleDeleteCandidate = () => {
+  isDeleteAlertOpen.value = true
+}
+
+const confirmDelete = () => {
+  if (candidate.value) {
+    deleteCandidateMutation(candidate.value.id)
+  }
+}
 
 // Navigate back to list
 const goBack = () => navigateTo('/candidates')
@@ -52,12 +91,23 @@ const goBack = () => navigateTo('/candidates')
         v-if="candidate"
         class="space-y-6"
       >
-        <CandidateMainInfo :candidate="candidate" />
+        <CandidateMainInfo
+          :candidate="candidate"
+          @delete="handleDeleteCandidate"
+        />
 
         <CandidateDetails :candidate="candidate" />
 
         <CandidateJobMatching :candidate="candidate" />
       </div>
     </AsyncState>
+
+    <DeleteConfirmDialog
+      v-model:open="isDeleteAlertOpen"
+      title="Delete Candidate"
+      :entity-name="candidate ? `${candidate.first_name} ${candidate.last_name}` : ''"
+      entity-type="candidate"
+      @confirm="confirmDelete"
+    />
   </div>
 </template>
