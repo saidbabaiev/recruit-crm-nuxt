@@ -15,6 +15,7 @@ const emit = defineEmits<{
   (e: 'update:search', value: string): void
   (e: 'update:experience', value: CandidateExperienceRange): void
   (e: 'update:workFormat', value: WorkFormat): void
+  (e: 'create-candidate'): void
 }>()
 
 const search = computed({
@@ -35,6 +36,10 @@ const workFormat = computed({
 const clearFilters = () => {
   experience.value = '' as CandidateExperienceRange
   workFormat.value = '' as WorkFormat
+}
+
+const onCreateCandidate = () => {
+  emit('create-candidate')
 }
 </script>
 
@@ -102,7 +107,10 @@ const clearFilters = () => {
       </Button>
     </div>
 
-    <Button>
+    <Button
+      class="cursor-pointer"
+      @click="onCreateCandidate"
+    >
       <Plus class="mr-2 h-4 w-4" />
       Add Candidate
     </Button>

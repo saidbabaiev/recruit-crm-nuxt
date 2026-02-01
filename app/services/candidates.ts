@@ -1,7 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '@/types/supabase'
 import type { Candidate, CandidateListResponse, CandidateFilters } from '@/types/candidates'
-import type { WorkFormat } from '@/types/enums'
 
 export const CandidatesService = {
   // Fetches all candidates with optional filters and pagination

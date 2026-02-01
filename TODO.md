@@ -19,7 +19,7 @@
     - [x] Delete
     - [ ] Filters
         - [x] Experience Years
-        - [ ] Work Format
+        - [x] Work Format
         - [ ] Skills
         - [ ] Country
         - [ ] City
@@ -28,6 +28,9 @@
     - [x] Delete
     - [ ] Edit
     - [ ] View Resume
+- [ ] Create
+ - [_] Implement Common Sheet Component with Form and Actions
+ - [_] Implement validation for form fields
+- [_] Edit
 - [ ] Export
 - [ ] Import
-- [ ] Create
