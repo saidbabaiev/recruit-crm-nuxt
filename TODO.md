@@ -19,6 +19,11 @@
 - [x] Details
 - [x] Search
 - [ ] Filter
+    - [ ] Experience Years
+    - [ ] Expected Salary
+    - [ ] Skills
+    - [ ] Country
+    - [ ] City
 - [x] Sort
 - [x] Pagination
 - [ ] Export

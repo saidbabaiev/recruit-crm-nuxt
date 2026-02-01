@@ -2,10 +2,6 @@
 import { useQueryClient } from '@tanstack/vue-query'
 import { useDebounceFn } from '@vueuse/core'
 
-import { Plus } from 'lucide-vue-next'
-
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import {
   Pagination,
   PaginationContent,
@@ -92,21 +88,9 @@ const handleDeleteCandidate = (candidate: Candidate) => {
     </div>
 
     <!-- Filters Section -->
-    <div class="flex flex-col sm:flex-row gap-4">
-      <div class="flex-1">
-        <Input
-          v-model="filters.search"
-          type="search"
-          placeholder="Search candidates by name, email, phone or location..."
-          class="w-full"
-        />
-      </div>
-
-      <Button>
-        <Plus class="mr-2 h-4 w-4" />
-        Add Candidate
-      </Button>
-    </div>
+    <CandidatesFilters
+      v-model:search="filters.search"
+    />
 
     <AsyncState
       :skip-loading="true"
