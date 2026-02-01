@@ -23,6 +23,10 @@ const experience = computed({
   get: () => props.experience,
   set: value => emit('update:experience', value as CandidateExperienceRange),
 })
+
+const clearFilters = () => {
+  experience.value = '' as CandidateExperienceRange
+}
 </script>
 
 <template>
@@ -57,6 +61,15 @@ const experience = computed({
           </SelectItem>
         </SelectContent>
       </Select>
+
+      <Button
+        v-if="experience"
+        variant="ghost"
+        class="cursor-pointer"
+        @click="clearFilters"
+      >
+        Clear
+      </Button>
     </div>
 
     <Button>

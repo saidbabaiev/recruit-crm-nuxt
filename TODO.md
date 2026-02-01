@@ -13,18 +13,21 @@
 
 ## 2. Candidates ( In Progress )
 - [x] List
-- [_] Create
-- [ ] Edit
-- [x] Delete
+    - [x] Search
+    - [x] Sort
+    - [x] Pagination
+    - [x] Delete
+    - [ ] Filters
+        - [x] Experience Years
+        - [ ] Expected Salary
+        - [ ] Skills
+        - [ ] Country
+        - [ ] City
+    - [x] Clear Filters
 - [x] Details
-- [x] Search
-- [ ] Filter
-    - [x] Experience Years
-    - [ ] Expected Salary
-    - [ ] Skills
-    - [ ] Country
-    - [ ] City
-- [x] Sort
-- [x] Pagination
+    - [x] Delete
+    - [ ] Edit
+    - [ ] View Resume
 - [ ] Export
 - [ ] Import
+- [ ] Create
