@@ -14,9 +14,12 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 
+import { useCandidates } from '@/composables/useCandidates'
+
 import { toTypedSchema } from '@vee-validate/zod'
 import { useForm, Field as VeeField } from 'vee-validate'
 import { z } from 'zod'
+import { useQueryClient } from '@tanstack/vue-query'
 
 const formSchema = toTypedSchema(
   z.object({
@@ -75,10 +78,24 @@ const { handleSubmit, resetForm } = useForm({
   },
 })
 
-const onSubmit = handleSubmit(() => {
-  $toast.success('Candidate created successfully')
-  resetForm()
-  open.value = false
+const { useCreateCandidate } = useCandidates()
+const queryClient = useQueryClient()
+
+const { mutate: createCandidate, isPending } = useCreateCandidate({
+  onSuccess: async () => {
+    $toast.success('Candidate created successfully')
+    await queryClient.invalidateQueries({ queryKey: ['candidates', 'list'] })
+    resetForm()
+    open.value = false
+  },
+  onError: (error) => {
+    $toast.error('Failed to create candidate')
+    console.error(error)
+  },
+})
+
+const onSubmit = handleSubmit((values) => {
+  createCandidate(values)
 })
 </script>
 
@@ -201,8 +218,9 @@ const onSubmit = handleSubmit(() => {
           <Button
             type="submit"
             form="candidate-form"
+            :disabled="isPending"
           >
-            Create
+            {{ isPending ? 'Creating...' : 'Create' }}
           </Button>
         </Field>
       </SheetFooter>

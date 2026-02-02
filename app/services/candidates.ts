@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js'
 import type { Database } from '@/types/supabase'
-import type { Candidate, CandidateListResponse, CandidateFilters } from '@/types/candidates'
+import type { Candidate, CandidateListResponse, CandidateFilters, CandidateInsert } from '@/types/candidates'
 
 export const CandidatesService = {
   // Fetches all candidates with optional filters and pagination
@@ -63,6 +63,22 @@ export const CandidatesService = {
     if (error) throw error
 
     return data
+  },
+
+  // Create a new candidate
+  async create(
+    client: SupabaseClient<Database>,
+    candidate: CandidateInsert,
+  ): Promise<Candidate> {
+    const { data: createdData, error } = await client
+      .from('candidates')
+      .insert(candidate)
+      .select()
+      .single()
+
+    if (error) throw error
+
+    return createdData
   },
 
   // Delete a candidate by ID

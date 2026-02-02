@@ -1,5 +1,5 @@
 import { useQuery, useMutation, keepPreviousData } from '@tanstack/vue-query'
-import type { CandidateFilters as CandidateParams } from '@/types/candidates'
+import type { Candidate, CandidateInsert, CandidateFilters as CandidateParams } from '@/types/candidates'
 import { CandidatesService } from '@/services/candidates'
 import type { MutationOptions } from '@/types/common'
 
@@ -28,6 +28,33 @@ export const useCandidates = () => {
     })
   }
 
+  // Create a new candidate
+  const useCreateCandidate = (options?: MutationOptions<Candidate>) => {
+    return useMutation({
+      mutationFn: async (candidate: Omit<CandidateInsert, 'company_id' | 'created_by'>) => {
+        if (!user.value?.sub) {
+          throw new Error('User not authenticated')
+        }
+
+        const { data: companyId, error: companyError } = await client
+          .rpc('get_user_company_id')
+
+        if (companyError || !companyId) {
+          throw new Error('Failed to get company info')
+        }
+
+        return CandidatesService.create(client, {
+          ...candidate,
+          company_id: companyId,
+          created_by: user.value.sub,
+        })
+      },
+      onSuccess: options?.onSuccess,
+      onError: options?.onError,
+    })
+  }
+
+  // Delete a candidate by ID
   const useDeleteCandidate = (options?: MutationOptions<void>) => {
     return useMutation({
       mutationFn: (id: string) => CandidatesService.delete(client, id),
@@ -39,6 +66,7 @@ export const useCandidates = () => {
   return {
     useCandidatesList,
     useCandidateDetails,
+    useCreateCandidate,
     useDeleteCandidate,
   }
 }
