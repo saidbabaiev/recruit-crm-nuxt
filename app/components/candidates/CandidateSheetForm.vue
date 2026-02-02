@@ -14,8 +14,40 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 
+import { toTypedSchema } from '@vee-validate/zod'
 import { useForm, Field as VeeField } from 'vee-validate'
 import { z } from 'zod'
+
+const formSchema = toTypedSchema(
+  z.object({
+    first_name: z
+      .string()
+      .min(1, 'First name is required')
+      .max(50, 'First name must not exceed 50 characters')
+      .transform(val => val.trim()),
+
+    last_name: z
+      .string()
+      .min(2, 'Last name must be at least 2 characters')
+      .max(50, 'Last name must not exceed 50 characters')
+      .optional()
+      .or(z.literal('')),
+
+    email: z
+      .string()
+      .email('Please enter a valid email address')
+      .toLowerCase()
+      .trim(),
+
+    phone: z
+      .string()
+      .min(10, 'Phone must be at least 10 characters')
+      .max(20, 'Phone must not exceed 20 characters')
+      .regex(/^[\d\s+()-]+$/, 'Phone can only contain digits and symbols +()-')
+      .optional()
+      .or(z.literal('')),
+  }),
+)
 
 interface Props {
   open: boolean
@@ -23,6 +55,7 @@ interface Props {
 
 const props = defineProps<Props>()
 
+const { $toast } = useNuxtApp()
 const emit = defineEmits<{
   (e: 'update:open', value: boolean): void
 }>()
@@ -32,9 +65,21 @@ const open = computed({
   set: value => emit('update:open', value),
 })
 
-const onSubmit = (values: unknown) => {
-  console.log(values)
-}
+const { handleSubmit, resetForm } = useForm({
+  validationSchema: formSchema,
+  initialValues: {
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone: '',
+  },
+})
+
+const onSubmit = handleSubmit(() => {
+  $toast.success('Candidate created successfully')
+  resetForm()
+  open.value = false
+})
 </script>
 
 <template>
@@ -47,109 +92,119 @@ const onSubmit = (values: unknown) => {
           and remove your data from our servers.
         </SheetDescription>
       </SheetHeader>
-      <div class="p-4">
-        <form
-          id="candidate-form"
-          class="space-y-4"
-          @submit="onSubmit"
-        >
-          <FieldGroup class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <!-- First Name -->
-            <VeeField
-              v-slot="{ field, errors }"
-              name="first_name"
-            >
-              <Field :data-invalid="!!errors.length">
-                <FieldLabel for="candidate-first-name">
-                  First Name
-                </FieldLabel>
-                <Input
-                  id="candidate-first-name"
-                  v-bind="field"
-                  placeholder="John"
-                  :aria-invalid="!!errors.length"
-                />
-                <FieldError
-                  v-if="errors.length"
-                  :errors="errors"
-                />
-              </Field>
-            </VeeField>
+      <form
+        id="candidate-form"
+        class="space-y-4 p-4"
+        @submit="onSubmit"
+      >
+        <FieldGroup class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- First Name -->
+          <VeeField
+            v-slot="{ field, errors }"
+            name="first_name"
+          >
+            <Field :data-invalid="!!errors.length">
+              <FieldLabel for="candidate-first-name">
+                First Name *
+              </FieldLabel>
+              <Input
+                id="candidate-first-name"
+                v-bind="field"
+                placeholder="John"
+                :aria-invalid="!!errors.length"
+              />
+              <FieldError
+                v-if="errors.length"
+                :errors="errors"
+              />
+            </Field>
+          </VeeField>
 
-            <!-- Last Name -->
-            <VeeField
-              v-slot="{ field, errors }"
-              name="last_name"
-            >
-              <Field :data-invalid="!!errors.length">
-                <FieldLabel for="candidate-last-name">
-                  Last Name
-                </FieldLabel>
-                <Input
-                  id="candidate-last-name"
-                  v-bind="field"
-                  placeholder="Doe"
-                  :aria-invalid="!!errors.length"
-                />
-                <FieldError
-                  v-if="errors.length"
-                  :errors="errors"
-                />
-              </Field>
-            </VeeField>
-          </FieldGroup>
+          <!-- Last Name -->
+          <VeeField
+            v-slot="{ field, errors }"
+            name="last_name"
+          >
+            <Field :data-invalid="!!errors.length">
+              <FieldLabel for="candidate-last-name">
+                Last Name
+              </FieldLabel>
+              <Input
+                id="candidate-last-name"
+                v-bind="field"
+                placeholder="Doe"
+                :aria-invalid="!!errors.length"
+              />
+              <FieldError
+                v-if="errors.length"
+                :errors="errors"
+              />
+            </Field>
+          </VeeField>
+        </FieldGroup>
 
-          <FieldGroup>
-            <!-- Email -->
-            <VeeField
-              v-slot="{ field, errors }"
-              name="email"
-            >
-              <Field :data-invalid="!!errors.length">
-                <FieldLabel for="candidate-email">
-                  Email
-                </FieldLabel>
-                <Input
-                  id="candidate-email"
-                  v-bind="field"
-                  placeholder="john.doe@example.com"
-                  :aria-invalid="!!errors.length"
-                />
-                <FieldError
-                  v-if="errors.length"
-                  :errors="errors"
-                />
-              </Field>
-            </VeeField>
+        <FieldGroup>
+          <!-- Email -->
+          <VeeField
+            v-slot="{ field, errors }"
+            name="email"
+          >
+            <Field :data-invalid="!!errors.length">
+              <FieldLabel for="candidate-email">
+                Email *
+              </FieldLabel>
+              <Input
+                id="candidate-email"
+                v-bind="field"
+                placeholder="john.doe@example.com"
+                :aria-invalid="!!errors.length"
+              />
+              <FieldError
+                v-if="errors.length"
+                :errors="errors"
+              />
+            </Field>
+          </VeeField>
 
-            <!-- Phone -->
-            <VeeField
-              v-slot="{ field, errors }"
-              name="phone"
-            >
-              <Field :data-invalid="!!errors.length">
-                <FieldLabel for="candidate-phone">
-                  Phone
-                </FieldLabel>
-                <Input
-                  id="candidate-phone"
-                  v-bind="field"
-                  placeholder="1234567890"
-                  :aria-invalid="!!errors.length"
-                />
-                <FieldError
-                  v-if="errors.length"
-                  :errors="errors"
-                />
-              </Field>
-            </VeeField>
-          </FieldGroup>
-        </form>
-      </div>
+          <!-- Phone -->
+          <VeeField
+            v-slot="{ field, errors }"
+            name="phone"
+          >
+            <Field :data-invalid="!!errors.length">
+              <FieldLabel for="candidate-phone">
+                Phone
+              </FieldLabel>
+              <Input
+                id="candidate-phone"
+                v-bind="field"
+                placeholder="1234567890"
+                :aria-invalid="!!errors.length"
+              />
+              <FieldError
+                v-if="errors.length"
+                :errors="errors"
+              />
+            </Field>
+          </VeeField>
+        </FieldGroup>
+      </form>
       <SheetFooter>
-        <Button type="submit">
-          Create
-        </Button>
+        <Field orientation="horizontal">
+          <Button
+            type="button"
+            variant="outline"
+            @click="resetForm"
+          >
+            Reset
+          </Button>
+          <Button
+            type="submit"
+            form="candidate-form"
+          >
+            Create
+          </Button>
+        </Field>
       </SheetFooter>
     </SheetContent>
   </Sheet>
