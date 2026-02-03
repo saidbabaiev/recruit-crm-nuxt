@@ -49,6 +49,38 @@ const formSchema = toTypedSchema(
       .regex(/^[\d\s+()-]+$/, 'Phone can only contain digits and symbols +()-')
       .optional()
       .or(z.literal('')),
+
+    country: z
+      .string()
+      .max(50, 'Country must not exceed 50 characters')
+      .optional()
+      .or(z.literal('')),
+
+    city: z
+      .string()
+      .max(50, 'City must not exceed 50 characters')
+      .optional()
+      .or(z.literal('')),
+
+    current_position: z
+      .string()
+      .max(50, 'Current position must not exceed 50 characters')
+      .optional()
+      .or(z.literal('')),
+
+    current_company: z
+      .string()
+      .max(50, 'Current company must not exceed 50 characters')
+      .optional()
+      .or(z.literal('')),
+
+    experience_years: z
+      .number()
+      .min(0, 'Experience years must be at least 0')
+      .max(50, 'Experience years must not exceed 50')
+      .optional()
+      .or(z.literal(null)),
+
   }),
 )
 
@@ -75,6 +107,11 @@ const { handleSubmit, resetForm } = useForm({
     last_name: '',
     email: '',
     phone: '',
+    country: '',
+    city: '',
+    current_position: '',
+    current_company: '',
+    experience_years: null,
   },
 })
 
@@ -196,6 +233,122 @@ const onSubmit = handleSubmit((values) => {
                 id="candidate-phone"
                 v-bind="field"
                 placeholder="1234567890"
+                :aria-invalid="!!errors.length"
+              />
+              <FieldError
+                v-if="errors.length"
+                :errors="errors"
+              />
+            </Field>
+          </VeeField>
+        </FieldGroup>
+
+        <!-- Location -->
+        <FieldGroup>
+          <!-- Country -->
+          <VeeField
+            v-slot="{ field, errors }"
+            name="country"
+          >
+            <Field :data-invalid="!!errors.length">
+              <FieldLabel for="candidate-country">
+                Country
+              </FieldLabel>
+              <Input
+                id="candidate-country"
+                v-bind="field"
+                placeholder="United States"
+                :aria-invalid="!!errors.length"
+              />
+              <FieldError
+                v-if="errors.length"
+                :errors="errors"
+              />
+            </Field>
+          </VeeField>
+
+          <!-- City -->
+          <VeeField
+            v-slot="{ field, errors }"
+            name="city"
+          >
+            <Field :data-invalid="!!errors.length">
+              <FieldLabel for="candidate-city">
+                City
+              </FieldLabel>
+              <Input
+                id="candidate-city"
+                v-bind="field"
+                placeholder="New York"
+                :aria-invalid="!!errors.length"
+              />
+              <FieldError
+                v-if="errors.length"
+                :errors="errors"
+              />
+            </Field>
+          </VeeField>
+        </FieldGroup>
+
+        <!-- Professional Information -->
+        <FieldGroup>
+          <!-- Current Position -->
+          <VeeField
+            v-slot="{ field, errors }"
+            name="current_position"
+          >
+            <Field :data-invalid="!!errors.length">
+              <FieldLabel for="candidate-current-position">
+                Current Position
+              </FieldLabel>
+              <Input
+                id="candidate-current-position"
+                v-bind="field"
+                placeholder="Software Engineer"
+                :aria-invalid="!!errors.length"
+              />
+              <FieldError
+                v-if="errors.length"
+                :errors="errors"
+              />
+            </Field>
+          </VeeField>
+
+          <!-- Current Company -->
+          <VeeField
+            v-slot="{ field, errors }"
+            name="current_company"
+          >
+            <Field :data-invalid="!!errors.length">
+              <FieldLabel for="candidate-current-company">
+                Current Company
+              </FieldLabel>
+              <Input
+                id="candidate-current-company"
+                v-bind="field"
+                placeholder="Google"
+                :aria-invalid="!!errors.length"
+              />
+              <FieldError
+                v-if="errors.length"
+                :errors="errors"
+              />
+            </Field>
+          </VeeField>
+
+          <!-- Experience Years -->
+          <VeeField
+            v-slot="{ field, errors }"
+            name="experience_years"
+          >
+            <Field :data-invalid="!!errors.length">
+              <FieldLabel for="candidate-experience-years">
+                Experience Years
+              </FieldLabel>
+              <Input
+                id="candidate-experience-years"
+                v-bind="field"
+                placeholder="10"
                 :aria-invalid="!!errors.length"
               />
               <FieldError
