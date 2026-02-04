@@ -8,4 +8,9 @@ import CandidateFormProfessional from '@/components/candidates/forms/CandidateFo
   <CandidateFormBasic />
   <CandidateFormLocation />
   <CandidateFormProfessional />
+  <!-- TODO:
+   - CandidateFormCompensation
+   - CandidateFormLinks
+   - CandidateFormSkills
+   -->
 </template>

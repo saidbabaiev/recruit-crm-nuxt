@@ -84,7 +84,7 @@ const { mutate: deleteCandidateMutation } = useDeleteCandidate({
   },
 })
 
-const isCandidateSheetFormOpen = ref(false)
+const isCandidateFormOpen = ref(false)
 
 const tableColumns = computed(() => createColumns(handleDeleteCandidate))
 
@@ -108,7 +108,7 @@ const handleDeleteCandidate = (candidate: Candidate) => {
       v-model:search="filters.search"
       v-model:experience="filters.experience"
       v-model:work-format="filters.workFormat"
-      @create-candidate="isCandidateSheetFormOpen = true"
+      @create-candidate="isCandidateFormOpen = true"
     />
 
     <AsyncState
@@ -174,7 +174,7 @@ const handleDeleteCandidate = (candidate: Candidate) => {
     </AsyncState>
 
     <CreateCandidateSheet
-      v-model:open="isCandidateSheetFormOpen"
+      v-model:open="isCandidateFormOpen"
     />
 
     <DeleteConfirmDialog
