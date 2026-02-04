@@ -2,7 +2,6 @@
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
@@ -138,19 +137,12 @@ const onSubmit = handleSubmit((values) => {
 </script>
 
 <template>
-  <Sheet
-    v-model:open="open"
-    class="max-w-2xl"
-  >
-    <SheetContent class="sm:max-w-xl flex flex-col">
-      <SheetHeader class="shrink-0 border-b">
-        <SheetTitle>Are you absolutely sure?</SheetTitle>
-        <SheetDescription>
-          This action cannot be undone. This will permanently delete your account
-          and remove your data from our servers.
-        </SheetDescription>
+  <Sheet v-model:open="open">
+    <SheetContent class="sm:max-w-2xl flex flex-col">
+      <SheetHeader class="shrink-0 border-b px-6">
+        <SheetTitle>Add Candidate</SheetTitle>
       </SheetHeader>
-      <div class="flex-1 min-h-0 overflow-y-auto p-4">
+      <div class="flex-1 min-h-0 overflow-y-auto px-6 py-4">
         <form
           id="candidate-form"
           class="space-y-4"
@@ -202,7 +194,7 @@ const onSubmit = handleSubmit((values) => {
             </VeeField>
           </FieldGroup>
 
-          <FieldGroup>
+          <FieldGroup class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- Email -->
             <VeeField
               v-slot="{ field, errors }"
@@ -249,7 +241,7 @@ const onSubmit = handleSubmit((values) => {
           </FieldGroup>
 
           <!-- Location -->
-          <FieldGroup>
+          <FieldGroup class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- Country -->
             <VeeField
               v-slot="{ field, errors }"
@@ -366,7 +358,7 @@ const onSubmit = handleSubmit((values) => {
           </FieldGroup>
         </form>
       </div>
-      <SheetFooter class="border-t">
+      <SheetFooter class="border-t px-6">
         <Field orientation="horizontal">
           <Button
             type="button"
