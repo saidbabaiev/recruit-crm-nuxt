@@ -15,7 +15,7 @@ import DeleteConfirmDialog from '@/components/common/DeleteConfirmDialog.vue'
 import AsyncState from '@/components/common/AsyncState.vue'
 import CandidatesTable from '@/components/candidates/table/CandidatesTable.vue'
 import { createColumns } from '@/components/candidates/table/columns'
-import CandidateSheetForm from '@/components/candidates/CandidateSheetForm.vue'
+import CreateCandidateSheet from '@/components/candidates/sheets/CreateCandidateSheet.vue'
 
 import type { Candidate, CandidateExperienceRange } from '@/types/candidates'
 import type { WorkFormat } from '@/types/enums'
@@ -173,7 +173,7 @@ const handleDeleteCandidate = (candidate: Candidate) => {
       </div>
     </AsyncState>
 
-    <CandidateSheetForm
+    <CreateCandidateSheet
       v-model:open="isCandidateSheetFormOpen"
     />
 

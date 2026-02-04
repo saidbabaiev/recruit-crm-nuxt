@@ -9,8 +9,8 @@ import { useForm } from 'vee-validate'
 import { useQueryClient } from '@tanstack/vue-query'
 
 import { useCandidates } from '@/composables/useCandidates'
-import { candidateFormInitialValues, candidateFormSchema } from '@/components/candidates/candidateForm'
-import CandidateFormFields from '@/components/candidates/CandidateFormFields.vue'
+import { candidateFormInitialValues, candidateFormSchema } from '@/components/candidates/forms/candidateForm'
+import CandidateForm from '@/components/candidates/forms/CandidateForm.vue'
 
 interface Props {
   open: boolean
@@ -66,7 +66,7 @@ const onSubmit = handleSubmit((values) => {
           class="space-y-4"
           @submit="onSubmit"
         >
-          <CandidateFormFields />
+          <CandidateForm />
         </form>
       </div>
       <SheetFooter class="border-t px-6">
