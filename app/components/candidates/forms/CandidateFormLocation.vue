@@ -58,7 +58,6 @@ import { Switch } from '@/components/ui/switch'
     </VeeField>
 
     <!-- Relocation Willingness -->
-    <!-- TODO: Fix - value is always false -->
     <VeeField
       v-slot="{ field, errors }"
       name="relocation_willingness"
@@ -70,8 +69,9 @@ import { Switch } from '@/components/ui/switch'
           </FieldLabel>
           <Switch
             id="candidate-relocation-willingness"
-            v-bind="field"
+            :model-value="field.value"
             :aria-invalid="!!errors.length"
+            @update:model-value="field['onUpdate:modelValue']"
           />
         </div>
         <FieldError
