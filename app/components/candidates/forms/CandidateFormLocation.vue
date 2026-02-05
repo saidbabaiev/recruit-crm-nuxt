@@ -8,10 +8,12 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { Switch } from '@/components/ui/switch'
 </script>
 
 <template>
   <FieldGroup class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- Country -->
     <VeeField
       v-slot="{ field, errors }"
       name="country"
@@ -33,6 +35,7 @@ import { Input } from '@/components/ui/input'
       </Field>
     </VeeField>
 
+    <!-- City -->
     <VeeField
       v-slot="{ field, errors }"
       name="city"
@@ -47,6 +50,30 @@ import { Input } from '@/components/ui/input'
           placeholder="New York"
           :aria-invalid="!!errors.length"
         />
+        <FieldError
+          v-if="errors.length"
+          :errors="errors"
+        />
+      </Field>
+    </VeeField>
+
+    <!-- Relocation Willingness -->
+    <!-- TODO: Fix - value is always false -->
+    <VeeField
+      v-slot="{ field, errors }"
+      name="relocation_willingness"
+    >
+      <Field :data-invalid="!!errors.length">
+        <div>
+          <FieldLabel for="candidate-relocation-willingness">
+            Willing to relocate?
+          </FieldLabel>
+          <Switch
+            id="candidate-relocation-willingness"
+            v-bind="field"
+            :aria-invalid="!!errors.length"
+          />
+        </div>
         <FieldError
           v-if="errors.length"
           :errors="errors"

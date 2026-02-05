@@ -7,6 +7,7 @@ export type JobStatus = Database['public']['Enums']['job_status']
 export type InterviewStatus = Database['public']['Enums']['interview_status']
 export type InterviewType = Database['public']['Enums']['interview_type']
 export type WorkFormat = Database['public']['Enums']['work_format']
+export type RemoteWorkPreference = Database['public']['Enums']['remote_work_preference']
 
 // --- ENUM UTILITIES - Helpers for working with enums ---
 export type BadgeVariant = 'default' | 'secondary' | 'destructive' | 'outline'
