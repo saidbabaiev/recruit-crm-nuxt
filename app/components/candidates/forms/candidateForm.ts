@@ -86,11 +86,45 @@ const candidateFormZod = z.object({
     .nullable()
     .optional(),
 
-  salary_period: z.enum(['yearly', 'monthly', 'null']).nullable().optional(),
+  salary_period: z.enum(['yearly', 'monthly']).nullable().optional(),
 
   notice_period: z.enum(['1 week', '2 weeks', '3 weeks', '1 month', '2 months', '3 months', '4 months', '5 months', '6 months', '7 months', '8 months', '9 months', '10 months', '11 months', '12 months', 'null']).nullable().optional(),
 
   availability_date: z.date().nullable().optional(),
+}).superRefine((data, ctx) => {
+  if (data.expected_salary_min !== null && data.expected_salary_min !== undefined) {
+    if (!data.expected_salary_max) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Expected salary max is required if expected salary min is set',
+        path: ['expected_salary_max'],
+      })
+    }
+
+    if (data.expected_salary_max && data.expected_salary_max < data.expected_salary_min) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Expected salary max must be greater than expected salary min',
+        path: ['expected_salary_max'],
+      })
+    }
+
+    if (!data.salary_currency) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Currency is required if salary is set',
+        path: ['salary_currency'],
+      })
+    }
+
+    if (!data.salary_period) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Period is required if salary is set',
+        path: ['salary_period'],
+      })
+    }
+  }
 })
 
 export type CandidateFormValues = z.infer<typeof candidateFormZod>
