@@ -103,6 +103,9 @@ import { Switch } from '@/components/ui/switch'
             <SelectValue placeholder="Remote Work Preference" />
           </SelectTrigger>
           <SelectContent>
+            <SelectItem value="null">
+              Not specified
+            </SelectItem>
             <SelectItem value="remote">
               Remote
             </SelectItem>

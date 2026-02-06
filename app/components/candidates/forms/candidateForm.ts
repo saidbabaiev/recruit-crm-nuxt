@@ -42,7 +42,7 @@ const candidateFormZod = z.object({
     .or(z.literal('')),
 
   relocation_willingness: z.boolean().optional(),
-  remote_work_preference: z.enum(['remote', 'hybrid', 'onsite']).nullable().optional(),
+  remote_work_preference: z.enum(['remote', 'hybrid', 'onsite', 'null']).nullable().optional(),
 
   current_position: z
     .string()
@@ -65,6 +65,32 @@ const candidateFormZod = z.object({
       .nullable()
       .optional(),
   ),
+
+  expected_salary_min: z
+    .number()
+    .min(0, 'Expected salary min must be at least 0')
+    .max(1000000, 'Expected salary min must not exceed 1000000')
+    .nullable()
+    .optional(),
+
+  expected_salary_max: z
+    .number()
+    .min(0, 'Expected salary max must be at least 0')
+    .nullable()
+    .optional(),
+
+  salary_currency: z
+    .string()
+    .max(50, 'Salary currency must not exceed 50 characters')
+    .regex(/^[A-Z]{3}$/, 'Salary currency must be a 3-letter currency code (e.g. USD, EUR, GBP, etc.)')
+    .nullable()
+    .optional(),
+
+  salary_period: z.enum(['yearly', 'monthly', 'null']).nullable().optional(),
+
+  notice_period: z.enum(['1 week', '2 weeks', '3 weeks', '1 month', '2 months', '3 months', '4 months', '5 months', '6 months', '7 months', '8 months', '9 months', '10 months', '11 months', '12 months', 'null']).nullable().optional(),
+
+  availability_date: z.date().nullable().optional(),
 })
 
 export type CandidateFormValues = z.infer<typeof candidateFormZod>
@@ -82,5 +108,11 @@ export const candidateFormInitialValues: CandidateFormValues = {
   current_company: '',
   experience_years: null,
   relocation_willingness: false,
-  // remote_work_preference: null,
+  remote_work_preference: null,
+  expected_salary_min: null,
+  expected_salary_max: null,
+  salary_currency: null,
+  salary_period: null,
+  notice_period: null,
+  availability_date: null,
 }
