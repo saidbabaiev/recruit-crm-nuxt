@@ -1,6 +1,5 @@
 import { toTypedSchema } from '@vee-validate/zod'
 import { z } from 'zod'
-// import type { RemoteWorkPreference } from '@/types/enums'
 
 const candidateFormZod = z.object({
   first_name: z
@@ -43,7 +42,7 @@ const candidateFormZod = z.object({
     .or(z.literal('')),
 
   relocation_willingness: z.boolean().optional(),
-  // remote_work_preference: z.enum().optional(),
+  remote_work_preference: z.enum(['remote', 'hybrid', 'onsite']).nullable().optional(),
 
   current_position: z
     .string()

@@ -62,15 +62,19 @@ import { Switch } from '@/components/ui/switch'
       v-slot="{ field, errors }"
       name="relocation_willingness"
     >
-      <Field :data-invalid="!!errors.length">
-        <div>
+      <Field
+        :data-invalid="!!errors.length"
+        class="h-full"
+      >
+        <div class="grid grid-cols-1 gap-2 h-full">
           <FieldLabel for="candidate-relocation-willingness">
-            Willing to relocate?
+            Willing to relocate
           </FieldLabel>
           <Switch
             id="candidate-relocation-willingness"
             :model-value="field.value"
             :aria-invalid="!!errors.length"
+            class="cursor-pointer"
             @update:model-value="field['onUpdate:modelValue']"
           />
         </div>
@@ -80,7 +84,41 @@ import { Switch } from '@/components/ui/switch'
         />
       </Field>
     </VeeField>
-  </FieldGroup>
 
-  <!-- TODO: relocation_willingness, remote_work_preference -->
+    <!-- Remote Work Preference -->
+    <VeeField
+      v-slot="{ field, errors }"
+      name="remote_work_preference"
+    >
+      <Field :data-invalid="!!errors.length">
+        <FieldLabel for="candidate-remote-work-preference">
+          Remote Work Preference
+        </FieldLabel>
+        <Select
+          id="candidate-remote-work-preference"
+          v-bind="field"
+          :aria-invalid="!!errors.length"
+        >
+          <SelectTrigger>
+            <SelectValue placeholder="Remote Work Preference" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="remote">
+              Remote
+            </SelectItem>
+            <SelectItem value="hybrid">
+              Hybrid
+            </SelectItem>
+            <SelectItem value="onsite">
+              On-site
+            </SelectItem>
+          </SelectContent>
+        </Select>
+      </Field>
+      <FieldError
+        v-if="errors.length"
+        :errors="errors"
+      />
+    </VeeField>
+  </FieldGroup>
 </template>
