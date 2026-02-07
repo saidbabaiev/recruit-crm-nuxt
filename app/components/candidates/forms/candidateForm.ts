@@ -97,6 +97,21 @@ const candidateFormZod = z.object({
   notice_period: z.enum(['1 week', '2 weeks', '3 weeks', '1 month', '2 months', '3 months', '4 months', '5 months', '6 months', '7 months', '8 months', '9 months', '10 months', '11 months', '12 months', 'null']).nullable().optional(),
 
   availability_date: z.date().nullable().optional(),
+
+  linkedin_url: z
+    .string()
+    .trim()
+    .url('Please enter a valid LinkedIn URL')
+    .nullable()
+    .optional(),
+
+  github_url: z
+    .string()
+    .trim()
+    .url('Please enter a valid GitHub URL')
+    .nullable()
+    .optional(),
+
 }).superRefine((data, ctx) => {
   const hasMin = data.expected_salary_min !== null && data.expected_salary_min !== undefined
   const hasMax = data.expected_salary_max !== null && data.expected_salary_max !== undefined
@@ -166,4 +181,6 @@ export const candidateFormInitialValues: CandidateFormValues = {
   salary_period: null,
   notice_period: null,
   availability_date: null,
+  linkedin_url: null,
+  github_url: null,
 }

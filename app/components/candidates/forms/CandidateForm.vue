@@ -3,6 +3,7 @@ import CandidateFormBasic from '@/components/candidates/forms/CandidateFormBasic
 import CandidateFormLocation from '@/components/candidates/forms/CandidateFormLocation.vue'
 import CandidateFormProfessional from '@/components/candidates/forms/CandidateFormProfessional.vue'
 import CandidateFormCompensation from '@/components/candidates/forms/CandidateFormCompensation.vue'
+import CandidateFormLinks from '@/components/candidates/forms/CandidateFormLinks.vue'
 </script>
 
 <template>
@@ -10,6 +11,7 @@ import CandidateFormCompensation from '@/components/candidates/forms/CandidateFo
   <CandidateFormLocation />
   <CandidateFormProfessional />
   <CandidateFormCompensation />
+  <CandidateFormLinks />
   <!-- TODO:
    - CandidateFormLinks
    - CandidateFormSkills
