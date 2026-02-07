@@ -8,6 +8,7 @@ import CandidateFormLocation from '@/components/candidates/forms/CandidateFormLo
 import CandidateFormProfessional from '@/components/candidates/forms/CandidateFormProfessional.vue'
 import CandidateFormCompensation from '@/components/candidates/forms/CandidateFormCompensation.vue'
 import CandidateFormLinks from '@/components/candidates/forms/CandidateFormLinks.vue'
+import CandidateFormSkills from '@/components/candidates/forms/CandidateFormSkills.vue'
 </script>
 
 <template>
@@ -50,7 +51,7 @@ import CandidateFormLinks from '@/components/candidates/forms/CandidateFormLinks
       </AccordionTrigger>
       <AccordionContent class="p-6">
         <CandidateFormLinks />
-        <!-- TODO: CandidateFormSkills -->
+        <CandidateFormSkills />
       </AccordionContent>
     </AccordionItem>
   </Accordion>

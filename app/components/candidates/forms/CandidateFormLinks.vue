@@ -6,6 +6,8 @@ import { Input } from '@/components/ui/input'
 
 <template>
   <FieldGroup>
+    <!-- TODO: Resume -->
+
     <!-- LinkedIn URL -->
     <VeeField
       v-slot="{ field, errors }"
