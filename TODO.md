@@ -3,34 +3,39 @@
 # CRM Implementation Plan
 
 ## 1. Authentication ( Paused )
-- [x] Sign In
-- [ ] Sign Up
-- [x] Sign Out
-- [ ] Verify Email
-- [ ] Forgot Password
-- [ ] Reset Password
-- [ ] Change Password
+
+[x] Sign In
+
+[x] Sign Up
+
+[_] Verify Email
+
+[x] Sign Out
+
+[_] Forgot Password
+
+[_] Reset Password
+
+[_] Change Password
 
 ## 2. Candidates ( In Progress )
-- [x] List
-    - [x] Search
-    - [x] Sort
-    - [x] Pagination
-    - [x] Delete
-    - [ ] Filters
-        - [x] Experience Years
-        - [x] Work Format
-        - [ ] Skills
-        - [ ] Country
-        - [ ] City
-    - [x] Clear Filters
-- [x] Details
-    - [x] Delete
-    - [ ] Edit
-    - [ ] View Resume
-- [ ] Create
- - [_] Implement Common Sheet Component with Form and Actions
- - [_] Implement validation for form fields
-- [_] Edit
-- [ ] Export
-- [ ] Import
+
+- List
+  - [x] Search
+  - [x] Sort
+  - [x] Pagination
+  - [x] Delete
+  - [x] Filters (Experience, Work Format)
+  - [x] Clear FIlters
+- Details
+  - [x] Candidate details
+  - [x] Delete
+  - [_] Edit
+  - [_] View Resume
+- Create
+  - [x] Implement Common Sheet Component with Form and Actions
+  - [x] Implement validation for form fields with Vee-validate and Zod
+  - [_] Edit
+- Export
+- Import
+
