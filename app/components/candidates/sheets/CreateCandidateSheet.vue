@@ -11,6 +11,7 @@ import { useQueryClient } from '@tanstack/vue-query'
 import { useCandidates } from '@/composables/useCandidates'
 import { candidateFormInitialValues, candidateFormSchema } from '@/components/candidates/forms/candidateForm'
 import CandidateForm from '@/components/candidates/forms/CandidateForm.vue'
+import type { CandidateInsert } from '@/types/candidates'
 
 interface Props {
   open: boolean
@@ -45,12 +46,13 @@ const { mutate: createCandidate, isPending } = useCreateCandidate({
   },
   onError: (error) => {
     $toast.error('Failed to create candidate')
-    console.error(error)
+    // eslint-disable-next-line no-console
+    console.error('Error creating candidate', error)
   },
 })
 
 const onSubmit = handleSubmit((values) => {
-  createCandidate(values)
+  createCandidate(values as CandidateInsert)
 })
 </script>
 
