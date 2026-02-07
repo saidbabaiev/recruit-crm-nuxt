@@ -79,6 +79,26 @@ import { Input } from '@/components/ui/input'
       </Field>
     </VeeField>
 
-  <!-- TODO: education -->
+    <!-- Education -->
+    <VeeField
+      v-slot="{ field, errors }"
+      name="education"
+    >
+      <Field :data-invalid="!!errors.length">
+        <FieldLabel for="candidate-education">
+          Education
+        </FieldLabel>
+        <Input
+          id="candidate-education"
+          v-bind="field"
+          placeholder="University of California, Los Angeles"
+          :aria-invalid="!!errors.length"
+        />
+        <FieldError
+          v-if="errors.length"
+          :errors="errors"
+        />
+      </Field>
+    </VeeField>
   </FieldGroup>
 </template>

@@ -72,6 +72,13 @@ const candidateFormZod = z.object({
       .optional(),
   ),
 
+  education: z
+    .string()
+    .trim()
+    .max(50, 'Education must not exceed 50 characters')
+    .optional()
+    .or(z.literal('')),
+
   expected_salary_min: z
     .number()
     .min(0, 'Expected salary min must be at least 0')
@@ -177,6 +184,7 @@ export const candidateFormInitialValues: CandidateFormValues = {
   current_position: '',
   current_company: '',
   experience_years: null,
+  education: '',
   relocation_willingness: false,
   remote_work_preference: null,
   expected_salary_min: null,
