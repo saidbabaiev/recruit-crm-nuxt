@@ -12,6 +12,7 @@ import { Input } from '@/components/ui/input'
 
 <template>
   <FieldGroup class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <!-- First Name -->
     <VeeField
       v-slot="{ field, errors }"
       name="first_name"
@@ -33,6 +34,7 @@ import { Input } from '@/components/ui/input'
       </Field>
     </VeeField>
 
+    <!-- Last Name -->
     <VeeField
       v-slot="{ field, errors }"
       name="last_name"
@@ -53,6 +55,8 @@ import { Input } from '@/components/ui/input'
         />
       </Field>
     </VeeField>
+
+    <!-- Email -->
     <VeeField
       v-slot="{ field, errors }"
       name="email"
@@ -74,6 +78,7 @@ import { Input } from '@/components/ui/input'
       </Field>
     </VeeField>
 
+    <!-- Phone -->
     <VeeField
       v-slot="{ field, errors }"
       name="phone"

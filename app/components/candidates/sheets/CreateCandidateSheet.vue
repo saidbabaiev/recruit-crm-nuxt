@@ -56,14 +56,13 @@ const onSubmit = handleSubmit((values) => {
 
 <template>
   <Sheet v-model:open="open">
-    <SheetContent class="sm:max-w-2xl flex flex-col">
+    <SheetContent class="sm:max-w-2xl flex flex-col gap-0">
       <SheetHeader class="shrink-0 border-b px-6">
         <SheetTitle>Add Candidate</SheetTitle>
       </SheetHeader>
-      <div class="flex-1 min-h-0 overflow-y-auto px-6 py-4">
+      <div class="flex-1 min-h-0 overflow-y-auto">
         <form
           id="candidate-form"
-          class="space-y-4"
           @submit="onSubmit"
         >
           <CandidateForm />
