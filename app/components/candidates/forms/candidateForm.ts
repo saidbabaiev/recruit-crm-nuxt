@@ -92,8 +92,11 @@ const candidateFormZod = z.object({
 
   availability_date: z.date().nullable().optional(),
 }).superRefine((data, ctx) => {
-  if (data.expected_salary_min !== null && data.expected_salary_min !== undefined) {
-    if (!data.expected_salary_max) {
+  const isMinSalarySet = data.expected_salary_min !== null && data.expected_salary_min !== undefined
+  const isMaxSalarySet = data.expected_salary_max !== null && data.expected_salary_max !== undefined
+
+  if (isMinSalarySet || isMaxSalarySet) {
+    if (!isMaxSalarySet) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: 'Expected salary max is required if expected salary min is set',
@@ -101,11 +104,27 @@ const candidateFormZod = z.object({
       })
     }
 
-    if (data.expected_salary_max && data.expected_salary_max < data.expected_salary_min) {
+    if (isMinSalarySet && !isMaxSalarySet) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: 'Expected salary max must be greater than expected salary min',
+        message: 'Expected salary max is required if expected salary min is set',
         path: ['expected_salary_max'],
+      })
+    }
+
+    if (isMaxSalarySet && !isMinSalarySet) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Expected salary min is required if expected salary max is set',
+        path: ['expected_salary_min'],
+      })
+    }
+
+    if (data.expected_salary_min && data.expected_salary_max && data.expected_salary_min > data.expected_salary_max) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Expected salary min must be less than expected salary max',
+        path: ['expected_salary_min'],
       })
     }
 
