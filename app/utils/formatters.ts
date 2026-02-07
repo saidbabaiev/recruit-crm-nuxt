@@ -1,5 +1,9 @@
 import type { Candidate } from '@/types/candidates'
 
+/**
+ * Format date
+ * Examples: "2026-01-01" => "Jan 1, 2026"
+ */
 export function formatDate(date: string | null): string {
   if (!date) return 'Not specified'
   return new Date(date).toLocaleDateString('en-US', {
@@ -9,11 +13,44 @@ export function formatDate(date: string | null): string {
   })
 }
 
+/**
+ * Format salary range
+ * Examples: formatSalary(4999, 5000, 'USD', 'monthly') => "$4,999 – $5,000 / mo"
+ */
+export const formatSalary = (
+  min: number,
+  max: number,
+  currency: string,
+  period: 'monthly' | 'yearly' | string | null,
+) => {
+  const formatter = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: currency,
+    maximumFractionDigits: 0,
+  })
+
+  const salaryRange = min === max
+    ? formatter.format(min)
+    : formatter.formatRange(min, max)
+
+  const periodLabel = period === 'monthly' ? '/ mo' : period === 'yearly' ? '/ yr' : ''
+
+  return `${salaryRange} ${periodLabel}`
+}
+
+/**
+ * Format candidate full name
+ * Examples: "['John', 'Doe']" => "John Doe"
+ */
 export function getFullName(c: Pick<Candidate, 'first_name' | 'last_name'> | null): string {
   if (!c) return 'Unknown Candidate'
   return [c.first_name, c.last_name].filter(Boolean).join(' ')
 }
 
+/**
+ * Format candidate initials
+ * Examples: "John Doe" => "JD"
+ */
 export function getCandidateInitials(c: Pick<Candidate, 'first_name' | 'last_name'> | null): string {
   if (!c?.first_name && !c?.last_name) return ''
   const first = c.first_name?.charAt(0) || ''
@@ -22,34 +59,18 @@ export function getCandidateInitials(c: Pick<Candidate, 'first_name' | 'last_nam
 }
 
 /**
- * Format salary range with currency and period
- * Examples: "50000 USD - 80000 USD year", "From 3000 EUR month"
+ * Format experience years
+ * Examples: "1+ years", "Not specified"
  */
-export function getSalaryRangeLabel(
-  min: number | null,
-  max: number | null,
-  currency: string | null,
-  period: string | null,
-): string {
-  if (min && max) {
-    return `${min} ${currency} - ${max} ${currency} ${period}`
-  }
-  else if (min) {
-    return `From ${min} ${currency} ${period}`
-  }
-  else if (max) {
-    return `Up to ${max} ${currency} ${period}`
-  }
-  else {
-    return 'Salary not specified'
-  }
-}
-
 export function getCandidateExperienceLabel(experienceYears: number | null): string {
   const years = experienceYears || 0
   return years ? `${years}+ years` : 'Not specified'
 }
 
+/**
+ * Format visa status
+ * Examples: "Citizen", "Permanent Resident", "Work Permit", "Student Visa", "Visa Required"
+ */
 export function formatVisaStatus(visaStatus: string | null): string {
   if (!visaStatus) return 'Not specified'
   const map: Record<string, string> = {
@@ -62,12 +83,11 @@ export function formatVisaStatus(visaStatus: string | null): string {
   return map[visaStatus] || visaStatus
 }
 
+/**
+ * Format remote preference
+ * Examples: "Remote", "Hybrid", "On-site", "Not specified"
+ */
 export function formatRemotePreference(preference: string | null): string {
   if (!preference) return 'Not specified'
-  const map: Record<string, string> = {
-    remote: 'Remote Only',
-    hybrid: 'Hybrid',
-    onsite: 'On-site',
-  }
-  return map[preference] || preference
+  return preference
 }

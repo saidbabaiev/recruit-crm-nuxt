@@ -8,7 +8,6 @@ import {
   formatRemotePreference,
   formatVisaStatus,
   getCandidateExperienceLabel,
-  getSalaryRangeLabel,
 } from '@/utils/formatters'
 
 interface Props {
@@ -57,9 +56,9 @@ defineProps<Props>()
 
         <!-- Salary Expectation -->
         <CandidateDetailsItem label="Salary Expectation">
-          <div v-if="candidate.expected_salary_min || candidate.expected_salary_max">
+          <div v-if="candidate.expected_salary_min && candidate.expected_salary_max && candidate.salary_currency && candidate.salary_period">
             {{
-              getSalaryRangeLabel(
+              formatSalary(
                 candidate.expected_salary_min,
                 candidate.expected_salary_max,
                 candidate.salary_currency,

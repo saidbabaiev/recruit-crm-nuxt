@@ -10,7 +10,7 @@ import type { JobMatch } from '@/types/jobs'
 import {
   formatRemotePreference,
   getCandidateExperienceLabel,
-  getSalaryRangeLabel,
+  formatSalary,
 } from '@/utils/formatters'
 
 import { normalizeError } from '@/utils/errors'
@@ -107,16 +107,13 @@ function handleInvite() {
 
         <div>
           <span class="text-xs font-medium text-muted-foreground">Salary:</span>
-          <div class="text-sm">
-            {{
-              getSalaryRangeLabel(
-                match.job.salary_min,
-                match.job.salary_max,
-                match.job.salary_currency,
-                match.job.salary_period,
-              )
-            }}
+          <div
+            v-if="match.job.salary_min && match.job.salary_max && match.job.salary_currency && match.job.salary_period"
+            class="text-sm"
+          >
+            {{ formatSalary(match.job.salary_min, match.job.salary_max, match.job.salary_currency, match.job.salary_period) }}
           </div>
+          <span v-else>Salary not specified</span>
         </div>
 
         <div>
