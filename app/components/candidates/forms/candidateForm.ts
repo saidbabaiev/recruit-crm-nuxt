@@ -114,6 +114,8 @@ const candidateFormZod = z.object({
 
   skills: z.array(z.string()).nullable().optional(),
 
+  languages: z.array(z.string()).nullable().optional(),
+
 }).superRefine((data, ctx) => {
   const hasMin = data.expected_salary_min !== null && data.expected_salary_min !== undefined
   const hasMax = data.expected_salary_max !== null && data.expected_salary_max !== undefined
@@ -186,4 +188,5 @@ export const candidateFormInitialValues: CandidateFormValues = {
   linkedin_url: null,
   github_url: null,
   skills: null,
+  languages: null,
 }
