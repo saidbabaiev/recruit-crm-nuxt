@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input'
 </script>
 
 <template>
-  <FieldGroup>
+  <FieldGroup class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <!-- Current Position -->
     <VeeField
       v-slot="{ field, errors }"
@@ -25,28 +25,6 @@ import { Input } from '@/components/ui/input'
           id="candidate-current-position"
           v-bind="field"
           placeholder="Software Engineer"
-          :aria-invalid="!!errors.length"
-        />
-        <FieldError
-          v-if="errors.length"
-          :errors="errors"
-        />
-      </Field>
-    </VeeField>
-
-    <!-- Current Company -->
-    <VeeField
-      v-slot="{ field, errors }"
-      name="current_company"
-    >
-      <Field :data-invalid="!!errors.length">
-        <FieldLabel for="candidate-current-company">
-          Current Company
-        </FieldLabel>
-        <Input
-          id="candidate-current-company"
-          v-bind="field"
-          placeholder="Google"
           :aria-invalid="!!errors.length"
         />
         <FieldError
@@ -78,7 +56,29 @@ import { Input } from '@/components/ui/input'
         />
       </Field>
     </VeeField>
-  </FieldGroup>
+
+    <!-- Current Company -->
+    <VeeField
+      v-slot="{ field, errors }"
+      name="current_company"
+    >
+      <Field :data-invalid="!!errors.length">
+        <FieldLabel for="candidate-current-company">
+          Current Company
+        </FieldLabel>
+        <Input
+          id="candidate-current-company"
+          v-bind="field"
+          placeholder="Google"
+          :aria-invalid="!!errors.length"
+        />
+        <FieldError
+          v-if="errors.length"
+          :errors="errors"
+        />
+      </Field>
+    </VeeField>
 
   <!-- TODO: education -->
+  </FieldGroup>
 </template>

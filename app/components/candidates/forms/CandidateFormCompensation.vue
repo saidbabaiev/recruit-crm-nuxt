@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input'
 </script>
 
 <template>
-  <FieldGroup class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <FieldGroup class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <!-- Expected Salary Min -->
     <VeeField
       v-slot="{ field, errors }"

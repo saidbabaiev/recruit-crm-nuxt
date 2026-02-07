@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 
-import { Briefcase, FileText, User } from 'lucide-vue-next'
+import { Briefcase, FileText, Link, User } from 'lucide-vue-next'
 
 import CandidateFormBasic from '@/components/candidates/forms/CandidateFormBasic.vue'
 import CandidateFormLocation from '@/components/candidates/forms/CandidateFormLocation.vue'
@@ -14,7 +14,7 @@ import CandidateFormSkills from '@/components/candidates/forms/CandidateFormSkil
 <template>
   <Accordion
     type="multiple"
-    :default-value="['personal', 'employment', 'skills']"
+    :default-value="['personal', 'employment', 'skills', 'links']"
   >
     <AccordionItem value="personal">
       <AccordionTrigger class="bg-secondary px-6 py-4">
@@ -23,7 +23,7 @@ import CandidateFormSkills from '@/components/candidates/forms/CandidateFormSkil
           Personal Information
         </div>
       </AccordionTrigger>
-      <AccordionContent class="p-6">
+      <AccordionContent class="p-6 space-y-6">
         <CandidateFormBasic />
         <CandidateFormLocation />
       </AccordionContent>
@@ -33,10 +33,10 @@ import CandidateFormSkills from '@/components/candidates/forms/CandidateFormSkil
       <AccordionTrigger class="bg-secondary px-6 py-4">
         <div class="flex items-center gap-2">
           <Briefcase class="h-4 w-4 text-muted-foreground shrink-0" />
-          Employment Information
+          Professional Information
         </div>
       </AccordionTrigger>
-      <AccordionContent class="p-6">
+      <AccordionContent class="p-6 space-y-6">
         <CandidateFormProfessional />
         <CandidateFormCompensation />
       </AccordionContent>
@@ -46,12 +46,23 @@ import CandidateFormSkills from '@/components/candidates/forms/CandidateFormSkil
       <AccordionTrigger class="bg-secondary px-6 py-4">
         <div class="flex items-center gap-2">
           <FileText class="h-4 w-4 text-muted-foreground shrink-0" />
-          Resume, Language and Technical Skills
+          Skills and Languages
         </div>
       </AccordionTrigger>
-      <AccordionContent class="p-6">
-        <CandidateFormLinks />
+      <AccordionContent class="p-6 space-y-6">
         <CandidateFormSkills />
+      </AccordionContent>
+    </AccordionItem>
+
+    <AccordionItem value="links">
+      <AccordionTrigger class="bg-secondary px-6 py-4">
+        <div class="flex items-center gap-2">
+          <Link class="h-4 w-4 text-muted-foreground shrink-0" />
+          Links
+        </div>
+      </AccordionTrigger>
+      <AccordionContent class="p-6 space-y-6">
+        <CandidateFormLinks />
       </AccordionContent>
     </AccordionItem>
   </Accordion>

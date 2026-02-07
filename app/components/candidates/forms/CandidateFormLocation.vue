@@ -12,7 +12,7 @@ import { Switch } from '@/components/ui/switch'
 </script>
 
 <template>
-  <FieldGroup class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <FieldGroup class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <!-- Country -->
     <VeeField
       v-slot="{ field, errors }"
