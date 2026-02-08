@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input'
   <FieldGroup class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <!-- Current Position -->
     <VeeField
-      v-slot="{ field, errors }"
+      v-slot="{ componentField, errors }"
       name="current_position"
     >
       <Field :data-invalid="!!errors.length">
@@ -23,7 +23,7 @@ import { Input } from '@/components/ui/input'
         </FieldLabel>
         <Input
           id="candidate-current-position"
-          v-bind="field"
+          v-bind="componentField"
           placeholder="Software Engineer"
           :aria-invalid="!!errors.length"
         />
@@ -36,7 +36,7 @@ import { Input } from '@/components/ui/input'
 
     <!-- Experience Years -->
     <VeeField
-      v-slot="{ field, errors }"
+      v-slot="{ componentField, errors }"
       name="experience_years"
     >
       <Field :data-invalid="!!errors.length">
@@ -46,7 +46,7 @@ import { Input } from '@/components/ui/input'
         <Input
           id="candidate-experience-years"
           type="number"
-          v-bind="field"
+          v-bind="componentField"
           placeholder="10"
           :aria-invalid="!!errors.length"
         />
@@ -59,7 +59,7 @@ import { Input } from '@/components/ui/input'
 
     <!-- Current Company -->
     <VeeField
-      v-slot="{ field, errors }"
+      v-slot="{ componentField, errors }"
       name="current_company"
     >
       <Field :data-invalid="!!errors.length">
@@ -68,7 +68,7 @@ import { Input } from '@/components/ui/input'
         </FieldLabel>
         <Input
           id="candidate-current-company"
-          v-bind="field"
+          v-bind="componentField"
           placeholder="Google"
           :aria-invalid="!!errors.length"
         />
@@ -81,7 +81,7 @@ import { Input } from '@/components/ui/input'
 
     <!-- Education -->
     <VeeField
-      v-slot="{ field, errors }"
+      v-slot="{ componentField, errors }"
       name="education"
     >
       <Field :data-invalid="!!errors.length">
@@ -90,7 +90,7 @@ import { Input } from '@/components/ui/input'
         </FieldLabel>
         <Input
           id="candidate-education"
-          v-bind="field"
+          v-bind="componentField"
           placeholder="University of California, Los Angeles"
           :aria-invalid="!!errors.length"
         />

@@ -1,6 +1,8 @@
 import { toTypedSchema } from '@vee-validate/zod'
 import { z } from 'zod'
 
+import type { Candidate } from '@/types/candidates'
+
 const candidateFormZod = z.object({
   first_name: z
     .string()
@@ -197,4 +199,33 @@ export const candidateFormInitialValues: CandidateFormValues = {
   github_url: null,
   skills: null,
   languages: null,
+}
+
+export const candidateToFormValues = (candidate: Candidate): CandidateFormValues => {
+  return {
+    first_name: candidate.first_name ?? '',
+    last_name: candidate.last_name ?? '',
+    email: candidate.email ?? '',
+    phone: candidate.phone ?? '',
+    country: candidate.country ?? '',
+    city: candidate.city ?? '',
+    current_position: candidate.current_position ?? '',
+    current_company: candidate.current_company ?? '',
+    experience_years: candidate.experience_years ?? null,
+    education: candidate.education ?? '',
+    relocation_willingness: candidate.relocation_willingness ?? false,
+    remote_work_preference: candidate.remote_work_preference ?? null,
+    expected_salary_min: candidate.expected_salary_min ?? null,
+    expected_salary_max: candidate.expected_salary_max ?? null,
+    salary_currency: candidate.salary_currency ?? null,
+    salary_period: candidate.salary_period ?? null,
+    notice_period: candidate.notice_period as 'null' | '1 week' | '2 weeks' | '3 weeks' | '1 month' | '2 months' | '3 months' | '4 months' | '5 months' | '6 months' | '7 months' | '8 months' | '9 months' | '10 months' | '11 months' | '12 months',
+    availability_date: candidate.availability_date
+      ? new Date(candidate.availability_date)
+      : null,
+    linkedin_url: candidate.linkedin_url ?? null,
+    github_url: candidate.github_url ?? null,
+    skills: candidate.skills ?? null,
+    languages: candidate.languages ?? null,
+  }
 }

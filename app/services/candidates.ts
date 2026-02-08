@@ -81,6 +81,24 @@ export const CandidatesService = {
     return createdData
   },
 
+  // Update a candidate
+  async update(
+    client: SupabaseClient<Database>,
+    id: string,
+    updates: Partial<CandidateInsert>,
+  ): Promise<Candidate> {
+    const { data, error } = await client
+      .from('candidates')
+      .update(updates)
+      .eq('id', id)
+      .select()
+      .single()
+
+    if (error) throw error
+
+    return data
+  },
+
   // Delete a candidate by ID
   async delete(client: SupabaseClient<Database>, id: string): Promise<void> {
     const { error, count } = await client

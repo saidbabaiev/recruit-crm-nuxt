@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input'
   <FieldGroup class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <!-- Expected Salary Min -->
     <VeeField
-      v-slot="{ field, errors }"
+      v-slot="{ componentField, errors }"
       name="expected_salary_min"
     >
       <Field :data-invalid="!!errors.length">
@@ -24,7 +24,7 @@ import { Input } from '@/components/ui/input'
         <Input
           id="candidate-expected-salary-min"
           type="number"
-          v-bind="field"
+          v-bind="componentField"
           placeholder="60000"
           :aria-invalid="!!errors.length"
         />
@@ -37,7 +37,7 @@ import { Input } from '@/components/ui/input'
 
     <!-- Expected Salary Max -->
     <VeeField
-      v-slot="{ field, errors }"
+      v-slot="{ componentField, errors }"
       name="expected_salary_max"
     >
       <Field :data-invalid="!!errors.length">
@@ -47,7 +47,7 @@ import { Input } from '@/components/ui/input'
         <Input
           id="candidate-expected-salary-max"
           type="number"
-          v-bind="field"
+          v-bind="componentField"
           placeholder="200000"
           :aria-invalid="!!errors.length"
         />
@@ -60,7 +60,7 @@ import { Input } from '@/components/ui/input'
 
     <!-- Salary Currency -->
     <VeeField
-      v-slot="{ field, errors }"
+      v-slot="{ componentField, errors }"
       name="salary_currency"
     >
       <Field :data-invalid="!!errors.length">
@@ -69,7 +69,7 @@ import { Input } from '@/components/ui/input'
         </FieldLabel>
         <Input
           id="candidate-salary-currency"
-          v-bind="field"
+          v-bind="componentField"
           placeholder="USD"
           :aria-invalid="!!errors.length"
         />
@@ -82,7 +82,7 @@ import { Input } from '@/components/ui/input'
 
     <!-- Salary Period -->
     <VeeField
-      v-slot="{ field, errors }"
+      v-slot="{ componentField, errors }"
       name="salary_period"
     >
       <Field :data-invalid="!!errors.length">
@@ -91,7 +91,7 @@ import { Input } from '@/components/ui/input'
         </FieldLabel>
         <Select
           id="candidate-salary-period"
-          v-bind="field"
+          v-bind="componentField"
           :aria-invalid="!!errors.length"
         >
           <SelectTrigger>

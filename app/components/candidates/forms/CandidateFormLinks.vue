@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input'
 
     <!-- LinkedIn URL -->
     <VeeField
-      v-slot="{ field, errors }"
+      v-slot="{ componentField, errors }"
       name="linkedin_url"
     >
       <Field :data-invalid="!!errors.length">
@@ -19,7 +19,7 @@ import { Input } from '@/components/ui/input'
         </FieldLabel>
         <Input
           id="candidate-linkedin-url"
-          v-bind="field"
+          v-bind="componentField"
           placeholder="https://www.linkedin.com/in/john-doe"
           :aria-invalid="!!errors.length"
         />
@@ -32,7 +32,7 @@ import { Input } from '@/components/ui/input'
 
     <!-- GitHub URL -->
     <VeeField
-      v-slot="{ field, errors }"
+      v-slot="{ componentField, errors }"
       name="github_url"
     >
       <Field :data-invalid="!!errors.length">
@@ -41,7 +41,7 @@ import { Input } from '@/components/ui/input'
         </FieldLabel>
         <Input
           id="candidate-github-url"
-          v-bind="field"
+          v-bind="componentField"
           placeholder="https://github.com/john-doe"
           :aria-invalid="!!errors.length"
         />

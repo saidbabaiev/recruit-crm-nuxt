@@ -15,7 +15,7 @@ import { Switch } from '@/components/ui/switch'
   <FieldGroup class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <!-- Country -->
     <VeeField
-      v-slot="{ field, errors }"
+      v-slot="{ componentField, errors }"
       name="country"
     >
       <Field :data-invalid="!!errors.length">
@@ -24,7 +24,7 @@ import { Switch } from '@/components/ui/switch'
         </FieldLabel>
         <Input
           id="candidate-country"
-          v-bind="field"
+          v-bind="componentField"
           placeholder="United States"
           :aria-invalid="!!errors.length"
         />
@@ -37,7 +37,7 @@ import { Switch } from '@/components/ui/switch'
 
     <!-- City -->
     <VeeField
-      v-slot="{ field, errors }"
+      v-slot="{ componentField, errors }"
       name="city"
     >
       <Field :data-invalid="!!errors.length">
@@ -46,7 +46,7 @@ import { Switch } from '@/components/ui/switch'
         </FieldLabel>
         <Input
           id="candidate-city"
-          v-bind="field"
+          v-bind="componentField"
           placeholder="New York"
           :aria-invalid="!!errors.length"
         />
@@ -87,7 +87,7 @@ import { Switch } from '@/components/ui/switch'
 
     <!-- Remote Work Preference -->
     <VeeField
-      v-slot="{ field, errors }"
+      v-slot="{ componentField, errors }"
       name="remote_work_preference"
     >
       <Field :data-invalid="!!errors.length">
@@ -96,7 +96,7 @@ import { Switch } from '@/components/ui/switch'
         </FieldLabel>
         <Select
           id="candidate-remote-work-preference"
-          v-bind="field"
+          v-bind="componentField"
           :aria-invalid="!!errors.length"
         >
           <SelectTrigger>

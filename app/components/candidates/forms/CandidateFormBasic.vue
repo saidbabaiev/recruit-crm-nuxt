@@ -14,7 +14,7 @@ import { Input } from '@/components/ui/input'
   <FieldGroup class="grid grid-cols-1 md:grid-cols-2 gap-6">
     <!-- First Name -->
     <VeeField
-      v-slot="{ field, errors }"
+      v-slot="{ componentField, errors }"
       name="first_name"
     >
       <Field :data-invalid="!!errors.length">
@@ -23,7 +23,7 @@ import { Input } from '@/components/ui/input'
         </FieldLabel>
         <Input
           id="candidate-first-name"
-          v-bind="field"
+          v-bind="componentField"
           placeholder="John"
           :aria-invalid="!!errors.length"
         />
@@ -36,7 +36,7 @@ import { Input } from '@/components/ui/input'
 
     <!-- Last Name -->
     <VeeField
-      v-slot="{ field, errors }"
+      v-slot="{ componentField, errors }"
       name="last_name"
     >
       <Field :data-invalid="!!errors.length">
@@ -45,7 +45,7 @@ import { Input } from '@/components/ui/input'
         </FieldLabel>
         <Input
           id="candidate-last-name"
-          v-bind="field"
+          v-bind="componentField"
           placeholder="Doe"
           :aria-invalid="!!errors.length"
         />
@@ -58,7 +58,7 @@ import { Input } from '@/components/ui/input'
 
     <!-- Email -->
     <VeeField
-      v-slot="{ field, errors }"
+      v-slot="{ componentField, errors }"
       name="email"
     >
       <Field :data-invalid="!!errors.length">
@@ -67,7 +67,7 @@ import { Input } from '@/components/ui/input'
         </FieldLabel>
         <Input
           id="candidate-email"
-          v-bind="field"
+          v-bind="componentField"
           placeholder="john.doe@example.com"
           :aria-invalid="!!errors.length"
         />
@@ -80,7 +80,7 @@ import { Input } from '@/components/ui/input'
 
     <!-- Phone -->
     <VeeField
-      v-slot="{ field, errors }"
+      v-slot="{ componentField, errors }"
       name="phone"
     >
       <Field :data-invalid="!!errors.length">
@@ -89,7 +89,7 @@ import { Input } from '@/components/ui/input'
         </FieldLabel>
         <Input
           id="candidate-phone"
-          v-bind="field"
+          v-bind="componentField"
           placeholder="1234567890"
           :aria-invalid="!!errors.length"
         />

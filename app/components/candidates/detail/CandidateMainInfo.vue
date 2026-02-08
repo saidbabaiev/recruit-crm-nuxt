@@ -17,11 +17,16 @@ interface Props {
 defineProps<Props>()
 
 const emit = defineEmits<{
-  delete: []
+  (e: 'delete'): []
+  (e: 'editCandidate'): void
 }>()
 
 const handleDeleteCandidate = () => {
   emit('delete')
+}
+
+const handleEditCandidate = () => {
+  emit('editCandidate')
 }
 </script>
 
@@ -49,6 +54,7 @@ const handleDeleteCandidate = () => {
                 variant="outline"
                 size="icon"
                 class="w-8 h-8 rounded-full cursor-pointer"
+                @click="handleEditCandidate"
               >
                 <Pencil class="h-4 w-4" />
               </Button>

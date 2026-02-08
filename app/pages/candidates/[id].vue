@@ -10,6 +10,7 @@ import CandidateMetaData from '@/components/candidates/detail/CandidateMetaData.
 
 import { useQueryClient } from '@tanstack/vue-query'
 import DeleteConfirmDialog from '@/components/common/DeleteConfirmDialog.vue'
+import EditCandidateSheet from '@/components/candidates/sheets/EditCandidateSheet.vue'
 import { normalizeError } from '@/utils/errors'
 
 const route = useRoute()
@@ -22,6 +23,7 @@ const { useCandidateDetails, useDeleteCandidate } = useCandidates()
 const { data: candidate, isPending, error } = useCandidateDetails(candidateId)
 
 const isDeleteAlertOpen = ref(false)
+const isEditCandidateOpen = ref(false)
 
 const { mutate: deleteCandidateMutation } = useDeleteCandidate({
   onSuccess: async () => {
@@ -94,6 +96,7 @@ const goBack = () => navigateTo('/candidates')
         <CandidateMainInfo
           :candidate="candidate"
           @delete="handleDeleteCandidate"
+          @edit-candidate="isEditCandidateOpen = true"
         />
 
         <CandidateDetails :candidate="candidate" />
@@ -108,6 +111,12 @@ const goBack = () => navigateTo('/candidates')
       :entity-name="candidate ? `${candidate.first_name} ${candidate.last_name}` : ''"
       entity-type="candidate"
       @confirm="confirmDelete"
+    />
+
+    <EditCandidateSheet
+      v-if="candidate"
+      v-model:open="isEditCandidateOpen"
+      :candidate="candidate"
     />
   </div>
 </template>
