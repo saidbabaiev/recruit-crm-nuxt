@@ -12,6 +12,8 @@ import { Input } from '@/components/ui/input'
 
 <template>
   <FieldGroup class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- TODO: Notice Period, Availability Date -->
+
     <!-- Current Position -->
     <VeeField
       v-slot="{ componentField, errors }"

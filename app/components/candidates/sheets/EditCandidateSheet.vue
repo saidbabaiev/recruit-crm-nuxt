@@ -110,7 +110,7 @@ const onSubmit = handleSubmit((values) => {
             class="flex-1"
             :disabled="isPending"
           >
-            {{ isPending ? 'Creating...' : 'Create' }}
+            {{ isPending ? 'Saving...' : 'Save' }}
           </Button>
         </Field>
       </SheetFooter>
