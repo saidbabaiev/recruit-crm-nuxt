@@ -75,6 +75,7 @@ const onSubmit = handleSubmit((values) => {
           <Button
             type="button"
             variant="outline"
+            class="flex-1"
             @click="resetForm"
           >
             Reset
@@ -82,6 +83,7 @@ const onSubmit = handleSubmit((values) => {
           <Button
             type="submit"
             form="candidate-form"
+            class="flex-1"
             :disabled="isPending"
           >
             {{ isPending ? 'Creating...' : 'Create' }}

@@ -21,21 +21,21 @@
 ## 2. Candidates ( In Progress )
 
 - List
-  - [x] Search
-  - [x] Sort
-  - [x] Pagination
-  - [x] Delete
-  - [x] Filters (Experience, Work Format)
-  - [x] Clear FIlters
+  - Search
+  - Sort
+  - Pagination
+  - Delete
+  - Filters (Experience, Work Format)
+  - Clear FIlters
 - Details
-  - [x] Candidate details
-  - [x] Delete
+  - Candidate details
+  - Delete
   - [_] Edit
   - [_] View Resume
 - Create
-  - [x] Implement Common Sheet Component with Form and Actions
-  - [x] Implement validation for form fields with Vee-validate and Zod
-  - [_] Edit
+  - Implement Common Sheet Component with Form and Actions
+  - Implement validation for form fields with Vee-validate and Zod
+  - [_] Upload Resume
 - Export
 - Import
 
