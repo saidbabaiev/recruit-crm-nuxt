@@ -35,6 +35,7 @@
 - Create
   - [x] Implement Common Sheet Component with Form and Actions
   - [x] Implement validation for form fields with Vee-validate and Zod
+  - [_] Notice Period, Availability Date
   - [_] Upload Resume
 - Export
 - Import
