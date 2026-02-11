@@ -8,12 +8,11 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { NOTICE_PERIOD_OPTIONS } from '@/types/candidates'
 </script>
 
 <template>
   <FieldGroup class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <!-- TODO: Notice Period, Availability Date -->
-
     <!-- Current Position -->
     <VeeField
       v-slot="{ componentField, errors }"
@@ -99,54 +98,14 @@ import { Input } from '@/components/ui/input'
             <SelectValue placeholder="Notice Period" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="null">
-              Not specified
-            </SelectItem>
-            <SelectItem value="1 week">
-              1 week
-            </SelectItem>
-            <SelectItem value="2 weeks">
-              2 weeks
-            </SelectItem>
-            <SelectItem value="3 weeks">
-              3 weeks
-            </SelectItem>
-            <SelectItem value="1 month">
-              1 month
-            </SelectItem>
-            <SelectItem value="2 months">
-              2 months
-            </SelectItem>
-            <SelectItem value="3 months">
-              3 months
-            </SelectItem>
-            <SelectItem value="4 months">
-              4 months
-            </SelectItem>
-            <SelectItem value="5 months">
-              5 months
-            </SelectItem>
-            <SelectItem value="6 months">
-              6 months
-            </SelectItem>
-            <SelectItem value="7 months">
-              7 months
-            </SelectItem>
-            <SelectItem value="8 months">
-              8 months
-            </SelectItem>
-            <SelectItem value="9 months">
-              9 months
-            </SelectItem>
-            <SelectItem value="10 months">
-              10 months
-            </SelectItem>
-            <SelectItem value="11 months">
-              11 months
-            </SelectItem>
-            <SelectItem value="12 months">
-              12 months
-            </SelectItem>
+            <template
+              v-for="option in NOTICE_PERIOD_OPTIONS"
+              :key="option"
+            >
+              <SelectItem :value="option">
+                {{ option }}
+              </SelectItem>
+            </template>
           </SelectContent>
         </Select>
         <FieldError

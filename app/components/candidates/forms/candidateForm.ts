@@ -1,7 +1,7 @@
 import { toTypedSchema } from '@vee-validate/zod'
 import { z } from 'zod'
 
-import type { Candidate } from '@/types/candidates'
+import { NOTICE_PERIOD_OPTIONS, type Candidate, type NoticePeriod } from '@/types/candidates'
 
 const candidateFormZod = z.object({
   first_name: z
@@ -103,7 +103,7 @@ const candidateFormZod = z.object({
 
   salary_period: z.enum(['yearly', 'monthly', 'null']).nullable().optional(),
 
-  notice_period: z.enum(['1 week', '2 weeks', '3 weeks', '1 month', '2 months', '3 months', '4 months', '5 months', '6 months', '7 months', '8 months', '9 months', '10 months', '11 months', '12 months', 'null']).nullable().optional(),
+  notice_period: z.enum([...NOTICE_PERIOD_OPTIONS, 'null']).nullable().optional(),
 
   availability_date: z
     .string()
@@ -222,7 +222,7 @@ export const candidateToFormValues = (candidate: Candidate): CandidateFormValues
     expected_salary_max: candidate.expected_salary_max ?? null,
     salary_currency: candidate.salary_currency ?? null,
     salary_period: candidate.salary_period ?? null,
-    notice_period: candidate.notice_period as 'null' | '1 week' | '2 weeks' | '3 weeks' | '1 month' | '2 months' | '3 months' | '4 months' | '5 months' | '6 months' | '7 months' | '8 months' | '9 months' | '10 months' | '11 months' | '12 months',
+    notice_period: candidate.notice_period as NoticePeriod,
     availability_date: candidate.availability_date ?? null,
     linkedin_url: candidate.linkedin_url ?? null,
     github_url: candidate.github_url ?? null,
